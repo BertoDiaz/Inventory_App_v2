@@ -1,0 +1,58 @@
+{% extends 'blog/base_computing.html' %}
+
+{% block content %}
+    <div class="orderDetail">
+        <div class="button">
+            {% if user.is_authenticated %}
+                <a class="btn btn-default" href="{% url 'blog:computing_edit' pk=computing.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="btn btn-default" href="{% url 'blog:computing_remove' pk=computing.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+        </div>
+        <h1>{{ computing.type_object }}</h1>
+        <div class="date">
+            {% if computing.created_date %}
+                {{ computing.created_date }}
+            {% endif %}
+        </div>
+        <div class="orderDetail">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">NAME: </span>{{ computing.name }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">LOCATION: </span>{{ computing.location }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">USER: </span>{{ computing.user_name }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">MODEL: </span>{{ computing.model }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">PROCESSOR: </span>{{ computing.processor }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">MEMORY: </span>{{ computing.memory }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">SCREEN 1: </span>{{ computing.screen_1 }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">SCREEN 2: </span>{{ computing.screen_2 }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">KEYBOARD: </span>{{ computing.keyboard }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">MOUSE: </span>{{ computing.mouse }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">OTHERS: </span>{{ computing.others }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">SETUP: </span>{{ computing.setup }}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

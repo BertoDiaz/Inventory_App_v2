@@ -1,0 +1,25 @@
+{% extends 'blog/base_others.html' %}
+
+{% block content %}
+    <div class="orderDetail">
+        <div class="button">
+            {% if user.is_authenticated %}
+                <a class="btn btn-default" href="{% url 'blog:others_edit' pk=others.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="btn btn-default" href="{% url 'blog:others_remove' pk=others.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+        </div>
+        <h1>{{ others.name }}</h1>
+        <div class="date">
+            {% if others.created_date %}
+                {{ others.created_date }}
+            {% endif %}
+        </div>
+        <div class="orderDetail">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">NAME: </span>{{ others.name }}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

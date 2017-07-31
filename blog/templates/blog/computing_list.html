@@ -1,0 +1,13 @@
+{% extends 'blog/base_computing.html' %}
+
+{% block content %}
+    {% for computing in computings %}
+        <div class="element">
+            <div class="date">
+                {{ computing.created_date }}
+            </div>
+            <h1><a href="{% url 'blog:computing_detail' pk=computing.pk %}">{{ computing.name }}</a></h1>
+            <p>{{ computing.type_object|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}

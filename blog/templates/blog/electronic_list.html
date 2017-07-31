@@ -1,0 +1,13 @@
+{% extends 'blog/base_electronic.html' %}
+
+{% block content %}
+    {% for electronic in electronics %}
+        <div class="element">
+            <div class="date">
+                {{ electronic.created_date }}
+            </div>
+            <h1><a href="{% url 'blog:electronic_detail' pk=electronic.pk %}">{{ electronic.value }}</a></h1>
+            <p>{{ electronic.type_component|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}

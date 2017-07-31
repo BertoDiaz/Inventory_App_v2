@@ -1,0 +1,15 @@
+{% extends 'blog/base_order.html' %}
+
+{% block content %}
+    <h1>New Order</h1>
+    <form method="POST" class="order-form">
+        {% csrf_token %}
+
+        {{ formset.management_form }}
+
+        {% for form in formset %}
+            {{ form.as_table }}
+        {% endfor %}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% endblock %}

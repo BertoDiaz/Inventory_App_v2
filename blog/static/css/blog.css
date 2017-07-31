@@ -1,0 +1,178 @@
+body {
+    /*padding-left: 15px;
+    padding-right: 15px;*/
+}
+
+/* navbar */
+.navbar {
+    background-color: #FF9400;
+}
+
+.navbar-light {
+    background-color: #FF9400;
+    border-color: #FF9400;
+    margin: 0px;
+}
+/* Title */
+.navbar-light .navbar-brand {
+    color: #333;
+}
+.navbar-light .navbar-brand:hover,
+.navbar-light .navbar-brand:focus {
+    color: #939393;
+}
+/* Link */
+.navbar-light .navbar-nav > li > a {
+    color: #333;
+}
+.navbar-light .navbar-nav > li > a:hover,
+.navbar-light .navbar-nav > li > a:focus {
+    color: #333;
+}
+.navbar-light .navbar-nav > .active > a,
+.navbar-light .navbar-nav > .active > a:hover,
+.navbar-light .navbar-nav > .active > a:focus {
+    color: #555;
+    background-color: #E7E7E7;
+}
+.navbar-light .navbar-nav > .open > a,
+.navbar-light .navbar-nav > .open > a:hover,
+.navbar-light .navbar-nav > .open > a:focus {
+    color: #555;
+    background-color: #D5D5D5;
+}
+/* Caret */
+.navbar-light .navbar-nav > .dropdown > a .caret {
+    border-top-color: #333;
+    border-bottom-color: #333;
+}
+.navbar-light .navbar-nav > .dropdown > a:hover .caret,
+.navbar-light .navbar-nav > .dropdown > a:focus .caret {
+    border-top-color: #333;
+    border-bottom-color: #333;
+}
+.navbar-light .navbar-nav > .open > a .caret,
+.navbar-light .navbar-nav > .open > a:hover .caret,
+.navbar-light .navbar-nav > .open > a:focus .caret {
+    border-top-color: #555;
+    border-bottom-color: #555;
+}
+/* Mobile version */
+.navbar-light .navbar-toggle {
+    border-color: #DDD;
+}
+.navbar-light .navbar-toggle:hover,
+.navbar-light .navbar-toggle:focus {
+    background-color: #DDD;
+}
+.navbar-light .navbar-toggle .icon-bar {
+    background-color: #CCC;
+}
+
+.navbar-light .navbar-nav .dropdown-menu .caret {
+    transform: rotate(-90deg);
+}
+
+@media (max-width: 767px) {
+
+    .navbar-light .navbar-nav .open .dropdown-menu > li > a {
+        color: #777;
+    }
+    .navbar-light .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-light .navbar-nav .open .dropdown-menu > li > a:focus {
+          color: #333;
+    }
+
+}
+
+h1 a {
+    color: #FCA205;
+    font-family: 'Lobster';
+}
+
+.page-header {
+    background-color: #ff9400;
+    margin: 0px;
+    padding: 20px 20px 20px 40px;
+}
+
+.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
+    color: #ffffff;
+    font-size: 36pt;
+    text-decoration: none;
+}
+
+.content {
+    margin-left: 40px;
+}
+
+h1, h2, h3 {
+    font-family: 'Lobster', cursive;
+}
+
+.date {
+    float: right;
+    color: #828282;
+}
+
+.dateDetail {
+    float: right;
+    color: #828282;
+}
+
+.button {
+    float: right;
+}
+
+.save {
+    float: right;
+}
+
+.element-form textarea, .element-form input {
+    width: 30%;
+}
+
+.top-menu, .top-menu:hover, .top-menu:visited {
+    color: #ffffff;
+    float: right;
+    font-size: 22pt;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.element {
+    margin-bottom: 70px;
+}
+
+.element h1 a, .element h1 a:visited {
+    color: #000000;
+}
+
+.element-secondCol {
+    margin-left: 30px;
+}
+
+.order-form textarea, .order-form input {
+    width: 35%;
+}
+
+.order {
+    margin-bottom: 30px;
+}
+
+.order h1 a, .order h1 a:visited {
+    color: #FF9400;
+}
+
+.orderDetail {
+    margin-top: 30px;
+}
+
+.login {
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+
+.login h1 a, .login h1 a:visited {
+    color: #000000;
+}

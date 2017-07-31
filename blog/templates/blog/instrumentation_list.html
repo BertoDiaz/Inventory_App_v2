@@ -1,0 +1,13 @@
+{% extends 'blog/base_instrumentation.html' %}
+
+{% block content %}
+    {% for instrumentation in instrumentations %}
+        <div class="element">
+            <div class="date">
+                {{ instrumentation.created_date }}
+            </div>
+            <h1><a href="{% url 'blog:instrumentation_detail' pk=instrumentation.pk %}">{{ instrumentation.type_instrumentation }}</a></h1>
+            <p>{{ instrumentation.location|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}

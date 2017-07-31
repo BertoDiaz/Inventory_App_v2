@@ -1,0 +1,13 @@
+{% extends 'blog/base_chemical.html' %}
+
+{% block content %}
+    {% for chemical in chemicals %}
+        <div class="element">
+            <div class="date">
+                {{ chemical.created_date }}
+            </div>
+            <h1><a href="{% url 'blog:chemical_detail' pk=chemical.pk %}">{{ chemical.name }}</a></h1>
+            <p>{{ chemical.type_chemical|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}

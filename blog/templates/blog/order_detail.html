@@ -1,0 +1,74 @@
+{% extends 'blog/base_order.html' %}
+
+{% block content %}
+    <div class="orderDetail">
+        <div class="button">
+            {% if user.is_authenticated %}
+                <a class="btn btn-default" href="{% url 'blog:order_edit' pk=order.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="btn btn-default" href="{% url 'blog:order_remove' pk=order.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+        </div>
+        <h1>{{ order.name }}</h1>
+        <div class="date">
+            {% if order.created_date %}
+                {{ order.created_date }}
+            {% endif %}
+        </div>
+        <!-- <div class="row" style="padding-top: 40px;">
+            <div class="col-md-12">
+                <table class="list-group">
+                    <tr class="list-group-item">
+                        <th>BUDGET</th>
+                        <th>{{ order.budget }}</th>
+                    </tr>
+                    <tr>
+                        <th class="col-md-6">BUY TYPE</th>
+                        <th class="col-md-6">{{ order.buy_type|linebreaksbr }}</th>
+                    </tr>
+                    <tr>
+                        <th class="col-md-6">PAYMENT REQUIREMENTS</th>
+                        <th class="col-md-6">{{ order.payment_requirements }}</th>
+                    </tr>
+                    <tr>
+                        <th class="col-md-6">PROVIDER</th>
+                        <th class="col-md-6">{{ order.provider }}</th>
+                    </tr>
+                    {% for product in products %}
+                        <tr>
+                            <th class="col-md-6">ITEM</th>
+                            <th class="col-md-6">{{ product }}</th>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div> -->
+    </div>
+    <div class="orderDetail">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <h4>BUDGET</h4>
+                <p>{{ order.budget }}</p>
+            </li>
+            <li class="list-group-item">
+                <h4>TYPE OF PURCHASE</h4>
+                <p>{{ order.type_of_purchase|linebreaksbr }}</p>
+            </li>
+            <li class="list-group-item">
+                <h4>PAYMENT CONDITIONS</h4>
+                <p>{{ order.payment_conditions }}</p>
+            </li>
+            <li class="list-group-item">
+                <h4>SUPPLIER</h4>
+                <p>{{ order.supplier }}</p>
+            </li>
+            {% if noItem == False %}
+            <li class="list-group-item">
+                <h4>ITEMS</h4>
+                {% for product in products %}
+                <p>{{ product }}</p>
+                {% endfor %}
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}
