@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms.formsets import formset_factory
 from django.utils import timezone
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
@@ -14,6 +16,21 @@ from .forms import InstrumentationForm, OthersForm
 def home(request):
 
     return render(request, 'blog/home.html')
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('blog:home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
 
 
 def element_list(request):
