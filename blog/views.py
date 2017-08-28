@@ -3,14 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.forms.formsets import formset_factory
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Element, Order, Product, Computing, Electronic, Chemical, Instrumentation
 from .models import Others
 from .forms import ElementForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, ChemicalForm
-from .forms import InstrumentationForm, OthersForm
+from .forms import InstrumentationForm, OthersForm, SignUpForm
 
 
 def home(request):
@@ -20,7 +20,7 @@ def home(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -29,7 +29,7 @@ def signup(request):
             login(request, user)
             return redirect('blog:home')
     else:
-        form = UserCreationForm()
+        form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
 
 

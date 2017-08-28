@@ -299,6 +299,7 @@ class Order(models.Model):
 
     author = models.ForeignKey('auth.User')
     name = models.CharField(max_length=200)
+    # name = models.ForeignKey('auth.User')
     applicant = models.CharField(max_length=200)
     budget = models.ForeignKey('Budget')
     type_of_purchase = models.ForeignKey('Type_of_purchase')
