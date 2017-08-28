@@ -3,14 +3,15 @@ from django.contrib.auth.decorators import login_required
 from django.forms.formsets import formset_factory
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.db.models.functions import Concat
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Element, Order, Product, Computing, Electronic, Chemical, Instrumentation
-from .models import Others
+from .models import Others, Full_Name_Users
 from .forms import ElementForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, ChemicalForm
-from .forms import InstrumentationForm, OthersForm, SignUpForm
+from .forms import InstrumentationForm, OthersForm, SignUpForm, UserFullNameForm
 
 
 def home(request):
@@ -23,6 +24,12 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
+            firstname = form.cleaned_data.get('first_name')
+            lastname = form.cleaned_data.get('last_name')
+            nameFull = firstname + ' ' + lastname
+            fullName = Full_Name_Users()
+            fullName.name = nameFull
+            fullName.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)

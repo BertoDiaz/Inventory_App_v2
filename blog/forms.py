@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.utils.encoding import smart_text
 from .models import Element, Order, Product, Computing, Electronic, Chemical, Instrumentation
-from .models import Others
+from .models import Others, Full_Name_Users
 
 
 class SignUpForm(UserCreationForm):
@@ -23,15 +23,16 @@ class ElementForm(forms.ModelForm):
         fields = ('name', 'maker', 'type_item',)
 
 
-class UserFullnameChoiceField(forms.ModelChoiceField):
-    """docstring for UserFullnameChoiceField."""
+class UserFullNameForm(forms.ModelForm):
+    """docstring for UserFullNameForm."""
 
-    def label_from_instance(self, obj):
-        return smart_text(obj.get_full_name())
+    class Meta:
+        model = Full_Name_Users
+        fields = ('name',)
 
 
 class OrderForm(forms.ModelForm):
-    name = UserFullnameChoiceField(queryset=User.objects.all())
+    # name = UserFullnameChoiceField(queryset=User.objects.all())
     # name = UserFullnameChoiceField(User.objects.filter(author=request.user))
 
     class Meta:
