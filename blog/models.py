@@ -391,3 +391,94 @@ class Product(models.Model):
 
 
 """ ------------------------------ """
+
+
+class Run(models.Model):
+    """docstring for Run."""
+
+    run = models.IntegerField()
+    run_specifications = models.TextField(max_length=500)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def create(self):
+        self.created_date = timezone.now()
+        self.save()
+
+    def __int__(self):
+        return self.run
+
+
+class Wafer(models.Model):
+    """docstring for Wafer."""
+
+    run = models.ForeignKey('Run')
+    wafer = models.IntegerField()
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def create(self):
+        self.created_date = timezone.now()
+        self.save()
+
+    def __int__(self):
+        return self.wafer
+
+
+class Chip(models.Model):
+    """docstring for Chip."""
+
+    run = models.ForeignKey('Run')
+    wafer = models.ForeignKey('Wafer')
+    chip = models. IntegerField()
+    date = models.DateField()
+    laser_source = models.CharField(max_length=50, blank=True)
+    readout = models.CharField(max_length=50, blank=True)
+    user_name = models.ForeignKey('Full_Name_Users')
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def create(self):
+        self.created_date = timezone.now()
+        self.save()
+
+    def __int__(self):
+        return self.chip
+
+
+class Waveguide(models.Model):
+    """docstring for Waveguide."""
+
+    run = models.ForeignKey('Run')
+    wafer = models.ForeignKey('Wafer')
+    chip = models.ForeignKey('Chip', null=True)
+    waveguide = models.ForeignKey('Name_Waveguide', blank=True)
+    name = models.CharField(max_length=100, blank=True)
+    amplitude = models.FloatField(blank=True)
+    offset = models.FloatField(blank=True)
+    frecuency = models.FloatField(blank=True)
+    i_up = models.FloatField(blank=True)
+    i_down = models.FloatField(blank=True)
+    slope = models.FloatField(blank=True)
+    visibility = models.FloatField(blank=True)
+    noise = models.FloatField(blank=True)
+    lod = models.FloatField(blank=True)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def create(self):
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return self.name
+
+
+class Name_Waveguide(models.Model):
+    """docstring for Name_Waveguide."""
+
+    name = models.CharField(max_length=50)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def create(self):
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return self.name

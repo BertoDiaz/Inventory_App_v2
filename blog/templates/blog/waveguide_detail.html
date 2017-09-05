@@ -1,0 +1,67 @@
+{% extends 'blog/base_waveguide.html' %}
+
+{% block content %}
+    <div class="col-md-6">
+        <div class="orderDetail">
+            <div class="button">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-default" href="{% url 'blog:waveguide_edit' pk=waveguide.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a class="btn btn-default" href="{% url 'blog:waveguide_remove' pk=waveguide.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                    <a class="btn btn-default" href="{% url 'blog:waveguide_list' pk=waveguide.chip.pk %}"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% endif %}
+            </div>
+            <h1>{{ waveguide.type_object }}</h1>
+            <!-- <div class="date">
+                {% if chip.created_date %}
+                    {{ chip.created_date }}
+                {% endif %}
+            </div> -->
+            <div class="chipDetail">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">RUN: </span>{{ waveguide.run.run }}</p>
+                    </li>
+                    <!-- <li class="list-group-item">
+                        <p><span style="font-weight: bold;">RUN SPECIFICATIONS: </span>{{ run.run_specifications }}</p>
+                    </li> -->
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">WAFER: </span>{{ waveguide.wafer.wafer }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">CHIP: </span>{{ waveguide.chip.chip }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">WAVEGUIDE: </span>{{ waveguide.name }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">AMPLITUDE: </span>{{ waveguide.amplitude }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">OFFSET: </span>{{ waveguide.offset }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">FRECUENCY: </span>{{ waveguide.frecuency }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">I UP: </span>{{ waveguide.i_up }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">I DOWN: </span>{{ waveguide.i_down }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">SLOPE: </span>{{ waveguide.slope }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">VISIBILITY: </span>{{ waveguide.visibility }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">NOISE: </span>{{ waveguide.noise }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">LOD: </span>{{ waveguide.lod }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

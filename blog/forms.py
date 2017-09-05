@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.utils.encoding import smart_text
+# from django.utils.encoding import smart_text
 from .models import Element, Order, Product, Computing, Electronic, Chemical, Instrumentation
-from .models import Others, Full_Name_Users
+from .models import Others, Full_Name_Users, Run, Wafer, Chip, Waveguide
 
 
 class SignUpForm(UserCreationForm):
@@ -85,3 +85,32 @@ class OthersForm(forms.ModelForm):
     class Meta:
         model = Others
         fields = ('name',)
+
+
+class RunForm(forms.ModelForm):
+
+    class Meta:
+        model = Run
+        fields = ('run', 'run_specifications',)
+
+
+class WaferForm(forms.ModelForm):
+
+    class Meta:
+        model = Wafer
+        fields = ('wafer',)
+
+
+class ChipForm(forms.ModelForm):
+
+    class Meta:
+        model = Chip
+        fields = ('chip', 'date', 'laser_source', 'readout', 'user_name',)
+
+
+class WaveguideForm(forms.ModelForm):
+
+    class Meta:
+        model = Waveguide
+        fields = ('waveguide', 'amplitude', 'offset', 'frecuency', 'i_up', 'i_down', 'slope',
+                  'visibility', 'noise', 'lod',)

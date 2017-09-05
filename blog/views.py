@@ -4,14 +4,15 @@ from django.forms.formsets import formset_factory
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
 # from django.contrib.auth.models import User
-from django.db.models.functions import Concat
+# from django.db.models.functions import Concat
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Element, Order, Product, Computing, Electronic, Chemical, Instrumentation
-from .models import Others, Full_Name_Users
+from .models import Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
 from .forms import ElementForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, ChemicalForm
-from .forms import InstrumentationForm, OthersForm, SignUpForm, UserFullNameForm
+from .forms import InstrumentationForm, OthersForm, SignUpForm, RunForm, WaferForm, ChipForm
+from .forms import WaveguideForm
 
 
 def home(request):
@@ -532,3 +533,247 @@ def order_remove(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.delete()
     return redirect('blog:order_list')
+
+
+def run_list(request):
+
+    runs = Run.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+
+    return render(request, 'blog/run_list.html', {'runs': runs})
+
+
+def run_detail(request, pk):
+    run = get_object_or_404(Run, pk=pk)
+
+    return render(request, 'blog/run_detail.html', {'run': run})
+
+
+@login_required
+def run_new(request):
+    if request.method == "POST":
+        form = RunForm(request.POST)
+        if form.is_valid():
+            run = form.save(commit=False)
+            run.save()
+            return redirect('blog:run_detail', pk=run.pk)
+    else:
+        form = RunForm()
+    return render(request, 'blog/run_edit.html', {'form': form})
+
+
+@login_required
+def run_edit(request, pk):
+    run = get_object_or_404(Run, pk=pk)
+    if request.method == "POST":
+        form = RunForm(data=request.POST, instance=run)
+        if form.is_valid():
+            run = form.save(commit=False)
+            run.save()
+            return redirect('blog:run_detail', pk=run.pk)
+    else:
+        form = RunForm(instance=run)
+    return render(request, 'blog/run_edit.html', {'form': form})
+
+
+@login_required
+def run_remove(request, pk):
+    run = get_object_or_404(Run, pk=pk)
+    run.delete()
+    return redirect('blog:run_list')
+
+
+def run_chip_list(request, pk):
+
+    chips = Chip.objects.filter(run=pk)
+
+    return render(request, 'blog/chip_list.html', {'chips': chips})
+
+
+def chip_list(request):
+
+    chips = Chip.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+
+    return render(request, 'blog/chip_list.html', {'chips': chips})
+
+
+def chip_detail(request, pk):
+    chip = get_object_or_404(Chip, pk=pk)
+
+    return render(request, 'blog/chip_detail.html', {'chip': chip})
+
+
+def chip_detail_exist(request, pk):
+    chip = get_object_or_404(Chip, pk=pk)
+
+    return render(request, 'blog/chip_detail_exist.html', {'chip': chip})
+
+
+@login_required
+def chip_new(request):
+    if request.method == "POST":
+        runForm = RunForm(request.POST, prefix='run')
+        waferForm = WaferForm(request.POST, prefix='wafer')
+        chipForm = ChipForm(request.POST, prefix='chip')
+        # waveguideForm = WaveguideForm(request.POST, prefix='waveguide')
+        if runForm.is_valid():
+            run = runForm.save(commit=False)
+            run_ex = Run.objects.get(run=run.run)
+            print(run)
+            if not run_ex:
+                # print(run_ex)
+                run.save()
+            else:
+                run = run_ex
+        if waferForm.is_valid():
+            wafer = waferForm.save(commit=False)
+            wafer_ex = Wafer.objects.get(wafer=wafer.wafer, run=run)
+            # print(wafer)
+            if not wafer_ex:
+                # print(wafer_ex)
+                wafer.run = run
+                wafer.save()
+            else:
+                wafer = wafer_ex
+        if chipForm.is_valid():
+            chip = chipForm.save(commit=False)
+            chip_ex = Chip.objects.get(chip=chip.chip, wafer=wafer, run=run)
+            # print(chip)
+            if not chip_ex:
+                # print(chip_ex)
+                chip.run = run
+                chip.wafer = wafer
+                chip.save()
+                return redirect('blog:chip_detail', pk=chip.pk)
+            else:
+                chip = chip_ex
+                return redirect('blog:chip_detail_exist', pk=chip.pk)
+    else:
+        runForm = RunForm(prefix='run')
+        waferForm = WaferForm(prefix='wafer')
+        chipForm = ChipForm(prefix='chip')
+        # waveguideFrom = WaveguideForm(prefix='waveguide')
+    return render(request, 'blog/chip_edit.html', {'runForm': runForm, 'waferForm': waferForm,
+                                                   'chipForm': chipForm})
+
+
+@login_required
+def chip_edit(request, pk):
+    chip = get_object_or_404(Run, pk=pk)
+    if request.method == "POST":
+        form = RunForm(data=request.POST, instance=chip)
+        if form.is_valid():
+            chip = form.save(commit=False)
+            chip.save()
+            return redirect('blog:chip_detail', pk=chip.pk)
+    else:
+        form = RunForm(instance=chip)
+    return render(request, 'blog/chip_edit.html', {'form': form})
+
+
+@login_required
+def chip_remove(request, pk):
+    chip = get_object_or_404(Run, pk=pk)
+    chip.delete()
+    return redirect('blog:chip_list')
+
+
+# def waveguide_list(request):
+#
+#     waveguides = Waveguide.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+#
+#     return render(request, 'blog/waveguide_list.html', {'waveguides': waveguides})
+
+def waveguide_list(request, pk):
+
+    waveguides = Waveguide.objects.filter(chip=pk)
+
+    return render(request, 'blog/waveguide_list.html', {'waveguides': waveguides, 'chip': pk})
+
+
+def waveguide_detail(request, pk, pk2):
+    waveguide = get_object_or_404(Waveguide, pk=pk2)
+
+    return render(request, 'blog/waveguide_detail.html', {'waveguide': waveguide})
+
+
+def waveguide_detail_exist(request, pk, pk2):
+    waveguide = get_object_or_404(Waveguide, pk=pk2)
+
+    return render(request, 'blog/waveguide_detail_exist.html', {'waveguide': waveguide})
+
+
+@login_required
+def waveguide_new(request, pk):
+    if request.method == "POST":
+        # runForm = RunForm(request.POST, prefix='run')
+        # waferForm = WaferForm(request.POST, prefix='wafer')
+        waveguideForm = WaveguideForm(request.POST, prefix='waveguide')
+        # waveguideForm = WaveguideForm(request.POST, prefix='waveguide')
+        # if runForm.is_valid():
+        #     run = runForm.save(commit=False)
+        #     run_ex = Run.objects.get(run=run.run)
+        #     print(run)
+        #     if not run_ex:
+        #         # print(run_ex)
+        #         run.save()
+        #     else:
+        #         run = run_ex
+        # if waferForm.is_valid():
+        #     wafer = waferForm.save(commit=False)
+        #     wafer_ex = Wafer.objects.get(wafer=wafer.wafer, run=run)
+        #     # print(wafer)
+        #     if not wafer_ex:
+        #         # print(wafer_ex)
+        #         wafer.run = run
+        #         wafer.save()
+        #     else:
+        #         wafer = wafer_ex
+        if waveguideForm.is_valid():
+            waveguide = waveguideForm.save(commit=False)
+            # print(waveguide)
+            chip = Chip.objects.get(pk=pk)
+            # print(chip.wafer)
+            waveguide_ex = Waveguide.objects.get(waveguide=waveguide.waveguide, chip=chip,
+                                                 wafer=chip.wafer, run=chip.run)
+            # print(waveguide)
+            if not waveguide_ex:
+                # print(waveguide_ex)
+                waveguide.run = chip.run
+                waveguide.wafer = chip.wafer
+                waveguide.chip = chip
+                waveguide.name = waveguide.waveguide.name
+                waveguide.save()
+                return redirect('blog:waveguide_detail', pk=chip.pk, pk2=waveguide.pk)
+            else:
+                waveguide = waveguide_ex
+                print(waveguide.pk)
+                return redirect('blog:waveguide_detail_exist', pk=chip.pk, pk2=waveguide.pk)
+    else:
+        # runForm = RunForm(prefix='run')
+        # waferForm = WaferForm(prefix='wafer')
+        chip = get_object_or_404(Chip, pk=pk)
+        waveguideForm = WaveguideForm(prefix='waveguide')
+        # waveguideFrom = WaveguideForm(prefix='waveguide')
+    return render(request, 'blog/waveguide_edit.html', {'waveguideForm': waveguideForm,
+                                                        'chip': chip})
+
+
+@login_required
+def waveguide_edit(request, pk):
+    waveguide = get_object_or_404(Run, pk=pk)
+    if request.method == "POST":
+        form = RunForm(data=request.POST, instance=waveguide)
+        if form.is_valid():
+            waveguide = form.save(commit=False)
+            waveguide.save()
+            return redirect('blog:waveguide_detail', pk=waveguide.pk)
+    else:
+        form = RunForm(instance=waveguide)
+    return render(request, 'blog/waveguide_edit.html', {'form': form})
+
+
+@login_required
+def waveguide_remove(request, pk):
+    waveguide = get_object_or_404(Run, pk=pk)
+    waveguide.delete()
+    return redirect('blog:waveguide_list')

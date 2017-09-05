@@ -1,0 +1,114 @@
+{% extends 'blog/base_waveguide.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-7">
+            <h1>New Waveguide</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <!-- {{ runForm.as_p }}
+                {{ waferForm.as_p }}
+                {{ chipForm.as_p }} -->
+
+                <table style="width:10%">
+                    <tr>
+                        <th>
+                            RUN:
+                        </th>
+                        <th>
+                            {{ chip.run.run }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Wafer:
+                        </th>
+                        <th>
+                            {{ chip.wafer.wafer }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Chip:
+                        </th>
+                        <th>
+                            {{ chip.chip }}
+                        </th>
+                    </tr>
+                </table>
+                <p></p>
+                {% for waveguideField in waveguideForm %}
+                    <div id="{{ waveguideField.auto_id }}_container">
+                        {{ waveguideField.help_text }}
+                        <table style="width:100%">
+                            <tr>
+                                <th>
+                                    {{ waveguideField.label_tag }}
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    {{ waveguideField }}
+                                </th>
+                            </tr>
+                        </table>
+                        <div id="{{ waveguideField.auto_id }}_errors">
+                            {{ waveguideField.errors }}
+                        </div>
+                    </div>
+                {% endfor %}
+                <button type="submit" class="save btn btn-default">Save</button>
+            </form>
+        </div>
+        <!-- <div class="col-md-5">
+            <h3>Locations</h3>
+            <div class="col-md-2">
+                <div class="row" style="margin-right: 20px; margin-bottom: 20px;">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Lab2027', 'Lab2031', 'Lab2035', 'Office2099', 'Office2101');">Lab 2027</button>
+                </div>
+
+                <div class="row" style="margin-right: 20px; margin-bottom: 20px;">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Lab2031', 'Lab2027', 'Lab2035', 'Office2099', 'Office2101');">Lab 2031</button>
+                </div>
+
+                <div class="row" style="margin-right: 20px; margin-bottom: 20px;">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Lab2035', 'Lab2027', 'Lab2031', 'Office2099', 'Office2101');">Lab 2035</button>
+                </div>
+
+                <div class="row" style="margin-right: 20px; margin-bottom: 20px;">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Office2099', 'Lab2027', 'Lab2031', 'Lab2035', 'Office2101');">Office 2099</button>
+                </div>
+
+                <div class="row">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Office2101', 'Lab2027', 'Lab2031', 'Lab2035', 'Office2099');">Office 2101</button>
+                </div>
+            </div>
+
+            <div class="col-md-1"></div>
+
+            <div class="col-md-2">
+                <div id="Lab2027" style="display:none;">
+                    <img src="{% static 'images/planos/Lab_2027_1.jpg' %}" alt="Lab 2027" height="700">
+                </div>
+
+                <div id="Lab2031" style="display:none;">
+                    <img src="{% static 'images/planos/Lab_2031.png' %}" alt="Lab 2031" height="700">
+                </div>
+
+                <div id="Lab2035" style="display:none;">
+                    <img src="{% static 'images/planos/Lab_2035.jpg' %}" alt="Lab 2035" height="700">
+                </div>
+
+                <div id="Office2099" style="display:none;">
+                    <img src="{% static 'images/planos/Office_2099.jpg' %}" alt="Office 2099" height="500">
+                </div>
+
+                <div id="Office2101" style="display:none;">
+                    <img src="{% static 'images/planos/Office_2101.jpg' %}" alt="Office 2101" height="500">
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+{% endblock %}

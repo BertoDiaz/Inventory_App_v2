@@ -6,6 +6,7 @@ from .models import Electronic, Type_Component, Unit
 from .models import Chemical, Type_Chemical, Unit_Chemical, Closet
 from .models import Instrumentation, Type_Instrumentation
 from .models import Others
+from .models import Run, Wafer, Chip, Waveguide, Name_Waveguide
 
 admin.site.register(Element)
 admin.site.register(Type)
@@ -30,3 +31,8 @@ admin.site.register(Closet)
 admin.site.register(Instrumentation)
 admin.site.register(Type_Instrumentation)
 admin.site.register(Others)
+admin.site.register(Run)
+admin.site.register(Wafer)
+admin.site.register(Chip)
+admin.site.register(Waveguide)
+admin.site.register(Name_Waveguide)
