@@ -1,3 +1,12 @@
+/**
+ * Shows a lab images and hide the others
+ * @param {id} id0
+ * @param {id} id1
+ * @param {id} id2
+ * @param {id} id3
+ * @param {id} id4
+ */
+
 function toggle_visibility(id0, id1, id2, id3, id4) {
    var toggle = document.getElementById(id0);
    var hide1 = document.getElementById(id1);

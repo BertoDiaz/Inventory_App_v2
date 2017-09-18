@@ -1,3 +1,7 @@
+/*
+ *    This function is useds to open the menu of the navegation bar.
+ */
+
 $(document).ready(function() {
     $('.navbar a.dropdown-toggle').on('click', function(e) {
         var $el = $(this);

@@ -1,3 +1,5 @@
+"""admin.py."""
+
 from django.contrib import admin
 from .models import Element, Type
 from .models import Order, Budget, Type_of_purchase, Payment, Supplier, Product

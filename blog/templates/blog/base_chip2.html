@@ -1,4 +1,9 @@
+<!doctype html>
 {% load staticfiles %}
+
+<!-- ***********************************************************************************************
+    This HTML page is used as a base page to create similar pages of the Chip 2 category.
+************************************************************************************************ -->
 
 <html>
     <head>
@@ -15,9 +20,17 @@
     </head>
     <body>
 
+        <!-- ***************************************************************************************
+            This line includes the navigation bar.
+        **************************************************************************************** -->
         {% include 'blog/navbar.html' %}
 
         <div class="page-header">
+
+            <!-- ***********************************************************************************
+                This part verifies if the username is logged in. If not, this shows an image to
+                indicate that the username is not logged in.
+            ************************************************************************************ -->
             {% if user.is_authenticated %}
                 <a href="{% url 'blog:chip_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
             {% else %}
@@ -29,6 +42,10 @@
         <div class="content container">
             <div class="row">
                 <div class="col-md-12">
+
+                <!-- *******************************************************************************
+                    Contents of the page.
+                ******************************************************************************** -->
                 {% block content %}
                 {% endblock %}
                 </div>

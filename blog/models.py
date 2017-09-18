@@ -1,3 +1,5 @@
+"""models.py."""
+
 from django.db import models
 from django.utils import timezone
 
@@ -5,286 +7,591 @@ from django.utils import timezone
 
 
 class Element(models.Model):
-    """docstring for Element."""
+    """
+    Element model docstring.
 
-    author = models.ForeignKey('auth.User')
-    type_item = models.ForeignKey('Type')
-    name = models.CharField(max_length=200)
-    maker = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the kinds of inventories that are possible.
+    """
+
+    author = models.ForeignKey('auth.User',
+                               help_text="Name of the author that created the element.")
+    type_item = models.ForeignKey('Type', help_text="Type of element.")
+    name = models.CharField(max_length=200, help_text="Name of the element.")
+    maker = models.CharField(max_length=200, help_text="Manufacturer of the element.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the data was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the kind of inventory.
+
+        @return: a string with the name of the kind of inventory.
+        """
         return self.name
 
 
 class Computing(models.Model):
-    """docstring for Computing."""
+    """
+    Computing model docstring.
 
-    name = models.CharField(max_length=200, blank=True)
-    type_object = models.ForeignKey('Type_Object')
-    location = models.ForeignKey('Location')
-    user_name = models.ForeignKey('Full_Name_Users', blank=True)
-    model = models.CharField(max_length=200, blank=True)
-    processor = models.CharField(max_length=200, blank=True)
-    memory = models.CharField(max_length=200, blank=True)
-    screen_1 = models.CharField(max_length=200, blank=True)
-    screen_2 = models.CharField(max_length=200, blank=True)
-    keyboard = models.CharField(max_length=200, blank=True)
-    mouse = models.CharField(max_length=200, blank=True)
-    others = models.CharField(max_length=200, blank=True)
-    setup = models.ForeignKey('Setup', blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the computers.
+    """
+
+    name = models.CharField(max_length=200, blank=True, help_text="Name of the computer.")
+    type_object = models.ForeignKey('Type_Object', help_text="Type of the computing.")
+    location = models.ForeignKey('Location', help_text="Where it is the computer.")
+    user_name = models.ForeignKey('Full_Name_Users', blank=True,
+                                  help_text="Username of this computer.")
+    model = models.CharField(max_length=200, blank=True, help_text="Model of the computer.")
+    processor = models.CharField(max_length=200, blank=True, help_text="Processor of the computer.")
+    memory = models.CharField(max_length=200, blank=True,
+                              help_text="How much memory have the computer.")
+    screen_1 = models.CharField(max_length=200, blank=True,
+                                help_text="Model of the screen of the computer.")
+    screen_2 = models.CharField(max_length=200, blank=True, help_text="Model of the second screen "
+                                "of the computer if this have a second screen.")
+    keyboard = models.CharField(max_length=200, blank=True, help_text="keyboard of the computer.")
+    mouse = models.CharField(max_length=200, blank=True, help_text="Mouse of the computer.")
+    others = models.CharField(max_length=200, blank=True,
+                              help_text="Others characteristics of the computer.")
+    setup = models.ForeignKey('Setup', blank=True, help_text="In order to the computer is used.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the computer was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the location of a computer.
+
+        @return: a string with the location of a computer.
+        """
         return self.location
 
 
 class Electronic(models.Model):
-    """docstring for Electronic."""
+    """
+    Electronic model docstring.
 
-    type_component = models.ForeignKey('Type_Component')
-    location = models.ForeignKey('Location')
-    closet = models.ForeignKey('Closet')
-    unit = models.ForeignKey('Unit')
-    value = models.CharField(max_length=200, blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the electronic components.
+    """
+
+    type_component = models.ForeignKey('Type_Component',
+                                       help_text="Type of the electronic component.")
+    location = models.ForeignKey('Location', help_text="Where it is the electronic component.")
+    closet = models.ForeignKey('Closet', help_text="In what closet is the electronic component.")
+    unit = models.ForeignKey('Unit', help_text="Unit of the value of the electronic componente.")
+    value = models.CharField(max_length=200, blank=True,
+                             help_text="Value of the electronic component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the electronic component was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the location of a electronic component.
+
+        @return: a string with the location of a electronic component.
+        """
         return self.location
 
 
 class Chemical(models.Model):
-    """docstring for Chemical."""
+    """
+    Chemical model docstring.
 
-    type_chemical = models.ForeignKey('Type_Chemical')
-    name = models.CharField(max_length=200, blank=True)
-    reference = models.CharField(max_length=200, blank=True)
-    quantity = models.CharField(max_length=20)
-    supplier = models.ForeignKey('Supplier')
-    concentration = models.CharField(max_length=200, blank=True)
-    unit_chemical = models.ForeignKey('Unit_Chemical')
-    location = models.ForeignKey('Location')
-    closet = models.ForeignKey('Closet')
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the chemicals.
+    """
+
+    type_chemical = models.ForeignKey('Type_Chemical', help_text="Type of the chemical.")
+    name = models.CharField(max_length=200, blank=True, help_text="Name of the chemical.")
+    reference = models.CharField(max_length=200, blank=True, help_text="Reference of the chemical.")
+    quantity = models.CharField(max_length=20, help_text="Quantity of the chemical.")
+    supplier = models.ForeignKey('Supplier', help_text="Supplier of the chemical.")
+    concentration = models.CharField(max_length=200, blank=True,
+                                     help_text="Concentration of the chemical.")
+    molecular_weight = models.CharField(max_length=200, blank=True,
+                                        help_text="Molecular weight of the chemical.")
+    unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
+                                      "concentration/molecular weight of the chemical.")
+    location = models.ForeignKey('Location', help_text="Where it is the computer.")
+    closet = models.ForeignKey('Closet', help_text="In what closet is the electronic component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the chemical was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of a chemical.
+
+        @return: a string with the name of a chemical.
+        """
         return self.name
 
 
 class Instrumentation(models.Model):
-    """docstring for Instrumentation."""
+    """
+    Instrumentation model docstring.
 
-    type_instrumentation = models.ForeignKey('Type_Instrumentation')
-    characteristics = models.CharField(max_length=200, blank=True)
-    manufacturer = models.CharField(max_length=200, blank=True)
-    supplier = models.ForeignKey('Supplier')
-    location = models.ForeignKey('Location')
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the instruments.
+    """
+
+    type_instrumentation = models.ForeignKey('Type_Instrumentation',
+                                             help_text="Type of instrument to be stored.")
+    characteristics = models.CharField(max_length=200, blank=True,
+                                       help_text="Important features of the instrument.")
+    manufacturer = models.CharField(max_length=200, blank=True,
+                                    help_text="Manufacturer of the instrument.")
+    supplier = models.ForeignKey('Supplier', help_text="Seller of the instrument.")
+    location = models.ForeignKey('Location', help_text="Where it is the computer.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the instrument was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the manufacturer of the instrument.
+
+        @return: a string with the manufacturer of the instrument.
+        """
         return self.manufacturer
 
 
 class Others(models.Model):
-    """docstring for Others."""
+    """
+    Others model docstring.
 
-    name = models.CharField(max_length=200, blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the other components of the group.
+    """
+
+    name = models.CharField(max_length=200, blank=True, help_text="Name of the component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the component was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the component.
+
+        @return: a string with the name of the component.
+        """
         return self.name
 
 
 class Type(models.Model):
-    """docstring for Type."""
+    """
+    Type model docstring.
 
-    author = models.ForeignKey('auth.User')
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different types of elements.
+    """
+
+    author = models.ForeignKey('auth.User', help_text="Name of the author that created the type.")
+    name = models.CharField(max_length=200, help_text="Name of the type of element.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the type of element was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the type of element.
+
+        @return: a string with the name of the type of element.
+        """
         return self.name
 
 
 class Type_Object(models.Model):
-    """docstring for Type_Object."""
+    """
+    Type model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different parts of a computer.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the part of the computer.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the part of computer was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the part of a computer.
+
+        @return: a string with the name of the part of a computer.
+        """
         return self.name
 
 
 class Type_Component(models.Model):
-    """docstring for Type_Component."""
+    """
+    Type model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different electronic components.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the type of electronic component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the type of electronic component was created
+        and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the type of electronic component.
+
+        @return: a string with the name of the type of electronic component.
+        """
         return self.name
 
 
 class Type_Chemical(models.Model):
-    """docstring for Type_Chemical."""
+    """
+    Type chemical model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different chemicals.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the type of chemical.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the type of chemical was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the type of chemical.
+
+        @return: a string with the name of the type of chemical.
+        """
         return self.name
 
 
 class Type_Instrumentation(models.Model):
-    """docstring for Type_Instrumentation."""
+    """
+    Type instrument model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different instruments.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the type of instrument.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the type of instrument was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the type of instrument.
+
+        @return: a string with the name of the type of instrument.
+        """
         return self.name
 
 
 class Location(models.Model):
-    """docstring for Location."""
+    """
+    Location model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different locations in the labs and the offices.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the location of the object.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the location was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the location.
+
+        @return: a string with the name of the location.
+        """
         return self.name
 
 
 class Closet(models.Model):
-    """docstring Closet."""
+    """
+    Closet model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different closets in the labs and the offices.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the closet.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the closet was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the closet.
+
+        @return: a string with the name of the closet.
+        """
         return self.name
 
 
 class Number_Closet(models.Model):
-    """docstring for Number_Closet."""
+    """
+    Number closet model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different closets with your number in the labs and the offices.
+    """
+
+    name = models.CharField(max_length=200, help_text="Number of the closet.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the number of the closet was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the closet.
+
+        @return: a string with the name of the closet.
+        """
         return self.name
 
 
 class Unit(models.Model):
-    """docstring for Unit."""
+    """
+    Unit model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different units of the different electronic components.
+    """
+
+    name = models.CharField(max_length=200, help_text="Unit of the electronic component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the unit of the electronic component was created
+        and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the unit of the electronic component.
+
+        @return: a string with the name of the unit of the electronic component.
+        """
         return self.name
 
 
 class Unit_Chemical(models.Model):
-    """docstring for Unit_Chemical."""
+    """
+    Unit chemical model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different units of the different chemical.
+    """
+
+    name = models.CharField(max_length=200, help_text="Unit of the chemical.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the unit of the chemical was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the unit of the chemical.
+
+        @return: a string with the name of the unit of the chemical.
+        """
         return self.name
 
 
 class Full_Name_Users(models.Model):
-    """docstring for Full_Name_Users."""
+    """
+    Full name users model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different full name of the users.
+    """
+
+    name = models.CharField(max_length=200, help_text="Full name of the users.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the full name of the user was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the full name of the user.
+
+        @return: a string with the full name of the user.
+        """
         return self.name
 
 
 class Setup(models.Model):
-    """docstring for Setup."""
+    """
+    Setup model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different setups of the computers.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the setup.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the setup of the computer was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the setup.
+
+        @return: a string with the name of the setup.
+        """
         return self.name
 
 
@@ -295,98 +602,198 @@ class Setup(models.Model):
 
 
 class Order(models.Model):
-    """docstring for Order."""
+    """
+    Order model docstring.
 
-    author = models.ForeignKey('auth.User')
-    name = models.CharField(max_length=200)
+    This model stores the different orders of the group.
+    """
+
+    author = models.ForeignKey('auth.User', help_text="Username of who create the order.")
+    name = models.CharField(max_length=200, help_text="Name of the order to save it.")
     # name = models.ForeignKey('auth.User')
-    applicant = models.CharField(max_length=200)
-    budget = models.ForeignKey('Budget')
-    type_of_purchase = models.ForeignKey('Type_of_purchase')
-    payment_conditions = models.ForeignKey('Payment')
-    supplier = models.ForeignKey('Supplier')
+    applicant = models.CharField(max_length=200, help_text="Name of who do the order.")
+    budget = models.ForeignKey('Budget', help_text="Budget in where load the order.")
+    type_of_purchase = models.ForeignKey('Type_of_purchase',
+                                         help_text="Type of purchase of the order.")
+    payment_conditions = models.ForeignKey('Payment',
+                                           help_text="Conditions of payment of the order.")
+    supplier = models.ForeignKey('Supplier', help_text="Who provide of components of the order.")
     # product = models.ForeignKey('Product', null=True)
-    number_product = models.IntegerField(default=1)
-    created_date = models.DateTimeField(default=timezone.now)
+    number_product = models.IntegerField(default=1, help_text="Number of products to order.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the order was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the order.
+
+        @return: a string with the name of the order.
+        """
         return self.name
 
 
 class Budget(models.Model):
-    """docstring for Budget."""
+    """
+    Budget model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different budget of the group.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the budget.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the budget was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the budget.
+
+        @return: a string with the name of the budget.
+        """
         return self.name
 
 
 class Type_of_purchase(models.Model):
-    """docstring for Type_of_purchase."""
+    """
+    Type of purchase model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different purchases possible.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the purchase.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the purchase was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the purchase.
+
+        @return: a string with the name of the purchase.
+        """
         return self.name
 
 
 class Payment(models.Model):
-    """docstring for Payment."""
+    """
+    Payment model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different payments possible.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the conditions of payment.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the payment was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the payment.
+
+        @return: a string with the name of the payment.
+        """
         return self.name
 
 
 class Supplier(models.Model):
-    """docstring for Supplier."""
+    """
+    Supplier model docstring.
 
-    name = models.CharField(max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different suppliers.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the supplier.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the supplier was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the supplier.
+
+        @return: a string with the name of the supplier.
+        """
         return self.name
 
 
 class Product(models.Model):
-    """docstring for Product."""
+    """
+    Product model docstring.
 
-    description = models.CharField(max_length=300)
-    quantity = models.CharField(max_length=20)
-    unit_price = models.CharField(max_length=20)
-    order = models.ForeignKey('Order', null=True, blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different products.
+    """
+
+    description = models.CharField(max_length=300, help_text="Description of the product.")
+    quantity = models.CharField(max_length=20,
+                                help_text="Quantity of the product that are ordered.")
+    unit_price = models.CharField(max_length=20, help_text="Price per unit of the product.")
+    order = models.ForeignKey('Order', null=True, blank=True,
+                              help_text="To what order is assigned.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the product was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the product.
+
+        @return: a string with the name of the product.
+        """
         return self.description
 
 
@@ -394,91 +801,173 @@ class Product(models.Model):
 
 
 class Run(models.Model):
-    """docstring for Run."""
+    """
+    Run model docstring.
 
-    run = models.IntegerField()
-    run_specifications = models.TextField(max_length=500)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different runs.
+    """
+
+    run = models.IntegerField(help_text="ID of the run.")
+    run_specifications = models.TextField(max_length=500, help_text="Specifications of the run.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the run was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __int__(self):
+        """
+        Return integer function docstring.
+
+        This function returns the ID of the run.
+
+        @return: a integer with the ID of the run.
+        """
         return self.run
 
 
 class Wafer(models.Model):
-    """docstring for Wafer."""
+    """
+    Wafer model docstring.
 
-    run = models.ForeignKey('Run')
-    wafer = models.IntegerField()
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different wafers.
+    """
+
+    run = models.ForeignKey('Run', help_text="To what run is assigned.")
+    wafer = models.IntegerField(help_text="Id of the wafer.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the wafer was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __int__(self):
+        """
+        Return integer function docstring.
+
+        This function returns the ID of the wafer.
+
+        @return: a integer with the ID of the wafer.
+        """
         return self.wafer
 
 
 class Chip(models.Model):
-    """docstring for Chip."""
+    """
+    Wafer model docstring.
 
-    run = models.ForeignKey('Run')
-    wafer = models.ForeignKey('Wafer')
-    chip = models. IntegerField()
-    date = models.DateField()
-    laser_source = models.CharField(max_length=50, blank=True)
-    readout = models.CharField(max_length=50, blank=True)
-    user_name = models.ForeignKey('Full_Name_Users')
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different chips.
+    """
+
+    run = models.ForeignKey('Run', help_text="To what run is assigned.")
+    wafer = models.ForeignKey('Wafer', help_text="To what wafer is assigned.")
+    chip = models. IntegerField(help_text="ID of the chip.")
+    date = models.DateField(help_text="When was took.")
+    laser_source = models.CharField(max_length=50, blank=True,
+                                    help_text="Source of light that is used.")
+    readout = models.CharField(max_length=50, blank=True,
+                               help_text="What type of sensor is used to read.")
+    user_name = models.ForeignKey('Full_Name_Users', help_text="Who have the chip.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the chip was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __int__(self):
+        """
+        Return integer function docstring.
+
+        This function returns the ID of the chip.
+
+        @return: a integer with the ID of the chip.
+        """
         return self.chip
 
 
 class Waveguide(models.Model):
-    """docstring for Waveguide."""
+    """
+    Waveguide model docstring.
 
-    run = models.ForeignKey('Run')
-    wafer = models.ForeignKey('Wafer')
-    chip = models.ForeignKey('Chip', null=True)
-    waveguide = models.ForeignKey('Name_Waveguide', blank=True)
-    name = models.CharField(max_length=100, blank=True)
-    amplitude = models.FloatField(blank=True)
-    offset = models.FloatField(blank=True)
-    frecuency = models.FloatField(blank=True)
-    i_up = models.FloatField(blank=True)
-    i_down = models.FloatField(blank=True)
-    slope = models.FloatField(blank=True)
-    visibility = models.FloatField(blank=True)
-    noise = models.FloatField(blank=True)
-    lod = models.FloatField(blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different Waveguides.
+    """
+
+    run = models.ForeignKey('Run', help_text="To what run is assigned.")
+    wafer = models.ForeignKey('Wafer', help_text="To what wafer is assigned.")
+    chip = models.ForeignKey('Chip', null=True, help_text="To what chip is assigned.")
+    waveguide = models.ForeignKey('Name_Waveguide', blank=True, help_text="ID of the waveguide.")
+    name = models.CharField(max_length=100, blank=True, help_text="Name of the waveguide.")
+    amplitude = models.FloatField(blank=True, help_text="Amplitude of the signal.")
+    offset = models.FloatField(blank=True, help_text="")
+    frecuency = models.FloatField(blank=True, help_text="Frequency of the signal.")
+    i_up = models.FloatField(blank=True, help_text="Value of the current up.")
+    i_down = models.FloatField(blank=True, help_text=" Value of the current down.")
+    slope = models.FloatField(blank=True, help_text="Slope of the signal.")
+    visibility = models.FloatField(blank=True, help_text="Visibility of th e signal.")
+    noise = models.FloatField(blank=True, help_text="Noise in the signal.")
+    lod = models.FloatField(blank=True, help_text="")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the waveguide was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the waveguide.
+
+        @return: a string with the name of the waveguide.
+        """
         return self.name
 
 
 class Name_Waveguide(models.Model):
-    """docstring for Name_Waveguide."""
+    """
+    Name waveguide model docstring.
 
-    name = models.CharField(max_length=50)
-    created_date = models.DateTimeField(default=timezone.now)
+    This model stores the different names of the waveguide.
+    """
+
+    name = models.CharField(max_length=50, help_text="Name of the waveguide.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the name of the waveguide was created and save the info.
+        """
         self.created_date = timezone.now()
         self.save()
 
     def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the waveguide.
+
+        @return: a string with the name of the waveguide.
+        """
         return self.name

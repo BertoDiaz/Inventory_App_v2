@@ -1,4 +1,9 @@
+<!doctype html>
 {% load staticfiles %}
+
+<!-- ***********************************************************************************************
+    This HTML page is used as a base page to create similar the Home pages.
+************************************************************************************************ -->
 
 <html>
     <head>
@@ -16,11 +21,18 @@
     <body>
 
         <div class="page-header">
+            <!-- ***********************************************************************************
+                Logo of the group in the navbar.
+            ************************************************************************************ -->
             <h1><a href="{% url 'blog:home' %}"><img src="{% static 'images/Nanob2A Logo Completo.png' %}" alt="Logo NANOB2A" height="50"></a></h1>
         </div>
         <div class="content container">
             <div class="row">
                 <div class="col-md-8">
+
+                <!-- *******************************************************************************
+                    Contents of the page.
+                ******************************************************************************** -->
                 {% block content %}
                 {% endblock %}
                 </div>

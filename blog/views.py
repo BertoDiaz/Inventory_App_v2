@@ -22,6 +22,7 @@ def home(request):
     This function shows the main page.
 
     @param request: HTML request page.
+
     @return: Main page.
     """
     return render(request, 'blog/home.html')
@@ -34,8 +35,9 @@ def signup(request):
     This function carries out the registration of a new user.
 
     @param request: HTML request page.
+
     @return: First time, return to sign up page. If the sign up form is completed, return to home
-             page with your username.
+    page with your username.
     """
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -64,6 +66,7 @@ def element_list(request):
     This function shows the different elements of this web app that are ordered by creation date.
 
     @param request: HTML request page.
+
     @return: list of elements.
     """
     elements = Element.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
@@ -78,8 +81,11 @@ def element_detail(request, pk):
     This function shows the information of an element.
 
     @param request: HTML request page.
+
     @param pk: primary key of the element.
+
     @return: one element.
+
     @raise 404: element does not exists.
     """
     element = get_object_or_404(Element, pk=pk)
@@ -95,8 +101,9 @@ def element_new(request):
     This function shows the form to create a new element.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new element. If the form is completed, return the
-             details of this new element.
+    details of this new element.
     """
     if request.method == "POST":
         form = ElementForm(request.POST)
@@ -119,9 +126,12 @@ def element_edit(request, pk):
     This function shows the form to modify an element.
 
     @param request: HTML request page.
+
     @param pk: primary key of the element to modify.
+
     @return: First time, this shows the form to edit the element. If the form is completed, return
-             the details of this element.
+    the details of this element.
+
     @raise 404: element does not exists.
     """
     element = get_object_or_404(Element, pk=pk)
@@ -145,8 +155,11 @@ def element_remove(request, pk):
     This function removes an element.
 
     @param request: HTML request page.
+
     @param pk: primary key of the element to remove.
+
     @return: list of elements.
+
     @raise 404: element does not exists.
     """
     element = get_object_or_404(Element, pk=pk)
@@ -162,6 +175,7 @@ def computing_list(request):
     ordered by creation date.
 
     @param request: HTML request page.
+
     @return: list of computers.
     """
     computings = Computing.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
@@ -176,8 +190,11 @@ def computing_detail(request, pk):
     This function shows the information of a computer.
 
     @param request: HTML request page.
+
     @param pk: primary key of the computer.
+
     @return: one computer.
+
     @raise 404: computer does not exists.
     """
     computing = get_object_or_404(Computing, pk=pk)
@@ -193,8 +210,9 @@ def computing_new(request):
     This function shows the form to create a new computer.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new computer. If the form is completed, return the
-             details of this new computer.
+    details of this new computer.
     """
     if request.method == "POST":
         form = ComputingForm(request.POST)
@@ -215,9 +233,12 @@ def computing_edit(request, pk):
     This function shows the form to modify a computer.
 
     @param request: HTML request page.
+
     @param pk: primary key of the computer to modify.
+
     @return: First time, this shows the form to edit the computer information. If the form is
     completed, return the details of this computer.
+
     @raise 404: computer does not exists.
     """
     computing = get_object_or_404(Computing, pk=pk)
@@ -240,8 +261,11 @@ def computing_remove(request, pk):
     This function removes a computer.
 
     @param request: HTML request page.
+
     @param pk: primary key of the computer to remove.
+
     @return: list of computers.
+
     @raise 404: computer does not exists.
     """
     computing = get_object_or_404(Computing, pk=pk)
@@ -257,6 +281,7 @@ def electronic_list(request):
     they are ordered by creation date.
 
     @param request: HTML request page.
+
     @return: list of electronic components.
     """
     electronics = Electronic.objects.filter(
@@ -274,8 +299,11 @@ def electronic_detail(request, pk):
     This function shows the information of a electronic component.
 
     @param request: HTML request page.
+
     @param pk: primary key of the electronic component.
+
     @return: one electronic component.
+
     @raise 404: electronic component does not exists.
     """
     electronic = get_object_or_404(Electronic, pk=pk)
@@ -291,6 +319,7 @@ def electronic_new(request):
     This function shows the form to create a new electronic component.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new electronic component. If the form is
     completed, return the details of this new electronic component.
     """
@@ -313,9 +342,12 @@ def electronic_edit(request, pk):
     This function shows the form to modify a electronic component.
 
     @param request: HTML request page.
+
     @param pk: primary key of the electronic component to modify.
+
     @return: First time, this shows the form to edit the electronic component information. If the
     form is completed, return the details of this electronic component.
+
     @raise 404: electronic component does not exists.
     """
     electronic = get_object_or_404(Electronic, pk=pk)
@@ -338,8 +370,11 @@ def electronic_remove(request, pk):
     This function removes a electronic component.
 
     @param request: HTML request page.
+
     @param pk: primary key of the electronic component to remove.
+
     @return: list of electronic components.
+
     @raise 404: electronic component does not exists.
     """
     electronic = get_object_or_404(Electronic, pk=pk)
@@ -355,6 +390,7 @@ def chemical_list(request):
     ordered by creation date.
 
     @param request: HTML request page.
+
     @return: list of chemicals.
     """
     chemicals = Chemical.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
@@ -369,8 +405,11 @@ def chemical_detail(request, pk):
     This function shows the information of a chemical.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chemical.
+
     @return: one chemical.
+
     @raise 404: chemical does not exists.
     """
     chemical = get_object_or_404(Chemical, pk=pk)
@@ -386,8 +425,9 @@ def chemical_new(request):
     This function shows the form to create a new chemical.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new chemical. If the form is completed, return
-             the details of this new chemical.
+    the details of this new chemical.
     """
     if request.method == "POST":
         form = ChemicalForm(request.POST)
@@ -408,9 +448,12 @@ def chemical_edit(request, pk):
     This function shows the form to modify a chemical.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chemical to modify.
+
     @return: First time, this shows the form to edit the chemical information. If the form is
-             completed, return the details of this chemical.
+    completed, return the details of this chemical.
+
     @raise 404: chemical does not exists.
     """
     chemical = get_object_or_404(Chemical, pk=pk)
@@ -433,8 +476,11 @@ def chemical_remove(request, pk):
     This function removes a chemical.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chemical to remove.
+
     @return: list of chemicals.
+
     @raise 404: chemical does not exists.
     """
     chemical = get_object_or_404(Chemical, pk=pk)
@@ -450,6 +496,7 @@ def instrumentation_list(request):
     ordered by creation date.
 
     @param request: HTML request page.
+
     @return: list of instruments.
     """
     instrumentations = Instrumentation.objects.filter(
@@ -465,8 +512,11 @@ def instrumentation_detail(request, pk):
     This function shows the information of a instrument.
 
     @param request: HTML request page.
+
     @param pk: primary key of the instrument.
+
     @return: one instrument.
+
     @raise 404: instrument does not exists.
     """
     instrumentation = get_object_or_404(Instrumentation, pk=pk)
@@ -482,8 +532,9 @@ def instrumentation_new(request):
     This function shows the form to create a new instrument.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new instrument. If the form is completed, return
-             the details of this new instrument.
+    the details of this new instrument.
     """
     if request.method == "POST":
         form = InstrumentationForm(request.POST)
@@ -504,9 +555,12 @@ def instrumentation_edit(request, pk):
     This function shows the form to modify a instrument.
 
     @param request: HTML request page.
+
     @param pk: primary key of the instrument to modify.
+
     @return: First time, this shows the form to edit the instrument information. If the form is
-             completed, return the details of this instrument.
+    completed, return the details of this instrument.
+
     @raise 404: instrument does not exists.
     """
     instrumentation = get_object_or_404(Instrumentation, pk=pk)
@@ -529,8 +583,11 @@ def instrumentation_remove(request, pk):
     This function removes a instrument.
 
     @param request: HTML request page.
+
     @param pk: primary key of the instrument to remove.
+
     @return: list of instruments.
+
     @raise 404: instrument does not exists.
     """
     instrumentation = get_object_or_404(Instrumentation, pk=pk)
@@ -546,6 +603,7 @@ def others_list(request):
     they are ordered by creation date.
 
     @param request: HTML request page.
+
     @return: list of components whithout type.
     """
     otherss = Others.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
@@ -560,8 +618,11 @@ def others_detail(request, pk):
     This function shows the information of a component whithout type.
 
     @param request: HTML request page.
+
     @param pk: primary key of the component.
+
     @return: one components whithout type.
+
     @raise 404: component does not exists.
     """
     others = get_object_or_404(Others, pk=pk)
@@ -577,8 +638,9 @@ def others_new(request):
     This function shows the form to create a new component without type.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new component. If the form is completed, return
-             the details of this new component without type.
+    the details of this new component without type.
     """
     if request.method == "POST":
         form = OthersForm(request.POST)
@@ -599,9 +661,12 @@ def others_edit(request, pk):
     This function shows the form to modify a component without type.
 
     @param request: HTML request page.
+
     @param pk: primary key of the component to modify.
+
     @return: First time, this shows the form to edit the component information. If the form is
-             completed, return the details of this component without type.
+    completed, return the details of this component without type.
+
     @raise 404: component does not exists.
     """
     others = get_object_or_404(Others, pk=pk)
@@ -624,8 +689,11 @@ def others_remove(request, pk):
     This function removes a component that does not have type.
 
     @param request: HTML request page.
+
     @param pk: primary key of the component to remove.
+
     @return: list of components.
+
     @raise 404: component does not exists.
     """
     others = get_object_or_404(Others, pk=pk)
@@ -641,6 +709,7 @@ def order_list(request):
     creation date.
 
     @param request: HTML request page.
+
     @return: list of orders.
     """
     orders = Order.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
@@ -655,8 +724,11 @@ def order_detail(request, pk):
     This function shows the information of an order.
 
     @param request: HTML request page.
+
     @param pk: primary key of the order.
+
     @return: one order.
+
     @raise 404: order does not exists.
     """
     order = get_object_or_404(Order, pk=pk)
@@ -678,8 +750,9 @@ def order_new(request):
     This function shows the first step of the form to create a new order.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new order. If the form is completed, return
-             the next step to finish the order.
+    the next step to finish the order.
     """
     if request.method == "POST":
         form = OrderForm(request.POST)
@@ -695,12 +768,13 @@ def order_new(request):
 
 def setBordersCell(sheet):
     """
-    setBordersCell function docstring.
+    Set borders cell function docstring.
 
     This function modify the cells of the Excel page to carry out an order and include the image of
     ICN2 logo.
 
     @param sheet: Excel sheet to modify the cells.
+
     @return: Excel sheet modified.
     """
     border_TopBottomThin = Border(top=Side(style='thin'), bottom=Side(style='thin'))
@@ -786,9 +860,12 @@ def order_new_next(request, pk):
     This function shows the second step of the form to create a new order.
 
     @param request: HTML request page.
+
     @param pk: primary key of the new order.
+
     @return: First time, this shows the form to complete a new order. If the form is completed,
-             the Excel sheet is completed with the data and return the details of the new order.
+    the Excel sheet is completed with the data and return the details of the new order.
+
     @raise 404: order does not exists.
     """
     order = get_object_or_404(Order, pk=pk)
@@ -835,9 +912,12 @@ def order_edit(request, pk):
     This function shows the form to modify an order.
 
     @param request: HTML request page.
+
     @param pk: primary key of the order to modify.
+
     @return: First time, this shows the form to edit the order information. If the form is
-             completed, return the details of this order.
+    completed, return the details of this order.
+
     @raise 404: order does not exists.
     """
     order = get_object_or_404(Order, pk=pk)
@@ -889,8 +969,11 @@ def order_remove(request, pk):
     This function removes an order.
 
     @param request: HTML request page.
+
     @param pk: primary key of the order to remove.
+
     @return: list of orders.
+
     @raise 404: order does not exists.
     """
     order = get_object_or_404(Order, pk=pk)
@@ -906,6 +989,7 @@ def run_list(request):
     creation date.
 
     @param request: HTML request page.
+
     @return: list of runs.
     """
     runs = Run.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
@@ -920,8 +1004,11 @@ def run_detail(request, pk):
     This function shows the information of a run. BUT THIS FUNCTION IS NOT IN USE NOW.
 
     @param request: HTML request page.
+
     @param pk: primary key of the run.
+
     @return: one run.
+
     @raise 404: run does not exists.
     """
     run = get_object_or_404(Run, pk=pk)
@@ -937,8 +1024,9 @@ def run_new(request):
     This function shows the form to create a new run. BUT THIS FUNCTION IS NOT IN USE NOW.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new run. If the form is completed, return
-             the details of this new run.
+    the details of this new run.
     """
     if request.method == "POST":
         form = RunForm(request.POST)
@@ -959,9 +1047,12 @@ def run_edit(request, pk):
     This function shows the form to modify a run. BUT THIS FUNCTION IS NOT IN USE NOW.
 
     @param request: HTML request page.
+
     @param pk: primary key of the run to modify.
+
     @return: First time, this shows the form to edit the run information. If the form is
-             completed, return the details of this run.
+    completed, return the details of this run.
+
     @raise 404: run does not exists.
     """
     run = get_object_or_404(Run, pk=pk)
@@ -984,8 +1075,11 @@ def run_remove(request, pk):
     This function removes a run. BUT THIS FUNCTION IS NOT IN USE NOW.
 
     @param request: HTML request page.
+
     @param pk: primary key of the run to remove.
+
     @return: list of runs.
+
     @raise 404: run does not exists.
     """
     run = get_object_or_404(Run, pk=pk)
@@ -1000,7 +1094,9 @@ def run_chip_list(request, pk):
     This function shows the list of chips of a run that are stored in this web app.
 
     @param request: HTML request page.
+
     @param pk: primary key of the run.
+
     @return: list of chips.
     """
     chips = Chip.objects.filter(run=pk)
@@ -1016,6 +1112,7 @@ def chip_list(request):
     creation date.
 
     @param request: HTML request page.
+
     @return: list of chips.
     """
     chips = Chip.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
@@ -1030,8 +1127,11 @@ def chip_detail(request, pk):
     This function shows the information of a chip.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chip.
+
     @return: one chip.
+
     @raise 404: chip does not exists.
     """
     chip = get_object_or_404(Chip, pk=pk)
@@ -1046,8 +1146,11 @@ def chip_detail_exist(request, pk):
     This function shows the information of a chip when a chip is created but this already exists.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chip.
+
     @return: one chip.
+
     @raise 404: chip does not exists.
     """
     chip = get_object_or_404(Chip, pk=pk)
@@ -1065,8 +1168,9 @@ def chip_new(request):
     search if the run or wafer or chip already exists.
 
     @param request: HTML request page.
+
     @return: First time, this shows the form to a new chip. If the form is completed and the run or
-             wafer or chip does not exists, return the details of this new chip.
+    wafer or chip does not exists, return the details of this new chip.
     """
     if request.method == "POST":
         runForm = RunForm(request.POST, prefix='run')
@@ -1122,9 +1226,12 @@ def chip_edit(request, pk):
     This function shows the form to modify a chip.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chip to modify.
+
     @return: First time, this shows the form to edit the chip information. If the form is
-             completed, return the details of this chip.
+    completed, return the details of this chip.
+
     @raise 404: chip does not exists.
     """
     chip = get_object_or_404(Run, pk=pk)
@@ -1147,8 +1254,11 @@ def chip_remove(request, pk):
     This function removes a chip.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chip to remove.
+
     @return: list of chips.
+
     @raise 404: chip does not exists.
     """
     chip = get_object_or_404(Run, pk=pk)
@@ -1170,7 +1280,9 @@ def waveguide_list(request, pk):
     This function shows the list of waveguides of a chip that are stored in this web app.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chip.
+
     @return: list of waveguides of a chip.
     """
     waveguides = Waveguide.objects.filter(chip=pk)
@@ -1185,9 +1297,13 @@ def waveguide_detail(request, pk, pk2):
     This function shows the information of a waveguide of a chip.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chip.
+
     @param pk2: primary key of the waveguide.
+
     @return: one waveguide.
+
     @raise 404: waveguide does not exists.
     """
     waveguide = get_object_or_404(Waveguide, pk=pk2)
@@ -1203,9 +1319,13 @@ def waveguide_detail_exist(request, pk, pk2):
     this already exists.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chip.
+
     @param pk2: primary key of the waveguide.
+
     @return: one waveguide.
+
     @raise 404: waveguide does not exists.
     """
     waveguide = get_object_or_404(Waveguide, pk=pk2)
@@ -1222,10 +1342,12 @@ def waveguide_new(request, pk):
     this function search if the waveguide already exists.
 
     @param request: HTML request page.
+
     @param pk: primary key of the chip.
+
     @return: First time, this shows the form to a new waveguide to a chip already created. If the
-             form is completed and waveguide does not exists, return the details of this new
-             waveguide.
+    form is completed and waveguide does not exists, return the details of this new waveguide.
+
     @raise 404: chip does not exists.
     """
     if request.method == "POST":
@@ -1290,9 +1412,12 @@ def waveguide_edit(request, pk):
     This function shows the form to modify a waveguide.
 
     @param request: HTML request page.
+
     @param pk: primary key of the waveguide to modify.
+
     @return: First time, this shows the form to edit the waveguide information. If the form is
-             completed, return the details of this waveguide.
+    completed, return the details of this waveguide.
+
     @raise 404: waveguide does not exists.
     """
     waveguide = get_object_or_404(Run, pk=pk)
@@ -1315,8 +1440,11 @@ def waveguide_remove(request, pk):
     This function removes a waveguide.
 
     @param request: HTML request page.
+
     @param pk: primary key of the waveguide to remove.
+
     @return: list of waveguides.
+
     @raise 404: waveguide does not exists.
     """
     waveguide = get_object_or_404(Run, pk=pk)
