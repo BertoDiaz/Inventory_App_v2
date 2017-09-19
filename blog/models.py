@@ -123,6 +123,42 @@ class Electronic(models.Model):
         return self.location
 
 
+class Optic(models.Model):
+    """
+    Optic model docstring.
+
+    This model stores the optic components.
+    """
+
+    type_optic = models.ForeignKey('Type_Optic', help_text="Type of the optic component.")
+    description = models.CharField(max_length=300, help_text="Description of the optic component.")
+    location = models.ForeignKey('Location', help_text="Where it is the optic component.")
+    closet = models.ForeignKey('Closet', help_text="In what closet is the optic component.")
+    # unit = models.ForeignKey('Unit', help_text="Unit of the value of the optic component.")
+    # value = models.CharField(max_length=200, blank=True,
+    #                          help_text="Value of the optic component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+
+    def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the optic component was created and save the info.
+        """
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the location of a optic component.
+
+        @return: a string with the location of a optic component.
+        """
+        return self.location
+
+
 class Chemical(models.Model):
     """
     Chemical model docstring.
@@ -141,8 +177,8 @@ class Chemical(models.Model):
                                         help_text="Molecular weight of the chemical.")
     unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
                                       "concentration/molecular weight of the chemical.")
-    location = models.ForeignKey('Location', help_text="Where it is the computer.")
-    closet = models.ForeignKey('Closet', help_text="In what closet is the electronic component.")
+    location = models.ForeignKey('Location', help_text="Where it is the chemical.")
+    closet = models.ForeignKey('Closet', help_text="In what closet is the chemical.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -161,6 +197,51 @@ class Chemical(models.Model):
         This function returns the name of a chemical.
 
         @return: a string with the name of a chemical.
+        """
+        return self.name
+
+
+class Biological(models.Model):
+    """
+    Biological model docstring.
+
+    This model stores the biological components.
+    """
+
+    type_biological = models.ForeignKey('Type_Biological',
+                                        help_text="Type of the biological component.")
+    name = models.CharField(max_length=200, blank=True,
+                            help_text="Name of the biological component.")
+    reference = models.CharField(max_length=200, blank=True,
+                                 help_text="Reference of the biological component.")
+    quantity = models.CharField(max_length=20, help_text="Quantity of the biological component.")
+    supplier = models.ForeignKey('Supplier', help_text="Supplier of the biological component.")
+    concentration = models.CharField(max_length=200, blank=True,
+                                     help_text="Concentration of the biological component.")
+    molecular_weight = models.CharField(max_length=200, blank=True,
+                                        help_text="Molecular weight of the biological component.")
+    unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
+                                      "concentration/molecular weight of the chemical.")
+    location = models.ForeignKey('Location', help_text="Where it is the biological component.")
+    closet = models.ForeignKey('Closet', help_text="In what closet is the biological component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+
+    def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the biological component was created and save the info.
+        """
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of a biological component.
+
+        @return: a string with the name of a biological component.
         """
         return self.name
 
@@ -265,7 +346,7 @@ class Type(models.Model):
 
 class Type_Object(models.Model):
     """
-    Type model docstring.
+    Type object model docstring.
 
     This model stores the different parts of a computer.
     """
@@ -295,7 +376,7 @@ class Type_Object(models.Model):
 
 class Type_Component(models.Model):
     """
-    Type model docstring.
+    Type component model docstring.
 
     This model stores the different electronic components.
     """
@@ -320,6 +401,37 @@ class Type_Component(models.Model):
         This function returns the name of the type of electronic component.
 
         @return: a string with the name of the type of electronic component.
+        """
+        return self.name
+
+
+class Type_Optic(models.Model):
+    """
+    Type optic model docstring.
+
+    This model stores the different optic components.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the type of optic component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+
+    def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the type of optic component was created
+        and save the info.
+        """
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the type of optic component.
+
+        @return: a string with the name of the type of optic component.
         """
         return self.name
 
@@ -350,6 +462,37 @@ class Type_Chemical(models.Model):
         This function returns the name of the type of chemical.
 
         @return: a string with the name of the type of chemical.
+        """
+        return self.name
+
+
+class Type_Biological(models.Model):
+    """
+    Type biological model docstring.
+
+    This model stores the different biological components.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the type of biological component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+
+    def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the type of biological component was created
+        and save the info.
+        """
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the type of biological component.
+
+        @return: a string with the name of the type of biological component.
         """
         return self.name
 

@@ -31,12 +31,26 @@ urlpatterns = [
     url(r'^electronic/(?P<pk>[0-9]+)/edit/$', views.electronic_edit, name='electronic_edit'),
     url(r'^electronic/(?P<pk>\d+)/remove/$', views.electronic_remove, name='electronic_remove'),
 
+    # #################### OPTIC #################### #
+    url(r'^optic/$', views.optic_list, name='optic_list'),
+    url(r'^optic/(?P<pk>[0-9]+)/$', views.optic_detail, name='optic_detail'),
+    url(r'^optic/new/$', views.optic_new, name='optic_new'),
+    url(r'^optic/(?P<pk>[0-9]+)/edit/$', views.optic_edit, name='optic_edit'),
+    url(r'^optic/(?P<pk>\d+)/remove/$', views.optic_remove, name='optic_remove'),
+
     # #################### CHEMICAL ##################### #
     url(r'^chemical/$', views.chemical_list, name='chemical_list'),
     url(r'^chemical/(?P<pk>[0-9]+)/$', views.chemical_detail, name='chemical_detail'),
     url(r'^chemical/new/$', views.chemical_new, name='chemical_new'),
     url(r'^chemical/(?P<pk>[0-9]+)/edit/$', views.chemical_edit, name='chemical_edit'),
     url(r'^chemical/(?P<pk>\d+)/remove/$', views.chemical_remove, name='chemical_remove'),
+
+    # #################### BIOLOGICAL ##################### #
+    url(r'^biological/$', views.biological_list, name='biological_list'),
+    url(r'^biological/(?P<pk>[0-9]+)/$', views.biological_detail, name='biological_detail'),
+    url(r'^biological/new/$', views.biological_new, name='biological_new'),
+    url(r'^biological/(?P<pk>[0-9]+)/edit/$', views.biological_edit, name='biological_edit'),
+    url(r'^biological/(?P<pk>\d+)/remove/$', views.biological_remove, name='biological_remove'),
 
     # #################### INSTRUMENTATION #################### #
     url(r'^instrumentation/$', views.instrumentation_list, name='instrumentation_list'),

@@ -1,0 +1,13 @@
+{% extends 'blog/base_biological.html' %}
+
+{% block content %}
+    {% for biological in biologicals %}
+        <div class="element">
+            <div class="date">
+                {{ biological.created_date }}
+            </div>
+            <h1><a href="{% url 'blog:biological_detail' pk=biological.pk %}">{{ biological.name }}</a></h1>
+            <p>{{ biological.type_biological|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}

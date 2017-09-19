@@ -8,11 +8,11 @@ from django.contrib.auth import login, authenticate
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
-from .models import Element, Order, Product, Computing, Electronic, Chemical, Instrumentation
-from .models import Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
-from .forms import ElementForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, ChemicalForm
-from .forms import InstrumentationForm, OthersForm, SignUpForm, RunForm, WaferForm, ChipForm
-from .forms import WaveguideForm
+from .models import Element, Order, Product, Computing, Electronic, Optic, Chemical, Biological
+from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
+from .forms import ElementForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, OpticForm
+from .forms import ChemicalForm, BiologicalForm, InstrumentationForm, OthersForm, SignUpForm
+from .forms import RunForm, WaferForm, ChipForm, WaveguideForm
 
 
 def home(request):
@@ -382,6 +382,115 @@ def electronic_remove(request, pk):
     return redirect('blog:electronic_list')
 
 
+def optic_list(request):
+    """
+    Optic_list function docstring.
+
+    This function shows the list of optic components that are stored in this web app and
+    they are ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of optic components.
+    """
+    optics = Optic.objects.filter(
+        created_date__lte=timezone.now()).order_by('created_date')
+
+    print(optics)
+
+    return render(request, 'blog/optic_list.html', {'optics': optics})
+
+
+def optic_detail(request, pk):
+    """
+    Optic_detail function docstring.
+
+    This function shows the information of a optic component.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the optic component.
+
+    @return: one optic component.
+
+    @raise 404: optic component does not exists.
+    """
+    optic = get_object_or_404(Optic, pk=pk)
+
+    return render(request, 'blog/optic_detail.html', {'optic': optic})
+
+
+@login_required
+def optic_new(request):
+    """
+    Optic_new function docstring.
+
+    This function shows the form to create a new optic component.
+
+    @param request: HTML request page.
+
+    @return: First time, this shows the form to a new optic component. If the form is
+    completed, return the details of this new optic component.
+    """
+    if request.method == "POST":
+        form = OpticForm(request.POST)
+        if form.is_valid():
+            optic = form.save(commit=False)
+            optic.save()
+            return redirect('blog:optic_detail', pk=optic.pk)
+    else:
+        form = OpticForm()
+    return render(request, 'blog/optic_edit.html', {'form': form})
+
+
+@login_required
+def optic_edit(request, pk):
+    """
+    Optic_edit function docstring.
+
+    This function shows the form to modify a optic component.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the optic component to modify.
+
+    @return: First time, this shows the form to edit the optic component information. If the
+    form is completed, return the details of this optic component.
+
+    @raise 404: optic component does not exists.
+    """
+    optic = get_object_or_404(Optic, pk=pk)
+    if request.method == "POST":
+        form = OpticForm(data=request.POST, instance=optic)
+        if form.is_valid():
+            optic = form.save(commit=False)
+            optic.save()
+            return redirect('blog:optic_detail', pk=optic.pk)
+    else:
+        form = OpticForm(instance=optic)
+    return render(request, 'blog/optic_edit.html', {'form': form})
+
+
+@login_required
+def optic_remove(request, pk):
+    """
+    Optic_remove function docstring.
+
+    This function removes a optic component.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the optic component to remove.
+
+    @return: list of optic components.
+
+    @raise 404: optic component does not exists.
+    """
+    optic = get_object_or_404(Optic, pk=pk)
+    optic.delete()
+    return redirect('blog:optic_list')
+
+
 def chemical_list(request):
     """
     Chemical_list function docstring.
@@ -486,6 +595,112 @@ def chemical_remove(request, pk):
     chemical = get_object_or_404(Chemical, pk=pk)
     chemical.delete()
     return redirect('blog:chemical_list')
+
+
+def biological_list(request):
+    """
+    Biological_list function docstring.
+
+    This function shows the list of biologicals that are stored in this web app and they are
+    ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of biologicals.
+    """
+    biologicals = Biological.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+
+    return render(request, 'blog/biological_list.html', {'biologicals': biologicals})
+
+
+def biological_detail(request, pk):
+    """
+    Biological_detail function docstring.
+
+    This function shows the information of a biological.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the biological.
+
+    @return: one biological.
+
+    @raise 404: biological does not exists.
+    """
+    biological = get_object_or_404(Biological, pk=pk)
+
+    return render(request, 'blog/biological_detail.html', {'biological': biological})
+
+
+@login_required
+def biological_new(request):
+    """
+    Biological_new function docstring.
+
+    This function shows the form to create a new biological.
+
+    @param request: HTML request page.
+
+    @return: First time, this shows the form to a new biological. If the form is completed, return
+    the details of this new biological.
+    """
+    if request.method == "POST":
+        form = BiologicalForm(request.POST)
+        if form.is_valid():
+            biological = form.save(commit=False)
+            biological.save()
+            return redirect('blog:biological_detail', pk=biological.pk)
+    else:
+        form = BiologicalForm()
+    return render(request, 'blog/biological_edit.html', {'form': form})
+
+
+@login_required
+def biological_edit(request, pk):
+    """
+    Biological_edit function docstring.
+
+    This function shows the form to modify a biological.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the biological to modify.
+
+    @return: First time, this shows the form to edit the biological information. If the form is
+    completed, return the details of this biological.
+
+    @raise 404: biological does not exists.
+    """
+    biological = get_object_or_404(Biological, pk=pk)
+    if request.method == "POST":
+        form = BiologicalForm(data=request.POST, instance=biological)
+        if form.is_valid():
+            biological = form.save(commit=False)
+            biological.save()
+            return redirect('blog:biological_detail', pk=biological.pk)
+    else:
+        form = BiologicalForm(instance=biological)
+    return render(request, 'blog/biological_edit.html', {'form': form})
+
+
+@login_required
+def biological_remove(request, pk):
+    """
+    Biological_remove function docstring.
+
+    This function removes a biological.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the biological to remove.
+
+    @return: list of biologicals.
+
+    @raise 404: biological does not exists.
+    """
+    biological = get_object_or_404(Biological, pk=pk)
+    biological.delete()
+    return redirect('blog:biological_list')
 
 
 def instrumentation_list(request):

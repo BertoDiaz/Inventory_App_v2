@@ -1,0 +1,13 @@
+{% extends 'blog/base_optic.html' %}
+
+{% block content %}
+    {% for optic in optics %}
+        <div class="element">
+            <div class="date">
+                {{ optic.created_date }}
+            </div>
+            <h1><a href="{% url 'blog:optic_detail' pk=optic.pk %}">{{ optic.description }}</a></h1>
+            <p>{{ optic.type_optic|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}

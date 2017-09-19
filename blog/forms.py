@@ -4,8 +4,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 # from django.utils.encoding import smart_text
-from .models import Element, Order, Product, Computing, Electronic, Chemical, Instrumentation
-from .models import Others, Full_Name_Users, Run, Wafer, Chip, Waveguide
+from .models import Element, Order, Product, Computing, Electronic, Optic, Chemical, Biological
+from .models import Instrumentation, Others, Full_Name_Users, Run, Wafer, Chip, Waveguide
 
 
 class SignUpForm(UserCreationForm):
@@ -149,6 +149,25 @@ class ElectronicForm(forms.ModelForm):
         fields = ('type_component', 'location', 'closet', 'unit', 'value',)
 
 
+class OpticForm(forms.ModelForm):
+    """
+    Optic form docstring.
+
+    This form is useds to create a new optic component.
+    """
+
+    class Meta:
+        """
+        Meta docstring.
+
+        This function use the Optic model and the fields: type_optic, description, location
+        and closet
+        """
+
+        model = Optic
+        fields = ('type_optic', 'description', 'location', 'closet',)
+
+
 class ChemicalForm(forms.ModelForm):
     """
     Chemical form docstring.
@@ -166,6 +185,26 @@ class ChemicalForm(forms.ModelForm):
 
         model = Chemical
         fields = ('type_chemical', 'name', 'reference', 'quantity', 'supplier', 'concentration',
+                  'molecular_weight', 'unit_chemical', 'location', 'closet',)
+
+
+class BiologicalForm(forms.ModelForm):
+    """
+    Biological form docstring.
+
+    This form is useds to create a new biological component.
+    """
+
+    class Meta:
+        """
+        Meta docstring.
+
+        This function use the Biological model and the fields: type_biological, name, reference,
+        quantity, supplier, concentration, molecular_weight, unit_chemical, location and closet.
+        """
+
+        model = Biological
+        fields = ('type_biological', 'name', 'reference', 'quantity', 'supplier', 'concentration',
                   'molecular_weight', 'unit_chemical', 'location', 'closet',)
 
 

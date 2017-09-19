@@ -1,0 +1,31 @@
+{% extends 'blog/base_optic.html' %}
+
+{% block content %}
+    <div class="orderDetail">
+        <div class="button">
+            {% if user.is_authenticated %}
+                <a class="btn btn-default" href="{% url 'blog:optic_edit' pk=optic.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="btn btn-default" href="{% url 'blog:optic_remove' pk=optic.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+        </div>
+        <h1>{{ optic.type_optic }}</h1>
+        <div class="date">
+            {% if optic.created_date %}
+                {{ optic.created_date }}
+            {% endif %}
+        </div>
+        <div class="orderDetail">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">Description: </span>{{ optic.description }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">Location: </span>{{ optic.location }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p><span style="font-weight: bold;">Closet: </span>{{ optic.closet }}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
