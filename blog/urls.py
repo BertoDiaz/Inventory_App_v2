@@ -63,11 +63,12 @@ urlpatterns = [
         name='instrumentation_remove'),
 
     # #################### OTHERS #################### #
-    url(r'^others/$', views.others_list, name='others_list'),
-    url(r'^others/(?P<pk>[0-9]+)/$', views.others_detail, name='others_detail'),
-    url(r'^others/new/$', views.others_new, name='others_new'),
-    url(r'^others/(?P<pk>[0-9]+)/edit/$', views.others_edit, name='others_edit'),
-    url(r'^others/(?P<pk>\d+)/remove/$', views.others_remove, name='others_remove'),
+    # This is not active.
+    # url(r'^others/$', views.others_list, name='others_list'),
+    # url(r'^others/(?P<pk>[0-9]+)/$', views.others_detail, name='others_detail'),
+    # url(r'^others/new/$', views.others_new, name='others_new'),
+    # url(r'^others/(?P<pk>[0-9]+)/edit/$', views.others_edit, name='others_edit'),
+    # url(r'^others/(?P<pk>\d+)/remove/$', views.others_remove, name='others_remove'),
 
     # #################### ORDER #################### #
     url(r'^order/$', views.order_list, name='order_list'),
