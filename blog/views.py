@@ -2,9 +2,19 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.forms.formsets import formset_factory
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
+# from django.core.mail import EmailMultiAlternatives, EmailMessage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.encoders import encode_base64
+import smtplib
+import os
+# import getpass
+# import base64
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
@@ -12,7 +22,7 @@ from .models import Element, Order, Product, Computing, Electronic, Optic, Chemi
 from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
 from .forms import ElementForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, OpticForm
 from .forms import ChemicalForm, BiologicalForm, InstrumentationForm, OthersForm, SignUpForm
-from .forms import RunForm, WaferForm, ChipForm, WaveguideForm
+from .forms import RunForm, WaferForm, ChipForm, WaveguideForm, SendEmailForm
 
 
 def home(request):
@@ -608,7 +618,8 @@ def biological_list(request):
 
     @return: list of biologicals.
     """
-    biologicals = Biological.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+    biologicals = Biological.objects.filter(
+        created_date__lte=timezone.now()).order_by('created_date')
 
     return render(request, 'blog/biological_list.html', {'biologicals': biologicals})
 
@@ -1174,6 +1185,65 @@ def order_edit(request, pk):
                                                     'products_formset': products_formset,
                                                     'noItem': noItem,
                                                     'count': count})
+
+
+@login_required
+def order_send_email(request, pk):
+    """
+    Order_send_email function docstring.
+
+    This function send an email with the order.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the order to send.
+
+    @return: edit page of the order.
+
+    @raise 404: order does not exists.
+    """
+    if request.method == "POST":
+        order = get_object_or_404(Order, pk=pk)
+        username = User.objects.get(username=order.author)
+        sendEmail_form = SendEmailForm(data=request.POST)
+        if sendEmail_form.is_valid():
+            # sendEmail = sendEmail_form.save(commit=False)
+            print(sendEmail_form.cleaned_data.get('password'))
+            fromaddr = username.email
+            toaddrs = 'pexespada@gmail.com'
+            subject = 'Formulario de pedido'
+            message = "<p>Buenas,</p><p>Adjunto a este correo el formulario de pedido.</p>"
+            msg = MIMEMultipart('related')
+            msg['From'] = fromaddr
+            msg['To'] = toaddrs
+            msg['Subject'] = subject
+
+            # Content-type:text/html
+            message = MIMEText(message, 'html')
+            msg.attach(message)
+            # ADJUNTO
+            file = 'blog/formulariosPedidos/FP_' + order.name + '.xlsx'
+            if (os.path.isfile(file)):
+                adjunto = MIMEBase('application', 'octet-stream')
+                adjunto.set_payload(open(file, "rb").read())
+                encode_base64(adjunto)
+                adjunto.add_header('Content-Disposition',
+                                   'attachment; filename = "%s"' % os.path.basename(file))
+                msg.attach(adjunto)
+            # ENVIAR
+            server = smtplib.SMTP('mail.icn2.cat', 587)
+            # protocolo de cifrado de datos utilizado por gmail
+            server.starttls()
+            # Credenciales
+            # server.login(username.email, 'heriberto_20')
+            server.login('icn2\\' + username.username, sendEmail_form.cleaned_data.get('password'))
+            server.set_debuglevel(1)
+            server.sendmail(fromaddr, toaddrs, msg.as_string())
+            server.quit()
+        return redirect('blog:order_detail', pk=pk)
+    else:
+        form = SendEmailForm()
+        return render(request, 'blog/order_send_email.html', {'form': form})
 
 
 @login_required

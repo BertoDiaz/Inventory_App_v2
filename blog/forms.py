@@ -90,6 +90,17 @@ class OrderForm(forms.ModelForm):
                   'supplier', 'number_product',)
 
 
+class SendEmailForm(forms.Form):
+    """
+    Send email form docstring.
+
+    This form is useds to send a email.
+    """
+
+    username = forms.CharField(max_length=50)
+    password = forms.CharField(max_length=20, widget=forms.PasswordInput)
+
+
 class ProductForm(forms.ModelForm):
     """
     Product form docstring.

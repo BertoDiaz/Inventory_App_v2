@@ -77,6 +77,7 @@ urlpatterns = [
     url(r'^order/new/(?P<pk>[0-9]+)/$', views.order_new_next, name='order_new_next'),
     url(r'^order/(?P<pk>[0-9]+)/edit/$', views.order_edit, name='order_edit'),
     url(r'^order/(?P<pk>\d+)/remove/$', views.order_remove, name='order_remove'),
+    url(r'^order/(?P<pk>\d+)/send/$', views.order_send_email, name='order_send_email'),
 
     # #################### RUN #################### #
     url(r'^run/$', views.run_list, name='run_list'),
