@@ -79,7 +79,8 @@ def inventory_list(request):
 
     @return: list of inventories.
     """
-    inventories = Inventory.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+    inventories = Inventory.objects.filter(
+        created_date__lte=timezone.now()).order_by('created_date')
 
     return render(request, 'blog/inventory_list.html', {'inventories': inventories})
 
@@ -112,8 +113,8 @@ def inventory_new(request):
 
     @param request: HTML request page.
 
-    @return: First time, this shows the form to a new inventory. If the form is completed, return the
-    details of this new inventory.
+    @return: First time, this shows the form to a new inventory. If the form is completed, return
+    the details of this new inventory.
     """
     if request.method == "POST":
         form = InventoryForm(request.POST)
@@ -1099,7 +1100,7 @@ def order_new_next(request, pk):
     if request.method == "POST":
         product = ProductForm()
         formset = ProductFormSet(request.POST)
-        doc = openpyxl.load_workbook('blog/formulariosPedidos/Formulario_Pedido_v2.xlsx')
+        doc = openpyxl.load_workbook('blog/orderForm/Formulario_Pedido_v2.xlsx')
         doc.get_sheet_names()
         sheet = doc.get_sheet_by_name('Order Form')
         sheet['C6'] = order.applicant
