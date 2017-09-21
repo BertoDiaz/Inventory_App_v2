@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 # from django.utils.encoding import smart_text
-from .models import Element, Order, Product, Computing, Electronic, Optic, Chemical, Biological
+from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Wafer, Chip, Waveguide
 
 
@@ -31,21 +31,21 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
 
 
-class ElementForm(forms.ModelForm):
+class InventoryForm(forms.ModelForm):
     """
-    Element form docstring.
+    Inventory form docstring.
 
-    This form is useds to create a new element.
+    This form is useds to create a new inventory.
     """
 
     class Meta:
         """
         Meta docstring.
 
-        This function use the Element model and the fields: name, maker and type_item.
+        This function use the Inventory model and the fields: name, maker and type_item.
         """
 
-        model = Element
+        model = Inventory
         fields = ('name', 'maker', 'type_item',)
 
 

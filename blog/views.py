@@ -18,9 +18,9 @@ import os
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
-from .models import Element, Order, Product, Computing, Electronic, Optic, Chemical, Biological
+from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
-from .forms import ElementForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, OpticForm
+from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, OpticForm
 from .forms import ChemicalForm, BiologicalForm, InstrumentationForm, OthersForm, SignUpForm
 from .forms import RunForm, WaferForm, ChipForm, WaveguideForm, SendEmailForm
 
@@ -69,112 +69,112 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
-def element_list(request):
+def inventory_list(request):
     """
-    Element_list function docstring.
+    Inventory_list function docstring.
 
-    This function shows the different elements of this web app that are ordered by creation date.
+    This function shows the different inventories of this web app that are ordered by creation date.
 
     @param request: HTML request page.
 
-    @return: list of elements.
+    @return: list of inventories.
     """
-    elements = Element.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+    inventories = Inventory.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
 
-    return render(request, 'blog/element_list.html', {'elements': elements})
+    return render(request, 'blog/inventory_list.html', {'inventories': inventories})
 
 
-def element_detail(request, pk):
+def inventory_detail(request, pk):
     """
-    Element_detail function docstring.
+    Inventory_detail function docstring.
 
-    This function shows the information of an element.
+    This function shows the information of an inventory.
 
     @param request: HTML request page.
 
-    @param pk: primary key of the element.
+    @param pk: primary key of the inventory.
 
-    @return: one element.
+    @return: one inventory.
 
-    @raise 404: element does not exists.
+    @raise 404: inventory does not exists.
     """
-    element = get_object_or_404(Element, pk=pk)
+    inventory = get_object_or_404(Inventory, pk=pk)
 
-    return render(request, 'blog/element_detail.html', {'element': element})
+    return render(request, 'blog/inventory_detail.html', {'inventory': inventory})
 
 
 @login_required
-def element_new(request):
+def inventory_new(request):
     """
-    Element_new function docstring.
+    Inventory_new function docstring.
 
-    This function shows the form to create a new element.
+    This function shows the form to create a new inventory.
 
     @param request: HTML request page.
 
-    @return: First time, this shows the form to a new element. If the form is completed, return the
-    details of this new element.
+    @return: First time, this shows the form to a new inventory. If the form is completed, return the
+    details of this new inventory.
     """
     if request.method == "POST":
-        form = ElementForm(request.POST)
+        form = InventoryForm(request.POST)
         if form.is_valid():
-            element = form.save(commit=False)
-            element.author = request.user
-            # element.published_date = timezone.now()
-            element.save()
-            return redirect('blog:element_detail', pk=element.pk)
+            inventory = form.save(commit=False)
+            inventory.author = request.user
+            # inventory.published_date = timezone.now()
+            inventory.save()
+            return redirect('blog:inventory_detail', pk=inventory.pk)
     else:
-        form = ElementForm()
-    return render(request, 'blog/element_edit.html', {'form': form})
+        form = InventoryForm()
+    return render(request, 'blog/inventory_edit.html', {'form': form})
 
 
 @login_required
-def element_edit(request, pk):
+def inventory_edit(request, pk):
     """
-    Element_edit function docstring.
+    Inventory_edit function docstring.
 
-    This function shows the form to modify an element.
+    This function shows the form to modify an inventory.
 
     @param request: HTML request page.
 
-    @param pk: primary key of the element to modify.
+    @param pk: primary key of the inventory to modify.
 
-    @return: First time, this shows the form to edit the element. If the form is completed, return
-    the details of this element.
+    @return: First time, this shows the form to edit the inventory. If the form is completed, return
+    the details of this inventory.
 
-    @raise 404: element does not exists.
+    @raise 404: inventory does not exists.
     """
-    element = get_object_or_404(Element, pk=pk)
+    inventory = get_object_or_404(Inventory, pk=pk)
     if request.method == "POST":
-        form = ElementForm(data=request.POST, instance=element)
+        form = InventoryForm(data=request.POST, instance=inventory)
         if form.is_valid():
-            element = form.save(commit=False)
-            element.author = request.user
-            element.save()
-            return redirect('blog:element_detail', pk=element.pk)
+            inventory = form.save(commit=False)
+            inventory.author = request.user
+            inventory.save()
+            return redirect('blog:inventory_detail', pk=inventory.pk)
     else:
-        form = ElementForm(instance=element)
-    return render(request, 'blog/element_edit.html', {'form': form})
+        form = InventoryForm(instance=inventory)
+    return render(request, 'blog/inventory_edit.html', {'form': form})
 
 
 @login_required
-def element_remove(request, pk):
+def inventory_remove(request, pk):
     """
-    Element_remove function docstring.
+    Inventory_remove function docstring.
 
-    This function removes an element.
+    This function removes an inventory.
 
     @param request: HTML request page.
 
-    @param pk: primary key of the element to remove.
+    @param pk: primary key of the inventory to remove.
 
-    @return: list of elements.
+    @return: list of inventories.
 
-    @raise 404: element does not exists.
+    @raise 404: inventory does not exists.
     """
-    element = get_object_or_404(Element, pk=pk)
-    element.delete()
-    return redirect('blog:element_list')
+    inventory = get_object_or_404(Inventory, pk=pk)
+    inventory.delete()
+    return redirect('blog:inventory_list')
 
 
 def computing_list(request):

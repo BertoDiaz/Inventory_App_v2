@@ -132,7 +132,7 @@ h1, h2, h3 {
     float: right;
 }
 
-.element-form textarea, .element-form input {
+.inventory-form textarea, .inventory-form input {
     width: 30%;
 }
 
@@ -144,15 +144,15 @@ h1, h2, h3 {
     margin-right: 20px;
 }
 
-.element {
+.inventory {
     margin-bottom: 70px;
 }
 
-.element h1 a, .element h1 a:visited {
+.inventory h1 a, .inventory h1 a:visited {
     color: #000000;
 }
 
-.element-secondCol {
+.inventory-secondCol {
     margin-left: 30px;
 }
 

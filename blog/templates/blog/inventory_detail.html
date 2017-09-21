@@ -1,0 +1,18 @@
+{% extends 'blog/base_inventory.html' %}
+
+{% block content %}
+    <div class="button">
+        {% if user.is_authenticated %}
+            <a class="btn btn-default" href="{% url 'blog:inventory_edit' pk=inventory.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-default" href="{% url 'blog:inventory_remove' pk=inventory.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+        {% endif %}
+    </div>
+    <h1>{{ inventory.name }}</h1>
+    <p>{{ inventory.maker }}</p>
+    <p>{{ inventory.type_item|linebreaksbr }}</p>
+    <div class="dateDetail">
+        {% if inventory.created_date %}
+            {{ inventory.created_date }}
+        {% endif %}
+    </div>
+{% endblock %}

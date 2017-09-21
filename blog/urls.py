@@ -10,12 +10,12 @@ urlpatterns = [
     # #################### SIGN UP #################### #
     url(r'^accounts/signup/$', views.signup, name='signup'),
 
-    # #################### ELEMENT #################### #
-    url(r'^element/$', views.element_list, name='element_list'),
-    url(r'^element/(?P<pk>[0-9]+)/$', views.element_detail, name='element_detail'),
-    url(r'^element/new/$', views.element_new, name='element_new'),
-    url(r'^element/(?P<pk>[0-9]+)/edit/$', views.element_edit, name='element_edit'),
-    url(r'^element/(?P<pk>\d+)/remove/$', views.element_remove, name='element_remove'),
+    # #################### INVENTORY #################### #
+    url(r'^inventory/$', views.inventory_list, name='inventory_list'),
+    url(r'^inventory/(?P<pk>[0-9]+)/$', views.inventory_detail, name='inventory_detail'),
+    url(r'^inventory/new/$', views.inventory_new, name='inventory_new'),
+    url(r'^inventory/(?P<pk>[0-9]+)/edit/$', views.inventory_edit, name='inventory_edit'),
+    url(r'^inventory/(?P<pk>\d+)/remove/$', views.inventory_remove, name='inventory_remove'),
 
     # #################### COMPUTING #################### #
     url(r'^computing/$', views.computing_list, name='computing_list'),

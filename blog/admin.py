@@ -1,7 +1,7 @@
 """admin.py."""
 
 from django.contrib import admin
-from .models import Element, Type
+from .models import Inventory, Type
 from .models import Order, Budget, Type_of_purchase, Payment, Supplier, Product
 from .models import Computing, Type_Object, Location, Full_Name_Users, Setup
 from .models import Electronic, Type_Component, Unit
@@ -12,7 +12,7 @@ from .models import Instrumentation, Type_Instrumentation
 from .models import Others
 from .models import Run, Wafer, Chip, Waveguide, Name_Waveguide
 
-admin.site.register(Element)
+admin.site.register(Inventory)
 admin.site.register(Type)
 admin.site.register(Order)
 admin.site.register(Budget)

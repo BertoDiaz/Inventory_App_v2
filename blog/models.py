@@ -6,18 +6,18 @@ from django.utils import timezone
 """ Models Inventory """
 
 
-class Element(models.Model):
+class Inventory(models.Model):
     """
-    Element model docstring.
+    Inventory model docstring.
 
     This model stores the kinds of inventories that are possible.
     """
 
     author = models.ForeignKey('auth.User',
-                               help_text="Name of the author that created the element.")
-    type_item = models.ForeignKey('Type', help_text="Type of element.")
-    name = models.CharField(max_length=200, help_text="Name of the element.")
-    maker = models.CharField(max_length=200, help_text="Manufacturer of the element.")
+                               help_text="Name of the author that created the inventory.")
+    type_item = models.ForeignKey('Type', help_text="Type of inventory.")
+    name = models.CharField(max_length=200, help_text="Name of the inventory.")
+    maker = models.CharField(max_length=200, help_text="Manufacturer of the inventory.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -317,18 +317,18 @@ class Type(models.Model):
     """
     Type model docstring.
 
-    This model stores the different types of elements.
+    This model stores the different types of inventories.
     """
 
     author = models.ForeignKey('auth.User', help_text="Name of the author that created the type.")
-    name = models.CharField(max_length=200, help_text="Name of the type of element.")
+    name = models.CharField(max_length=200, help_text="Name of the type of inventory.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
         """
         Create function docstring.
 
-        This function stores the date when the type of element was created and save the info.
+        This function stores the date when the type of inventory was created and save the info.
         """
         self.created_date = timezone.now()
         self.save()
@@ -337,9 +337,9 @@ class Type(models.Model):
         """
         Return string function docstring.
 
-        This function returns the name of the type of element.
+        This function returns the name of the type of inventory.
 
-        @return: a string with the name of the type of element.
+        @return: a string with the name of the type of inventory.
         """
         return self.name
 

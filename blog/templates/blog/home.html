@@ -1,14 +1,14 @@
 {% extends 'blog/base_home.html' %}
 
 {% block content %}
-    <div class="element">
-        <h1><a href="{% url 'blog:element_list' %}">Inventory</a></h1>
-            <h2><a class="element-secondCol" href="{% url 'blog:computing_list' %}">Computing</a></h2>
-            <h2><a class="element-secondCol" href="{% url 'blog:electronic_list' %}">Electronic</a></h2>
-            <h2><a class="element-secondCol" href="{% url 'blog:optic_list' %}">Optic</a></h2>
-            <h2><a class="element-secondCol" href="{% url 'blog:chemical_list' %}">Chemical</a></h2>
-            <h2><a class="element-secondCol" href="{% url 'blog:biological_list' %}">Biological</a></h2>
-            <h2><a class="element-secondCol" href="{% url 'blog:instrumentation_list' %}">Instrumentation</a></h2>
+    <div class="inventory">
+        <h1><a href="{% url 'blog:inventory_list' %}">Inventory</a></h1>
+            <h2><a class="inventory-secondCol" href="{% url 'blog:computing_list' %}">Computing</a></h2>
+            <h2><a class="inventory-secondCol" href="{% url 'blog:electronic_list' %}">Electronic</a></h2>
+            <h2><a class="inventory-secondCol" href="{% url 'blog:optic_list' %}">Optic</a></h2>
+            <h2><a class="inventory-secondCol" href="{% url 'blog:chemical_list' %}">Chemical</a></h2>
+            <h2><a class="inventory-secondCol" href="{% url 'blog:biological_list' %}">Biological</a></h2>
+            <h2><a class="inventory-secondCol" href="{% url 'blog:instrumentation_list' %}">Instrumentation</a></h2>
         <h1><a href="{% url 'blog:order_list' %}">Order</a></h1>
         <h1><a href="{% url 'blog:run_list' %}">RUN</a></h1>
     </div>
