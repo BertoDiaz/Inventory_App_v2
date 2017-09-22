@@ -1,15 +1,12 @@
-{% extends 'blog/base_chip.html' %}
+{% extends 'blog/base_wafer.html' %}
 {% load staticfiles %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-7">
-            <h1>New Chip</h1>
+            <h1>New Wafer</h1>
             <form method="POST">
                 {% csrf_token %}
-                <!-- {{ runForm.as_p }}
-                {{ waferForm.as_p }}
-                {{ chipForm.as_p }} -->
                 {% for runField in runForm %}
                     <div id="{{ runField.auto_id }}_container">
                         {{ runField.help_text }}
@@ -47,26 +44,6 @@
                         </table>
                         <div id="{{ waferField.auto_id }}_errors">
                             {{ waferField.errors }}
-                        </div>
-                    </div>
-                {% endfor %}
-                {% for chipField in chipForm %}
-                    <div id="{{ chipField.auto_id }}_container">
-                        {{ chipField.help_text }}
-                        <table style="width:100%">
-                            <tr>
-                                <th>
-                                    {{ chipField.label_tag }}
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ chipField }}
-                                </th>
-                            </tr>
-                        </table>
-                        <div id="{{ chipField.auto_id }}_errors">
-                            {{ chipField.errors }}
                         </div>
                     </div>
                 {% endfor %}

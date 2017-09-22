@@ -83,6 +83,14 @@ urlpatterns = [
     url(r'^run/$', views.run_list, name='run_list'),
     url(r'^run/(?P<pk>[0-9]+)/$', views.run_chip_list, name='run_chip_list'),
 
+    # #################### WAFER #################### #
+    url(r'^wafer/(?P<pk>[0-9]+)/$', views.wafer_list, name='wafer_list'),
+    # url(r'^wafer/(?P<pk>[0-9]+)/$', views.wafer_detail, name='wafer_detail'),
+    # url(r'^wafer/exist/(?P<pk>[0-9]+)/$', views.wafer_detail_exist, name='wafer_detail_exist'),
+    url(r'^wafer/new/$', views.wafer_new, name='wafer_new'),
+    # url(r'^wafer/(?P<pk>[0-9]+)/edit/$', views.wafer_edit, name='wafer_edit'),
+    # url(r'^wafer/(?P<pk>\d+)/remove/$', views.wafer_remove, name='wafer_remove'),
+
     # #################### CHIP #################### #
     url(r'^chip/$', views.chip_list, name='chip_list'),
     url(r'^chip/(?P<pk>[0-9]+)/$', views.chip_detail, name='chip_detail'),

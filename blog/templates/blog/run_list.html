@@ -7,7 +7,7 @@
                 {{ run.created_date }}
             </div>
             <!-- <p>{{ run.run }}</p> -->
-            <h1><a href="{% url 'blog:run_chip_list' pk=run.pk %}">{{ run.run }}</a></h1>
+            <h1><a href="{% url 'blog:wafer_list' pk=run.pk %}">{{ run.run }}</a></h1>
             <p>{{ run.run_specifications|linebreaksbr }}</p>
         </div>
     {% endfor %}
