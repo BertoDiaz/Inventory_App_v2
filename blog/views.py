@@ -1100,7 +1100,7 @@ def order_new_next(request, pk):
     if request.method == "POST":
         product = ProductForm()
         formset = ProductFormSet(request.POST)
-        doc = openpyxl.load_workbook('blog/orderForm/Formulario_Pedido_v2.xlsx')
+        doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
         doc.get_sheet_names()
         sheet = doc.get_sheet_by_name('Order Form')
         sheet['C6'] = order.applicant
@@ -1123,7 +1123,7 @@ def order_new_next(request, pk):
                 product.save()
 
             sheet = setBordersCell(sheet)
-            doc.save('blog/formulariosPedidos/' + nameFile + '.xlsx')
+            doc.save('blog/orderForm/' + nameFile + '.xlsx')
 
             return redirect('blog:order_detail', pk=order.pk)
     else:
