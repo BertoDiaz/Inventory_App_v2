@@ -10,7 +10,7 @@
                         {{ chip.created_date }}
                     </div> -->
                     <!-- <p>{{ chip.chip }}</p> -->
-                    <h1><a href="{% url 'blog:run_chip_list' pk=wafer.pk %}">{{ wafer.wafer }}</a></h1>
+                    <h1><a href="{% url 'blog:wafer_chip_list' pk=wafer.pk %}">{{ wafer.wafer }}</a></h1>
                     <p>{{ wafer.run.run }}</p>
                 </div>
             {% endfor %}

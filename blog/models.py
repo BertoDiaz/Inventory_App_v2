@@ -1014,13 +1014,15 @@ class Chip(models.Model):
 
     run = models.ForeignKey('Run', help_text="To what run is assigned.")
     wafer = models.ForeignKey('Wafer', help_text="To what wafer is assigned.")
-    chip = models. IntegerField(help_text="ID of the chip.")
-    date = models.DateField(help_text="When was took.")
+    # chip = models.IntegerField(help_text="ID of the chip.")
+    chip = models.CharField(max_length=50, help_text="ID of the chip.")
+    date = models.DateField(blank=True, null=True, help_text="When was took.")
     laser_source = models.CharField(max_length=50, blank=True,
                                     help_text="Source of light that is used.")
     readout = models.CharField(max_length=50, blank=True,
                                help_text="What type of sensor is used to read.")
-    user_name = models.ForeignKey('Full_Name_Users', help_text="Who have the chip.")
+    user_name = models.ForeignKey('Full_Name_Users', blank=True, null=True,
+                                  help_text="Who have the chip.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):

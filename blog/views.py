@@ -1412,7 +1412,55 @@ def wafer_new(request):
     """
     wafer_new function docstring.
 
-    This function shows the form to create a new wafer. This function uses 3 forms to create a new
+    This function shows the form to create a new wafer. This function uses 2 forms to create a new
+    wafer (Run form and Wafer form), moreover, when the form is completed, this function
+    search if the run or wafer already exists.
+
+    @param request: HTML request page.
+
+    @return: First time, this shows the form to a new wafer. If the form is completed and the run or
+    wafer does not exists, return the list of chips of this new wafer.
+    """
+    if request.method == "POST":
+        runForm = RunForm(request.POST, prefix='run')
+        waferForm = WaferForm(request.POST, prefix='wafer')
+        if runForm.is_valid():
+            run = runForm.save(commit=False)
+            # run_ex = Run.objects.get(run=run.run)
+            run_ex = Run.objects.filter(run=run.run).exists()
+            # print("Run: " + str(run_ex))
+            if not run_ex:
+                # print(run_ex)
+                run.save()
+            else:
+                # run = run_ex
+                run = Run.objects.get(run=run.run)
+        if waferForm.is_valid():
+            wafer = waferForm.save(commit=False)
+            # wafer_ex = Wafer.objects.get(wafer=wafer.wafer, run=run)
+            wafer_ex = Wafer.objects.filter(wafer=wafer.wafer, run=run).exists()
+            # print("Wafer: " + str(wafer_ex))
+            if not wafer_ex:
+                # print(wafer_ex)
+                wafer.run = run
+                wafer.save()
+                wafer_chip_new(run, wafer)
+                return redirect('blog:wafer_chip_list', pk=wafer.pk)
+            else:
+                # wafer = wafer_ex
+                wafer = Wafer.objects.get(wafer=wafer.wafer, run=run)
+                return redirect('blog:wafer_detail_exist', pk=wafer.pk)
+    else:
+        runForm = RunForm(prefix='run')
+        waferForm = WaferForm(prefix='wafer')
+    return render(request, 'blog/wafer_edit.html', {'runForm': runForm, 'waferForm': waferForm})
+
+
+def wafer_chip_new(run, wafer):
+    """
+    Chip_new function docstring.
+
+    This function shows the form to create a new chip. This function uses 3 forms to create a new
     chip (Run form, Wafer form and Chip form), moreover, when the form is completed, this function
     search if the run or wafer or chip already exists.
 
@@ -1421,34 +1469,59 @@ def wafer_new(request):
     @return: First time, this shows the form to a new chip. If the form is completed and the run or
     wafer or chip does not exists, return the details of this new chip.
     """
-    if request.method == "POST":
-        runForm = RunForm(request.POST, prefix='run')
-        waferForm = WaferForm(request.POST, prefix='wafer')
-        if runForm.is_valid():
-            run = runForm.save(commit=False)
-            run_ex = Run.objects.get(run=run.run)
-            print(run)
-            if not run_ex:
-                # print(run_ex)
-                run.save()
-            else:
-                run = run_ex
-        if waferForm.is_valid():
-            wafer = waferForm.save(commit=False)
-            wafer_ex = Wafer.objects.get(wafer=wafer.wafer, run=run)
-            # print(wafer)
-            if not wafer_ex:
-                # print(wafer_ex)
-                wafer.run = run
-                wafer.save()
-                return redirect('blog:chip_list', pk=wafer.pk)
-            else:
-                wafer = wafer_ex
-                return redirect('blog:wafer_detail_exist', pk=wafer.pk)
-    else:
-        runForm = RunForm(prefix='run')
-        waferForm = WaferForm(prefix='wafer')
-    return render(request, 'blog/wafer_edit.html', {'runForm': runForm, 'waferForm': waferForm})
+    chipName = ['CHIP1', 'CHIP2', 'CHIP3', 'CHIP4', 'CHIP5']
+    chipGName = ['CHIPG1', 'CHIPG2', 'CHIPG3', 'CHIPG4', 'CHIPG5']
+    chipPName = ['CHIP6P', 'CHIPG6P']
+
+    for chip in chipName:
+        chipForm = ChipForm()
+        newChip = chipForm.save(commit=False)
+        newChip.run = run
+        newChip.wafer = wafer
+        newChip.chip = chip
+        # print(newChip)
+        newChip.save()
+
+    for chip in chipGName:
+        chipForm = ChipForm()
+        newChip = chipForm.save(commit=False)
+        newChip.run = run
+        newChip.wafer = wafer
+        newChip.chip = chip
+        # print(newChip)
+        newChip.save()
+
+    for chip in chipPName:
+        chipForm = ChipForm()
+        newChip = chipForm.save(commit=False)
+        newChip.run = run
+        newChip.wafer = wafer
+        newChip.chip = chip
+        # print(newChip)
+        newChip.save()
+
+
+def wafer_chip_list(request, pk):
+    """
+    Run_chip_list function docstring.
+
+    This function shows the list of chips of a run that are stored in this web app.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the run.
+
+    @return: list of chips.
+    """
+    # chips = Chip.objects.filter(run=pk)
+    chips = Chip.objects.filter(wafer=pk)
+    run = Wafer.objects.get(pk=pk)
+    # print(run.run.pk)
+    runback = True
+    waferback = False
+
+    return render(request, 'blog/chip_list.html', {'chips': chips, 'runPK': run.run.pk,
+                                                   'runback': runback, 'waferback': waferback})
 
 
 def chip_list(request):
@@ -1482,8 +1555,11 @@ def chip_detail(request, pk):
     @raise 404: chip does not exists.
     """
     chip = get_object_or_404(Chip, pk=pk)
+    runback = False
+    waferback = True
 
-    return render(request, 'blog/chip_detail.html', {'chip': chip})
+    return render(request, 'blog/chip_detail.html', {'chip': chip, 'waferPK': chip.wafer.pk,
+                                                     'runback': runback, 'waferback': waferback})
 
 
 def chip_detail_exist(request, pk):

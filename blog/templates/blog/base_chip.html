@@ -33,7 +33,11 @@
             ************************************************************************************ -->
             {% if user.is_authenticated %}
                 <a href="{% url 'blog:chip_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
-                <a href="{% url 'blog:run_list' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% if runback %}
+                    <a href="{% url 'blog:wafer_list' pk=runPK%}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% elif waferback %}
+                    <a href="{% url 'blog:wafer_chip_list' pk=waferPK%}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% endif %}
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
