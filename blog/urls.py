@@ -100,10 +100,12 @@ urlpatterns = [
     url(r'^chip/new/$', views.chip_new, name='chip_new'),
     url(r'^chip/(?P<pk>[0-9]+)/edit/$', views.chip_edit, name='chip_edit'),
     url(r'^chip/(?P<pk>\d+)/remove/$', views.chip_remove, name='chip_remove'),
+    url(r'^chip/(?P<pk>[0-9]+)/waveguides/$', views.waveguide_list, name='waveguide_list'),
 
     # #################### WAVEGUIDE #################### #
-    url(r'^waveguide/(?P<pk>[0-9]+)/$', views.waveguide_list, name='waveguide_list'),
-    url(r'^waveguide/(?P<pk>[0-9]+)/detail/(?P<pk2>[0-9]+)/$', views.waveguide_detail,
+    # url(r'^waveguide/(?P<pk>[0-9]+)/$', views.waveguide_list, name='waveguide_list'),
+    # url(r'^waveguide/(?P<pk>[0-9]+)/detail/(?P<pk2>[0-9]+)/$', views.waveguide_detail,
+    url(r'^waveguide/(?P<pk>[0-9]+)/detail/$', views.waveguide_detail,
         name='waveguide_detail'),
     url(r'^waveguide/(?P<pk>[0-9]+)/exist/(?P<pk2>[0-9]+)/$', views.waveguide_detail_exist,
         name='waveguide_detail_exist'),

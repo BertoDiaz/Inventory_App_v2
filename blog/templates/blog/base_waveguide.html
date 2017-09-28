@@ -15,7 +15,7 @@
 
         <!-- <link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css"> -->
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-        
+
         <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 
     </head>
@@ -35,7 +35,11 @@
             {% if not user.is_authenticated %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% else %}
-                <a href="{% url 'blog:chip_detail' pk=chip %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% if chipBack %}
+                    <a href="{% url 'blog:chip_detail' pk=chip %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% elif waveguideBack %}
+                    <a href="{% url 'blog:waveguide_list' pk=waveguide.chip.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% endif %}
             {% endif %}
             <!-- <h1><a href="{% url 'blog:chip_list' %}">Chip</a></h1> -->
             <h1>Waveguide</h1>

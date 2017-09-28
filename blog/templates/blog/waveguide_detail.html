@@ -7,7 +7,6 @@
                 {% if user.is_authenticated %}
                     <a class="btn btn-default" href="{% url 'blog:waveguide_edit' pk=waveguide.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
                     <a class="btn btn-default" href="{% url 'blog:waveguide_remove' pk=waveguide.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                    <a class="btn btn-default" href="{% url 'blog:waveguide_list' pk=waveguide.chip.pk %}"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
             </div>
             <h1>{{ waveguide.type_object }}</h1>

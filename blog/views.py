@@ -81,7 +81,7 @@ def inventory_list(request):
     @return: list of inventories.
     """
     inventories = Inventory.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date')
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     return render(request, 'blog/inventory_list.html', {'inventories': inventories})
 
@@ -190,7 +190,8 @@ def computing_list(request):
 
     @return: list of computers.
     """
-    computings = Computing.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+    computings = Computing.objects.filter(
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     return render(request, 'blog/computing_list.html', {'computings': computings})
 
@@ -297,7 +298,7 @@ def electronic_list(request):
     @return: list of electronic components.
     """
     electronics = Electronic.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date')
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     print(electronics)
 
@@ -406,7 +407,7 @@ def optic_list(request):
     @return: list of optic components.
     """
     optics = Optic.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date')
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     print(optics)
 
@@ -514,7 +515,8 @@ def chemical_list(request):
 
     @return: list of chemicals.
     """
-    chemicals = Chemical.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+    chemicals = Chemical.objects.filter(
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     return render(request, 'blog/chemical_list.html', {'chemicals': chemicals})
 
@@ -621,7 +623,7 @@ def biological_list(request):
     @return: list of biologicals.
     """
     biologicals = Biological.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date')
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     return render(request, 'blog/biological_list.html', {'biologicals': biologicals})
 
@@ -728,7 +730,7 @@ def instrumentation_list(request):
     @return: list of instruments.
     """
     instrumentations = Instrumentation.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date')
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     return render(request, 'blog/instrumentation_list.html', {'instrumentations': instrumentations})
 
@@ -834,7 +836,8 @@ def others_list(request):
 
     @return: list of components whithout type.
     """
-    otherss = Others.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+    otherss = Others.objects.filter(
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     return render(request, 'blog/others_list.html', {'otherss': otherss})
 
@@ -940,7 +943,8 @@ def order_list(request):
 
     @return: list of orders.
     """
-    orders = Order.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+    orders = Order.objects.filter(
+        created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     return render(request, 'blog/order_list.html', {'orders': orders})
 
@@ -1279,7 +1283,7 @@ def run_list(request):
 
     @return: list of runs.
     """
-    runs = Run.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+    runs = Run.objects.filter(created_date__lte=timezone.now()).order_by('created_date').reverse()
 
     return render(request, 'blog/run_list.html', {'runs': runs})
 
@@ -1403,7 +1407,7 @@ def wafer_list(request, pk):
 
     @return: list of wafers.
     """
-    wafers = Wafer.objects.filter(run=pk)
+    wafers = Wafer.objects.filter(run=pk).order_by('created_date').reverse()
 
     return render(request, 'blog/wafer_list.html', {'wafers': wafers})
 
@@ -1740,11 +1744,16 @@ def waveguide_list(request, pk):
     @return: list of waveguides of a chip.
     """
     waveguides = Waveguide.objects.filter(chip=pk)
+    chipBack = True
+    waveguideBack = False
 
-    return render(request, 'blog/waveguide_list.html', {'waveguides': waveguides, 'chip': pk})
+    return render(request, 'blog/waveguide_list.html', {'waveguides': waveguides, 'chip': pk,
+                                                        'chipBack': chipBack,
+                                                        'waveguideBack': waveguideBack})
 
 
-def waveguide_detail(request, pk, pk2):
+# def waveguide_detail(request, pk, pk2):
+def waveguide_detail(request, pk):
     """
     Waveguide_detail function docstring.
 
@@ -1760,9 +1769,13 @@ def waveguide_detail(request, pk, pk2):
 
     @raise 404: waveguide does not exists.
     """
-    waveguide = get_object_or_404(Waveguide, pk=pk2)
+    waveguide = get_object_or_404(Waveguide, pk=pk)
+    chipBack = False
+    waveguideBack = True
 
-    return render(request, 'blog/waveguide_detail.html', {'waveguide': waveguide})
+    return render(request, 'blog/waveguide_detail.html', {'waveguide': waveguide,
+                                                          'chipBack': chipBack,
+                                                          'waveguideBack': waveguideBack})
 
 
 def waveguide_detail_exist(request, pk, pk2):
