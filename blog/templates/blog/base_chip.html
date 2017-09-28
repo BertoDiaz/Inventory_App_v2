@@ -32,7 +32,7 @@
                 indicate that the username is not logged in.
             ************************************************************************************ -->
             {% if user.is_authenticated %}
-                <a href="{% url 'blog:chip_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+                <!-- <a href="{% url 'blog:chip_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a> -->
                 {% if runback %}
                     <a href="{% url 'blog:wafer_list' pk=runPK%}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% elif waferback %}

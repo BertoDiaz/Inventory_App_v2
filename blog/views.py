@@ -20,6 +20,7 @@ from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
+from .models import Name_Waveguide
 from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, OpticForm
 from .forms import ChemicalForm, BiologicalForm, InstrumentationForm, OthersForm, SignUpForm
 from .forms import RunForm, WaferForm, ChipForm, WaveguideForm, SendEmailForm
@@ -1458,16 +1459,13 @@ def wafer_new(request):
 
 def wafer_chip_new(run, wafer):
     """
-    Chip_new function docstring.
+    Wafer_chip_new function docstring.
 
-    This function shows the form to create a new chip. This function uses 3 forms to create a new
-    chip (Run form, Wafer form and Chip form), moreover, when the form is completed, this function
-    search if the run or wafer or chip already exists.
+    This function creates all chips of a wafer. This function uses a forms to create the new
+    chips (Chip form).
 
-    @param request: HTML request page.
-
-    @return: First time, this shows the form to a new chip. If the form is completed and the run or
-    wafer or chip does not exists, return the details of this new chip.
+    @param run: primary key of the run.
+    @param wafer: primary key of the wafer.
     """
     chipName = ['CHIP1', 'CHIP2', 'CHIP3', 'CHIP4', 'CHIP5']
     chipGName = ['CHIPG1', 'CHIPG2', 'CHIPG3', 'CHIPG4', 'CHIPG5']
@@ -1481,6 +1479,7 @@ def wafer_chip_new(run, wafer):
         newChip.chip = chip
         # print(newChip)
         newChip.save()
+        chip_waveguide_new(run, wafer, newChip)
 
     for chip in chipGName:
         chipForm = ChipForm()
@@ -1490,6 +1489,7 @@ def wafer_chip_new(run, wafer):
         newChip.chip = chip
         # print(newChip)
         newChip.save()
+        chip_waveguide_new(run, wafer, newChip)
 
     for chip in chipPName:
         chipForm = ChipForm()
@@ -1499,17 +1499,18 @@ def wafer_chip_new(run, wafer):
         newChip.chip = chip
         # print(newChip)
         newChip.save()
+        chip_waveguide_new(run, wafer, newChip)
 
 
 def wafer_chip_list(request, pk):
     """
-    Run_chip_list function docstring.
+    Wafer_chip_list function docstring.
 
-    This function shows the list of chips of a run that are stored in this web app.
+    This function shows the list of chips of a wafer that are stored in this web app.
 
     @param request: HTML request page.
 
-    @param pk: primary key of the run.
+    @param pk: primary key of the wafer.
 
     @return: list of chips.
     """
@@ -1690,6 +1691,33 @@ def chip_remove(request, pk):
     chip = get_object_or_404(Run, pk=pk)
     chip.delete()
     return redirect('blog:chip_list')
+
+
+def chip_waveguide_new(run, wafer, chip):
+    """
+    Chip_waveguide_new function docstring.
+
+    This function creates all waveguides of a chip. This function uses a forms to create the new
+    waveguides (Waveguide form).
+
+    @param run: primary key of the run.
+    @param wafer: primary key of the wafer.
+    @param chip: primary key of the chip.
+    """
+    waveguideName = Name_Waveguide.objects.all()
+    # print(waveguideName)
+
+    for waveguide in waveguideName:
+        # print(waveguide.name)
+        waveguideForm = WaveguideForm()
+        newWaveguide = waveguideForm.save(commit=False)
+        newWaveguide.run = run
+        newWaveguide.wafer = wafer
+        newWaveguide.chip = chip
+        newWaveguide.waveguide = waveguide
+        newWaveguide.name = waveguide.name
+        # print(newWaveguide)
+        newWaveguide.save()
 
 
 # def waveguide_list(request):
