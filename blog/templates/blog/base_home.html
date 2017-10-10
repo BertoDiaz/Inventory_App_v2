@@ -23,6 +23,13 @@
 
         <div class="page-header">
             <!-- ***********************************************************************************
+                This part verifies if the username is logged in. If not, this shows an image to
+                indicate that the username is not logged in.
+            ************************************************************************************ -->
+            {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+            {% endif %}
+            <!-- ***********************************************************************************
                 Logo of the group in the navbar.
             ************************************************************************************ -->
             <h1><a href="{% url 'blog:home' %}"><img src="{% static 'images/Nanob2A Logo Completo.png' %}" alt="Logo NANOB2A" height="50"></a></h1>

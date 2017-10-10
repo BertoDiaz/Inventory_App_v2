@@ -1182,13 +1182,21 @@ def order_edit(request, pk):
         noItem = False
         if not products.exists():
             noItem = True
-        products_formset = ProductFormSet(initial=[{'description': form.description,
-                                                    'quantity': form.quantity,
-                                                    'unit_price': form.unit_price}
-                                                   for form in products], prefix="productForm")
-        count = products.count
+        # products_formset = ProductFormSet(initial=[{'description': form.description,
+        #                                             'quantity': form.quantity,
+        #                                             'unit_price': form.unit_price}
+        #                                            for form in products], prefix="productForm")
+        products_formset = ProductFormSet(queryset=Product.objects.filter(order=order.pk))
+        # product_form = ProductForm(instance=products)
+        count = products.count()
+        # for form in product_form:
+        #     print(form.description)
+        # for x in range(0, count - 1):
+        #     print(products[x])
+        # print(products_formset)
     return render(request, 'blog/order_edit.html', {'order_form': order_form,
                                                     'products_formset': products_formset,
+                                                    # 'product_form': product_form,
                                                     'noItem': noItem,
                                                     'count': count})
 

@@ -8,8 +8,6 @@
                     <a class="btn btn-default" href="{% url 'blog:chip_edit' pk=chip.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
                     <a class="btn btn-default" href="{% url 'blog:chip_remove' pk=chip.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                     <p></p>
-                    <a class="btn btn-default" href="{% url 'blog:waveguide_new' pk=chip.pk %}"><span>New Waveguide</span></a>
-                    <p></p>
                     <a class="btn btn-default" href="{% url 'blog:waveguide_list' pk=chip.pk %}"><span>Waveguides</span></a>
                 {% endif %}
             </div>

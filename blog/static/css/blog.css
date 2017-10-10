@@ -179,7 +179,76 @@ h1, h2, h3 {
     margin-top: 30px;
 }
 
+.run {
+    margin-bottom: 30px;
+}
+
+.run h1 a, .run h1 a:visited {
+    color: #000000;
+}
+
+.run-secondCol {
+    margin-left: 30px;
+}
+
+.runDetail {
+    margin-top: 30px;
+}
+
+.wafer {
+    margin-bottom: 30px;
+}
+
+.wafer h1 a, .wafer h1 a:visited {
+    color: #000000;
+}
+
+.wafer-secondCol {
+    margin-left: 30px;
+}
+
+.waferDetail {
+    margin-top: 30px;
+}
+
+.chip {
+    margin-bottom: 30px;
+}
+
+.chip h1 a, .chip h1 a:visited {
+    color: #000000;
+}
+
+.chip:hover{
+    background-color: #f1d8b4;
+}
+
+.chip-secondCol {
+    margin-left: 30px;
+}
+
 .chipDetail {
+    width: 75%;
+    margin-top: 30px;
+}
+
+.waveguide {
+    margin-bottom: 30px;
+}
+
+.waveguide h1 a, .waveguide h1 a:visited {
+    color: #000000;
+}
+
+.waveguide:hover{
+    background-color: #f1d8b4;
+}
+
+.waveguide-secondCol {
+    margin-left: 30px;
+}
+
+.waveguideDetail {
     width: 75%;
     margin-top: 30px;
 }

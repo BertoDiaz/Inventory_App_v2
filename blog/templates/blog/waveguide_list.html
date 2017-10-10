@@ -5,17 +5,17 @@
     <div class="row">
         <div class="col-md-7">
             {% for waveguide in waveguides %}
-                <div class="inventory">
+                <div class="waveguide"
+                onmouseover="chip_visibility('Waveguide_{{forloop.counter}}', 'ChipFull');"
+                onmouseout="chip_visibility('Waveguide_{{forloop.counter}}', 'ChipFull');">
                     <!-- <div class="date">
                         {{ chip.created_date }}
                     </div> -->
                     <!-- <p>{{ chip.chip }}</p> -->
-                    <h1><a href="{% url 'blog:waveguide_detail' pk=waveguide.pk %}"
-                        onmouseover="chip_visibility('Waveguide_{{forloop.counter}}', 'ChipFull');"
-                        onmouseout="chip_visibility('Waveguide_{{forloop.counter}}', 'ChipFull');">{{ waveguide.name }}</a></h1>
-                    <p>{{ waveguide.run.run }}</p>
-                    <p>{{ waveguide.wafer.wafer }}</p>
-                    <p>{{ waveguide.chip.chip }}</p>
+                    <h1><a href="{% url 'blog:waveguide_detail' pk=waveguide.pk %}">{{ waveguide.name }}</a></h1>
+                    <p><span style="font-weight: bold;">Run: </span>{{ waveguide.run.run }}</p>
+                    <p><span style="font-weight: bold;">Wafer: </span>{{ waveguide.wafer.wafer }}</p>
+                    <p><span style="font-weight: bold;">Chip: </span>{{ waveguide.chip.chip }}</p>
                 </div>
             {% endfor %}
         </div>
@@ -71,6 +71,86 @@
 
                 <div id="Waveguide_12" class="imageChip">
                     <img src="{% static 'images/chip/chip_v4-12.png' %}" alt="Waveguide 12" height="700">
+                </div>
+
+                <div id="Waveguide_13" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-13.png' %}" alt="Waveguide 13" height="700">
+                </div>
+
+                <div id="Waveguide_14" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-14.png' %}" alt="Waveguide 14" height="700">
+                </div>
+
+                <div id="Waveguide_15" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-15.png' %}" alt="Waveguide 15" height="700">
+                </div>
+
+                <div id="Waveguide_16" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-16.png' %}" alt="Waveguide 16" height="700">
+                </div>
+
+                <div id="Waveguide_17" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-17.png' %}" alt="Waveguide 17" height="700">
+                </div>
+
+                <div id="Waveguide_18" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-18.png' %}" alt="Waveguide 18" height="700">
+                </div>
+
+                <div id="Waveguide_19" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-19.png' %}" alt="Waveguide 19" height="700">
+                </div>
+
+                <div id="Waveguide_20" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-20.png' %}" alt="Waveguide 20" height="700">
+                </div>
+
+                <div id="Waveguide_21" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-21.png' %}" alt="Waveguide 21" height="700">
+                </div>
+
+                <div id="Waveguide_22" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-22.png' %}" alt="Waveguide 22" height="700">
+                </div>
+
+                <div id="Waveguide_23" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-23.png' %}" alt="Waveguide 23" height="700">
+                </div>
+
+                <div id="Waveguide_24" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-24.png' %}" alt="Waveguide 24" height="700">
+                </div>
+
+                <div id="Waveguide_25" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-25.png' %}" alt="Waveguide 25" height="700">
+                </div>
+
+                <div id="Waveguide_26" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-26.png' %}" alt="Waveguide 26" height="700">
+                </div>
+
+                <div id="Waveguide_27" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-27.png' %}" alt="Waveguide 27" height="700">
+                </div>
+
+                <div id="Waveguide_28" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-28.png' %}" alt="Waveguide 28" height="700">
+                </div>
+
+                <div id="Waveguide_29" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-29.png' %}" alt="Waveguide 29" height="700">
+                </div>
+
+                <div id="Waveguide_30" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-30.png' %}" alt="Waveguide 30" height="700">
+                </div>
+
+                <div id="Waveguide_31" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-31.png' %}" alt="Waveguide 31" height="700">
+                </div>
+
+                <div id="Waveguide_32" class="imageChip">
+                    <img src="{% static 'images/chip/chip_v4-32.png' %}" alt="Waveguide 32" height="700">
                 </div>
             </div>
         </div>

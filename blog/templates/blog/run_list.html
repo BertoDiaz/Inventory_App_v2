@@ -1,15 +1,15 @@
 {% extends 'blog/base_run.html' %}
 
 {% block content %}
-    <div class="col-md-7">   
+    <div class="col-md-7">
         {% for run in runs %}
-            <div class="inventory">
-                <div class="date">
+            <div class="run">
+                <!-- <div class="date">
                     {{ run.created_date }}
-                </div>
+                </div> -->
                 <!-- <p>{{ run.run }}</p> -->
-                <h1><a href="{% url 'blog:wafer_list' pk=run.pk %}">{{ run.run }}</a></h1>
-                <p>{{ run.run_specifications|linebreaksbr }}</p>
+                <h1><a href="{% url 'blog:wafer_list' pk=run.pk %}">RUN: {{ run.run }}</a></h1>
+                <p><span style="font-weight: bold;">Specification: </span>{{ run.run_specifications|linebreaksbr }}</p>
             </div>
         {% endfor %}
     </div>
