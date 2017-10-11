@@ -6,11 +6,13 @@
         {% csrf_token %}
         {{ order_form.as_p }}
 
-        <!-- {{ products_formset.management_form }} -->
+        {{ products_formset.management_form }}
 
         {% if noItem == False %}
             {% for form in products_formset %}
-                {{ form.as_table }}
+                {% if forloop.counter <= count %}
+                    {{ form.as_table }}
+                {% endif %}
             {% endfor %}
         {% endif %}
         <button type="submit" class="save btn btn-default">Save</button>
