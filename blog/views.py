@@ -1158,11 +1158,6 @@ def order_edit(request, pk):
     if request.method == "POST":
         order_form = OrderForm(data=request.POST, instance=order, prefix="orderForm")
         formset = ProductFormSet(data=request.POST, prefix="form")
-        # for form in formset:
-        #     print(form)
-        #     print(formset.total_form_count())
-        #     print(products.count())
-        # print(len(formset))
         if order_form.is_valid() and formset.is_valid():
             order = order_form.save(commit=False)
             order.author = request.user
@@ -1170,12 +1165,10 @@ def order_edit(request, pk):
             for num in range(0, len(formset)):
                 product = formset[num].save(commit=False)
                 product.order = order
-                # print(product.description)
                 if product.description != "":
                     if num < products.count():
                         new_products = products[num]
                         if new_products.description != product.description:
-                            # products[num].description = product.description
                             new_products.description = product.description
 
                         if new_products.quantity != product.quantity:
