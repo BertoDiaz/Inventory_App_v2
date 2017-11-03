@@ -1,20 +1,29 @@
 {% extends 'blog/base_order.html' %}
+{% load staticfiles %}
 
 {% block content %}
     <h1>Edit Order</h1>
-    <form method="POST" class="order-form">
+    <form id="myForm" method="POST" action="">
         {% csrf_token %}
         {{ order_form.as_p }}
 
-        {{ products_formset.management_form }}
-
         {% if noItem == False %}
-            {% for form in products_formset %}
-                {% if forloop.counter <= count %}
-                    {{ form.as_table }}
-                {% endif %}
-            {% endfor %}
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                    {% for form in products_formset.forms %}
+                        {% if forloop.counter <= count %}
+                            <tr>
+                                <td>{{ form.description }}</td>
+                                <td>{{ form.quantity }}</td>
+                                <td>{{ form.unit_price }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
+
+        {{ products_formset.management_form }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
 {% endblock %}

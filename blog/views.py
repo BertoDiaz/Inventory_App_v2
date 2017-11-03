@@ -1157,24 +1157,36 @@ def order_edit(request, pk):
     ProductFormSet = formset_factory(ProductForm)
     if request.method == "POST":
         order_form = OrderForm(data=request.POST, instance=order, prefix="orderForm")
-        formset = ProductFormSet(data=request.POST, prefix="productForm")
+        formset = ProductFormSet(data=request.POST, prefix="form")
+        # for form in formset:
+        #     print(form)
+        #     print(formset.total_form_count())
+        #     print(products.count())
+        # print(len(formset))
         if order_form.is_valid() and formset.is_valid():
             order = order_form.save(commit=False)
             order.author = request.user
             order.save()
-            for num in range(0, len(products)):
+            for num in range(0, len(formset)):
                 product = formset[num].save(commit=False)
                 product.order = order
-                if products[num].description != product.description:
-                    products[num].description = product.description
+                # print(product.description)
+                if product.description != "":
+                    if num < products.count():
+                        new_products = products[num]
+                        if new_products.description != product.description:
+                            # products[num].description = product.description
+                            new_products.description = product.description
 
-                if products[num].quantity != product.quantity:
-                    products[num].quantity = product.quantity
+                        if new_products.quantity != product.quantity:
+                            new_products.quantity = product.quantity
 
-                if products[num].unit_price != product.unit_price:
-                    products[num].unit_price = product.unit_price
+                        if new_products.unit_price != product.unit_price:
+                            new_products.unit_price = product.unit_price
 
-                products[num].save()
+                        new_products.save()
+                    else:
+                        product.save()
             return redirect('blog:order_detail', pk=order.pk)
     else:
         order_form = OrderForm(instance=order, prefix="orderForm")
@@ -1185,7 +1197,7 @@ def order_edit(request, pk):
         products_formset = ProductFormSet(initial=[{'description': form.description,
                                                     'quantity': form.quantity,
                                                     'unit_price': form.unit_price}
-                                                   for form in products], prefix="productForm")
+                                                   for form in products], prefix="form")
         count = products.count()
     return render(request, 'blog/order_edit.html', {'order_form': order_form,
                                                     'products_formset': products_formset,
