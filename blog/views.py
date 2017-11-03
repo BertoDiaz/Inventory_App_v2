@@ -1,29 +1,29 @@
 """views.py."""
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
 from django.forms.formsets import formset_factory
 from django.utils import timezone
-from django.contrib.auth import login, authenticate
-# from django.core.mail import EmailMultiAlternatives, EmailMessage
+from django.db import IntegrityError, transaction
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.encoders import encode_base64
 import smtplib
 import os
-# import getpass
-# import base64
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
 from .models import Name_Waveguide
-from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm, ElectronicForm, OpticForm
-from .forms import ChemicalForm, BiologicalForm, InstrumentationForm, OthersForm, SignUpForm
-from .forms import RunForm, WaferForm, ChipForm, WaveguideForm, SendEmailForm
+from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm
+from .forms import ElectronicForm, OpticForm, ChemicalForm, BiologicalForm, InstrumentationForm
+from .forms import OthersForm, SignUpForm, RunForm, WaferForm, ChipForm, WaveguideForm
+from .forms import SendEmailForm
 
 
 def home(request):
@@ -1152,50 +1152,73 @@ def order_edit(request, pk):
 
     @raise 404: order does not exists.
     """
-    order = get_object_or_404(Order, pk=pk)
-    products = Product.objects.filter(order=order.pk).order_by('created_date')
+    order_data = get_object_or_404(Order, pk=pk)
+
     ProductFormSet = formset_factory(ProductForm)
+
+    products = Product.objects.filter(order=order_data.pk).order_by('created_date')
+    product_data = [{'description': l.description, 'quantity': l.quantity,
+                     'unit_price': l.unit_price, 'order': l.order} for l in products]
+
     if request.method == "POST":
-        order_form = OrderForm(data=request.POST, instance=order, prefix="orderForm")
-        formset = ProductFormSet(data=request.POST, prefix="form")
-        if order_form.is_valid() and formset.is_valid():
+        order_form = OrderForm(data=request.POST, instance=order_data, prefix="orderForm")
+        product_formset = ProductFormSet(data=request.POST, prefix="form")
+
+        if order_form.is_valid() and product_formset.is_valid():
             order = order_form.save(commit=False)
             order.author = request.user
             order.save()
-            for num in range(0, len(formset)):
-                product = formset[num].save(commit=False)
-                product.order = order
-                if product.description != "":
-                    if num < products.count():
-                        new_products = products[num]
-                        if new_products.description != product.description:
-                            new_products.description = product.description
 
-                        if new_products.quantity != product.quantity:
-                            new_products.quantity = product.quantity
+            new_products = []
+            duplicates = False
 
-                        if new_products.unit_price != product.unit_price:
-                            new_products.unit_price = product.unit_price
+            for product_form in product_formset:
+                description = product_form.cleaned_data.get('description')
+                quantity = product_form.cleaned_data.get('quantity')
+                unit_price = product_form.cleaned_data.get('unit_price')
 
-                        new_products.save()
+                if description and quantity and unit_price:
+                    for new_products_data in new_products:
+                        if new_products_data.description == description:
+                            duplicates = True
+
+                    new_products.append(Product(description=description, quantity=quantity,
+                                                unit_price=unit_price, order=order))
+
+            try:
+                with transaction.atomic():
+                    if not duplicates:
+                        Product.objects.filter(order=order).delete()
+                        Product.objects.bulk_create(new_products)
+
+                        messages.success(request, 'You have updated your order.')
+                        return redirect('blog:order_detail', pk=order.pk)
                     else:
-                        product.save()
-            return redirect('blog:order_detail', pk=order.pk)
+                        messages.warning(request, 'There are repeated products.')
+                        return redirect('blog:order_edit', pk=order.pk)
+
+            except IntegrityError:
+                messages.error(request, 'There was an error saving your order.')
+                return redirect('blog:order_detail', pk=order.pk)
     else:
-        order_form = OrderForm(instance=order, prefix="orderForm")
-        products = Product.objects.filter(order=order.pk)
+        order_form = OrderForm(instance=order_data, prefix="orderForm")
+        # products = Product.objects.filter(order=order_data.pk)
         noItem = False
+
         if not products.exists():
             noItem = True
-        products_formset = ProductFormSet(initial=[{'description': form.description,
-                                                    'quantity': form.quantity,
-                                                    'unit_price': form.unit_price}
-                                                   for form in products], prefix="form")
+
+        products_formset = ProductFormSet(initial=product_data, prefix="form")
         count = products.count()
-    return render(request, 'blog/order_edit.html', {'order_form': order_form,
-                                                    'products_formset': products_formset,
-                                                    'noItem': noItem,
-                                                    'count': count})
+
+    context = {
+        'order_form': order_form,
+        'products_formset': products_formset,
+        'noItem': noItem,
+        'count': count
+    }
+
+    return render(request, 'blog/order_edit.html', context)
 
 
 @login_required

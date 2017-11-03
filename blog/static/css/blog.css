@@ -279,3 +279,21 @@ h1, h2, h3 {
     position: fixed;
     display:none;
 }
+
+.messagessuccess{
+    color: #31b00b;
+    /*font-size: 18pt;*/
+    font: bold 18pt;
+}
+
+.messageserror{
+    color: #d20b0b;
+    /*font-size: 18pt;*/
+    font: bold 18pt;
+}
+
+.messageswarning{
+    color: #d2b80b;
+    /*font-size: 18pt;*/
+    font: bold 18pt;
+}

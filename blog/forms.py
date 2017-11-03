@@ -3,6 +3,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms.formsets import BaseFormSet
 # from django.utils.encoding import smart_text
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Wafer, Chip, Waveguide
@@ -119,6 +120,42 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ('description', 'quantity', 'unit_price', 'order',)
         widgets = {'order': forms.HiddenInput()}
+
+
+class BaseProductFormSet(BaseFormSet):
+    """
+    BaseProductFormSet docstring.
+
+    This formset is useds to create a news products and validate duplications.
+    """
+
+    def clean(self):
+        """
+        Clean docstring.
+
+        Adds validation to check that exists two descriptions same.
+        """
+        if any(self.errors):
+            return
+
+        descriptions = []
+        duplicates = False
+
+        for form in self.forms:
+            if form.cleaned_data:
+                description = form.cleaned_data['description']
+
+                # Check that two descriptions are same
+                if description:
+                    if description in descriptions:
+                        duplicates = True
+                    descriptions.append(description)
+
+                if duplicates:
+                    raise forms.ValidationError(
+                        'Descriptions must be unique.',
+                        code='duplicate_descriptions'
+                    )
 
 
 class ComputingForm(forms.ModelForm):
