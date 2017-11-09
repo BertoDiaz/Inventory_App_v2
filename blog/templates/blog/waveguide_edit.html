@@ -4,60 +4,53 @@
 {% block content %}
     <div class="row">
         <div class="col-md-7">
-            <h1>New Waveguide</h1>
-            <form method="POST">
+            <h1>Edit Waveguide {{ form.name.value }}</h1>
+            <form method="POST" class="inventory-form">
                 {% csrf_token %}
-                <!-- {{ runForm.as_p }}
-                {{ waferForm.as_p }}
-                {{ chipForm.as_p }} -->
 
-                <table style="width:10%">
-                    <tr>
-                        <th>
-                            RUN:
-                        </th>
-                        <th>
-                            {{ chip.run.run }}
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            Wafer:
-                        </th>
-                        <th>
-                            {{ chip.wafer.wafer }}
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            Chip:
-                        </th>
-                        <th>
-                            {{ chip.chip }}
-                        </th>
-                    </tr>
-                </table>
-                <p></p>
-                {% for waveguideField in waveguideForm %}
-                    <div id="{{ waveguideField.auto_id }}_container">
-                        {{ waveguideField.help_text }}
-                        <table style="width:100%">
-                            <tr>
-                                <th>
-                                    {{ waveguideField.label_tag }}
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ waveguideField }}
-                                </th>
-                            </tr>
-                        </table>
-                        <div id="{{ waveguideField.auto_id }}_errors">
-                            {{ waveguideField.errors }}
-                        </div>
-                    </div>
-                {% endfor %}
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.amplitude.label_tag }}</span>
+                    {{ form.amplitude }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.offset.label_tag }}</span>
+                    {{ form.offset }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.frecuency.label_tag }}</span>
+                    {{ form.frecuency }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.i_up.label_tag }}</span>
+                    {{ form.i_up }}
+                    <small class="form-text text-muted">{{ form.i_up.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.i_down.label_tag }}</span>
+                    {{ form.i_down }}
+                    <small class="form-text text-muted">{{ form.i_down.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.slope.label_tag }}</span>
+                    {{ form.slope }}
+                    <small class="form-text text-muted">{{ form.slope.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.visibility.label_tag }}</span>
+                    {{ form.visibility }}
+                    <small class="form-text text-muted">{{ form.visibility.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.noise.label_tag }}</span>
+                    {{ form.noise }}
+                    <small class="form-text text-muted">{{ form.noise.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.lod.label_tag }}</span>
+                    {{ form.lod }}
+                    <small class="form-text text-muted">{{ form.lod.help_text|safe }}</small>
+                </div>
+
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>
         </div>

@@ -7,7 +7,49 @@
             <h1>New Biological</h1>
             <form method="POST" class="inventory-form">
                 {% csrf_token %}
-                {{ form.as_p }}
+
+                <div class="row">
+                    <span class="col-md-3">{{ form.type_biological.label_tag}}</span>
+                    {{ form.type_biological }}
+                    <small class="form-text text-muted">{{ form.type_biological.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.name.label_tag}}</span>
+                    {{ form.name }}
+                    <small class="form-text text-muted">{{ form.name.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.reference.label_tag}}</span>
+                    {{ form.reference }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.quantity.label_tag}}</span>
+                    {{ form.quantity }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.supplier.label_tag}}</span>
+                    {{ form.supplier }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.concentration.label_tag}}</span>
+                    {{ form.concentration }}
+                    <small class="form-text text-muted">{{ form.concentration.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.molecular_weight.label_tag}}</span>
+                    {{ form.molecular_weight }}
+                    <small class="form-text text-muted">{{ form.molecular_weight.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.unit_biological.label_tag }}</span>
+                    {{ form.unit_biological }}
+                    <small class="form-text text-muted">{{ form.unit_biological.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.location.label_tag}}</span>
+                    {{ form.location }}
+                </div>
+
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>
         </div>

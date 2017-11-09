@@ -6,7 +6,7 @@ from .models import Order, Budget, Type_of_purchase, Payment, Supplier, Product
 from .models import Computing, Type_Object, Location, Full_Name_Users, Setup
 from .models import Electronic, Type_Component, Unit
 from .models import Optic, Type_Optic
-from .models import Chemical, Type_Chemical, Unit_Chemical, Closet
+from .models import Chemical, Type_Chemical, Unit_Chemical
 from .models import Biological, Type_Biological
 from .models import Instrumentation, Type_Instrumentation
 from .models import Others
@@ -33,7 +33,6 @@ admin.site.register(Type_Optic)
 admin.site.register(Chemical)
 admin.site.register(Type_Chemical)
 admin.site.register(Unit_Chemical)
-admin.site.register(Closet)
 admin.site.register(Biological)
 admin.site.register(Type_Biological)
 admin.site.register(Instrumentation)

@@ -87,8 +87,10 @@ class OrderForm(forms.ModelForm):
         """
 
         model = Order
+        # fields = ('name', 'applicant', 'budget', 'type_of_purchase', 'payment_conditions',
+        #           'supplier', 'number_product',)
         fields = ('name', 'applicant', 'budget', 'type_of_purchase', 'payment_conditions',
-                  'supplier', 'number_product',)
+                  'supplier',)
 
 
 class SendEmailForm(forms.Form):
@@ -189,12 +191,12 @@ class ElectronicForm(forms.ModelForm):
         """
         Meta docstring.
 
-        This function use the Electronic model and the fields: type_component, location, closet,
+        This function use the Electronic model and the fields: type_component, location,
         unit and value.
         """
 
         model = Electronic
-        fields = ('type_component', 'location', 'closet', 'unit', 'value',)
+        fields = ('type_component', 'location', 'unit', 'value',)
 
 
 class OpticForm(forms.ModelForm):
@@ -208,12 +210,14 @@ class OpticForm(forms.ModelForm):
         """
         Meta docstring.
 
-        This function use the Optic model and the fields: type_optic, description, location
-        and closet
+        This function use the Optic model and the fields: type_optic, description and location
         """
 
         model = Optic
-        fields = ('type_optic', 'description', 'location', 'closet',)
+        fields = ('type_optic', 'description', 'location',)
+        widgets = {
+            'description': forms.Textarea,
+        }
 
 
 class ChemicalForm(forms.ModelForm):
@@ -228,12 +232,12 @@ class ChemicalForm(forms.ModelForm):
         Meta docstring.
 
         This function use the Chemical model and the fields: type_chemical, name, reference,
-        quantity, supplier, concentration, molecular_weight, unit_chemical, location and closet.
+        quantity, supplier, concentration, molecular_weight, unit_chemical and location.
         """
 
         model = Chemical
         fields = ('type_chemical', 'name', 'reference', 'quantity', 'supplier', 'concentration',
-                  'molecular_weight', 'unit_chemical', 'location', 'closet',)
+                  'molecular_weight', 'unit_chemical', 'location',)
 
 
 class BiologicalForm(forms.ModelForm):
@@ -248,12 +252,12 @@ class BiologicalForm(forms.ModelForm):
         Meta docstring.
 
         This function use the Biological model and the fields: type_biological, name, reference,
-        quantity, supplier, concentration, molecular_weight, unit_chemical, location and closet.
+        quantity, supplier, concentration, molecular_weight, unit_biological and location.
         """
 
         model = Biological
         fields = ('type_biological', 'name', 'reference', 'quantity', 'supplier', 'concentration',
-                  'molecular_weight', 'unit_chemical', 'location', 'closet',)
+                  'molecular_weight', 'unit_biological', 'location',)
 
 
 class InstrumentationForm(forms.ModelForm):
@@ -274,6 +278,9 @@ class InstrumentationForm(forms.ModelForm):
         model = Instrumentation
         fields = ('type_instrumentation', 'characteristics', 'manufacturer', 'supplier',
                   'location',)
+        widgets = {
+            'characteristics': forms.Textarea,
+        }
 
 
 class OthersForm(forms.ModelForm):
@@ -365,5 +372,5 @@ class WaveguideForm(forms.ModelForm):
         """
 
         model = Waveguide
-        fields = ('waveguide', 'amplitude', 'offset', 'frecuency', 'i_up', 'i_down', 'slope',
-                  'visibility', 'noise', 'lod',)
+        fields = ('name', 'amplitude', 'offset', 'frecuency', 'i_up', 'i_down',
+                  'slope', 'visibility', 'noise', 'lod',)

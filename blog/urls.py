@@ -25,14 +25,18 @@ urlpatterns = [
     url(r'^computing/(?P<pk>\d+)/remove/$', views.computing_remove, name='computing_remove'),
 
     # #################### ELECTRONIC #################### #
-    url(r'^electronic/$', views.electronic_list, name='electronic_list'),
+    url(r'^electronic/component/$', views.electronic_list_type_components,
+        name='electronic_list_type_components'),
+    url(r'^electronic/component/(?P<component>[a-zA-Z0-9_]+)/$', views.electronic_list,
+        name='electronic_list'),
     url(r'^electronic/(?P<pk>[0-9]+)/$', views.electronic_detail, name='electronic_detail'),
     url(r'^electronic/new/$', views.electronic_new, name='electronic_new'),
     url(r'^electronic/(?P<pk>[0-9]+)/edit/$', views.electronic_edit, name='electronic_edit'),
     url(r'^electronic/(?P<pk>\d+)/remove/$', views.electronic_remove, name='electronic_remove'),
 
     # #################### OPTIC #################### #
-    url(r'^optic/$', views.optic_list, name='optic_list'),
+    url(r'^optic/component/$', views.optic_list_type_optic, name='optic_list_type_optic'),
+    url(r'^optic/component/(?P<component>[a-zA-Z0-9_]+)/$', views.optic_list, name='optic_list'),
     url(r'^optic/(?P<pk>[0-9]+)/$', views.optic_detail, name='optic_detail'),
     url(r'^optic/new/$', views.optic_new, name='optic_new'),
     url(r'^optic/(?P<pk>[0-9]+)/edit/$', views.optic_edit, name='optic_edit'),

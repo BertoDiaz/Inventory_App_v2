@@ -5,11 +5,10 @@
         <div class="col-md-6">
             {% for electronic in electronics %}
                 <div class="inventory">
-                    <div class="date">
+                    <!-- <div class="date">
                         {{ electronic.created_date }}
-                    </div>
-                    <h1><a href="{% url 'blog:electronic_detail' pk=electronic.pk %}">{{ electronic.name_component }}</a></h1>
-                    <p>{{ electronic.value|linebreaksbr }}</p>
+                    </div> -->
+                    <h1><a href="{% url 'blog:electronic_list' component=electronic.name %}">{{ electronic.name }}</a></h1>
                 </div>
             {% endfor %}
         </div>

@@ -297,3 +297,7 @@ h1, h2, h3 {
     /*font-size: 18pt;*/
     font: bold 18pt;
 }
+
+.formLabel{
+    font: bold 12pt;
+}

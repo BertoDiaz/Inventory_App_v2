@@ -4,10 +4,35 @@
 {% block content %}
     <div class="row">
         <div class="col-md-7">
-            <h1>New Component</h1>
+            <h1>Edit Component</h1>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <form method="POST" class="inventory-form">
                 {% csrf_token %}
-                {{ form.as_p }}
+
+                <div class="row">
+                    <span class="col-md-3">{{ form.type_component.label_tag}}</span>
+                    {{ form.type_component }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.location.label_tag}}</span>
+                    {{ form.location }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.value.label_tag}}</span>
+                    {{ form.value }}
+                    <small class="form-text text-muted">{{ form.value.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.unit.label_tag}}</span>
+                    {{ form.unit }}
+                </div>
+
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>
         </div>

@@ -1,10 +1,97 @@
 {% extends 'blog/base_order.html' %}
+{% load staticfiles %}
 
 {% block content %}
     <h1>New Order</h1>
-    <form method="POST" class="order-form">
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <form id="myForm" method="POST" action="">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Next</button>
+
+        <div class="row">
+            <span class="col-md-3">{{ order_form.name.label_tag}}</span>
+            {{ order_form.name }}
+            <small class="form-text text-muted">{{ order_form.name.help_text|safe }}</small>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <span class="col-md-3">{{ order_form.applicant.label_tag}}</span>
+            {{ order_form.applicant }}
+            <small class="form-text text-muted">{{ order_form.applicant.help_text|safe }}</small>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <span class="col-md-3">{{ order_form.budget.label_tag}}</span>
+            {{ order_form.budget }}
+            <small class="form-text text-muted">{{ order_form.budget.help_text|safe }}</small>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <span class="col-md-3">{{ order_form.type_of_purchase.label_tag}}</span>
+            {{ order_form.type_of_purchase }}
+            <small class="form-text text-muted">{{ order_form.type_of_purchase.help_text|safe }}</small>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <span class="col-md-3">{{ order_form.payment_conditions.label_tag}}</span>
+            {{ order_form.payment_conditions }}
+            <small class="form-text text-muted">{{ order_form.payment_conditions.help_text|safe }}</small>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <span class="col-md-3">{{ order_form.supplier.label_tag}}</span>
+            {{ order_form.supplier }}
+            <small class="form-text text-muted">{{ order_form.supplier.help_text|safe }}</small>
+        </div>
+
+        <table class="table" border="0" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in products_formset.forms %}
+                    <tr>
+                        <td>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                {% for error in form.description.errors %}
+                                    {{ error|escape }}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ form.quantity }}
+                            {% if form.quantity.errors %}
+                                {% for error in form.quantity.errors %}
+                                    {{ error|escape }}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ form.unit_price }}
+                            {% if form.unit_price.errors %}
+                                {% for error in form.unit_price.errors %}
+                                    {{ error|escape }}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                {% if products_formset.non_form_errors %}
+                    {% for error in products_formset.non_form_errors %}
+                        {{ error|escape }}
+                    {% endfor %}
+                {% endif %}
+
+            </tbody>
+        </table>
+
+        {{ products_formset.management_form }}
+        <button type="submit" class="save btn btn-default">Save</button>
     </form>
 {% endblock %}

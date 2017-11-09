@@ -4,10 +4,72 @@
 {% block content %}
     <div class="row">
         <div class="col-md-7">
-            <h1>New Computing</h1>
+            <h1>Edit Computing</h1>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <form method="POST" class="inventory-form">
                 {% csrf_token %}
-                {{ form.as_p }}
+
+                <div class="row">
+                    <span class="col-md-3">{{ form.name.label_tag}}</span>
+                    {{ form.name }}
+                    <small class="form-text text-muted">{{ form.name.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.type_object.label_tag}}</span>
+                    {{ form.type_object }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.location.label_tag}}</span>
+                    {{ form.location }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.user_name.label_tag}}</span>
+                    {{ form.user_name }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.model.label_tag}}</span>
+                    {{ form.model }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.processor.label_tag}}</span>
+                    {{ form.processor }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.memory.label_tag}}</span>
+                    {{ form.memory }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.screen_1.label_tag}}</span>
+                    {{ form.screen_1 }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.screen_2.label_tag}}</span>
+                    {{ form.screen_2 }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.keyboard.label_tag}}</span>
+                    {{ form.keyboard }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.mouse.label_tag}}</span>
+                    {{ form.mouse }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.others.label_tag}}</span>
+                    {{ form.others }}
+                    <small class="form-text text-muted">{{ form.others.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.setup.label_tag}}</span>
+                    {{ form.setup }}
+                </div>
+
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>
         </div>

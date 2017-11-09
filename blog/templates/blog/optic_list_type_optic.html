@@ -1,0 +1,11 @@
+{% extends 'blog/base_optic.html' %}
+
+{% block content %}
+    <div class="col-md-6">
+        {% for optic in optics %}
+            <div class="inventory">
+                <h1><a href="{% url 'blog:optic_list' component=optic.name %}">{{ optic.name }}</a></h1>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

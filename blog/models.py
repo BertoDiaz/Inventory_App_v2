@@ -84,7 +84,7 @@ class Computing(models.Model):
 
         @return: a string with the location of a computer.
         """
-        return self.location
+        return self.name
 
 
 class Electronic(models.Model):
@@ -96,8 +96,8 @@ class Electronic(models.Model):
 
     type_component = models.ForeignKey('Type_Component',
                                        help_text="Type of the electronic component.")
+    name_component = models.CharField(max_length=200, blank=True)
     location = models.ForeignKey('Location', help_text="Where it is the electronic component.")
-    closet = models.ForeignKey('Closet', help_text="In what closet is the electronic component.")
     unit = models.ForeignKey('Unit', help_text="Unit of the value of the electronic componente.")
     value = models.CharField(max_length=200, blank=True,
                              help_text="Value of the electronic component.")
@@ -120,7 +120,7 @@ class Electronic(models.Model):
 
         @return: a string with the location of a electronic component.
         """
-        return self.location
+        return self.name_component
 
 
 class Optic(models.Model):
@@ -131,9 +131,9 @@ class Optic(models.Model):
     """
 
     type_optic = models.ForeignKey('Type_Optic', help_text="Type of the optic component.")
+    name_optic = models.CharField(max_length=100, blank=True)
     description = models.CharField(max_length=300, help_text="Description of the optic component.")
     location = models.ForeignKey('Location', help_text="Where it is the optic component.")
-    closet = models.ForeignKey('Closet', help_text="In what closet is the optic component.")
     # unit = models.ForeignKey('Unit', help_text="Unit of the value of the optic component.")
     # value = models.CharField(max_length=200, blank=True,
     #                          help_text="Value of the optic component.")
@@ -156,7 +156,7 @@ class Optic(models.Model):
 
         @return: a string with the location of a optic component.
         """
-        return self.location
+        return self.name_optic
 
 
 class Chemical(models.Model):
@@ -178,7 +178,6 @@ class Chemical(models.Model):
     unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
                                       "concentration/molecular weight of the chemical.")
     location = models.ForeignKey('Location', help_text="Where it is the chemical.")
-    closet = models.ForeignKey('Closet', help_text="In what closet is the chemical.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -220,10 +219,9 @@ class Biological(models.Model):
                                      help_text="Concentration of the biological component.")
     molecular_weight = models.CharField(max_length=200, blank=True,
                                         help_text="Molecular weight of the biological component.")
-    unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
-                                      "concentration/molecular weight of the chemical.")
+    unit_biological = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
+                                        "concentration/molecular weight of the biological.")
     location = models.ForeignKey('Location', help_text="Where it is the biological component.")
-    closet = models.ForeignKey('Closet', help_text="In what closet is the biological component.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -557,64 +555,64 @@ class Location(models.Model):
         return self.name
 
 
-class Closet(models.Model):
-    """
-    Closet model docstring.
+# class Closet(models.Model):
+#     """
+#     Closet model docstring.
+#
+#     This model stores the different closets in the labs and the offices.
+#     """
+#
+#     name = models.CharField(max_length=200, help_text="Name of the closet.")
+#     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+#
+#     def create(self):
+#         """
+#         Create function docstring.
+#
+#         This function stores the date when the closet was created and save the info.
+#         """
+#         self.created_date = timezone.now()
+#         self.save()
+#
+#     def __str__(self):
+#         """
+#         Return string function docstring.
+#
+#         This function returns the name of the closet.
+#
+#         @return: a string with the name of the closet.
+#         """
+#         return self.name
 
-    This model stores the different closets in the labs and the offices.
-    """
 
-    name = models.CharField(max_length=200, help_text="Name of the closet.")
-    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
-
-    def create(self):
-        """
-        Create function docstring.
-
-        This function stores the date when the closet was created and save the info.
-        """
-        self.created_date = timezone.now()
-        self.save()
-
-    def __str__(self):
-        """
-        Return string function docstring.
-
-        This function returns the name of the closet.
-
-        @return: a string with the name of the closet.
-        """
-        return self.name
-
-
-class Number_Closet(models.Model):
-    """
-    Number closet model docstring.
-
-    This model stores the different closets with your number in the labs and the offices.
-    """
-
-    name = models.CharField(max_length=200, help_text="Number of the closet.")
-    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
-
-    def create(self):
-        """
-        Create function docstring.
-
-        This function stores the date when the number of the closet was created and save the info.
-        """
-        self.created_date = timezone.now()
-        self.save()
-
-    def __str__(self):
-        """
-        Return string function docstring.
-
-        This function returns the name of the closet.
-
-        @return: a string with the name of the closet.
-        """
-        return self.name
+# class Number_Closet(models.Model):
+#     """
+#     Number closet model docstring.
+#
+#     This model stores the different closets with your number in the labs and the offices.
+#     """
+#
+#     name = models.CharField(max_length=200, help_text="Number of the closet.")
+#     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+#
+#     def create(self):
+#         """
+#         Create function docstring.
+#
+#         This function stores the date when the number of the closet was created and save the info.
+#         """
+#         self.created_date = timezone.now()
+#         self.save()
+#
+#     def __str__(self):
+#         """
+#         Return string function docstring.
+#
+#         This function returns the name of the closet.
+#
+#         @return: a string with the name of the closet.
+#         """
+#         return self.name
 
 
 class Unit(models.Model):
@@ -762,7 +760,7 @@ class Order(models.Model):
                                            help_text="Conditions of payment of the order.")
     supplier = models.ForeignKey('Supplier', help_text="Who provide of components of the order.")
     # product = models.ForeignKey('Product', null=True)
-    number_product = models.IntegerField(default=1, help_text="Number of products to order.")
+    # number_product = models.IntegerField(default=1, help_text="Number of products to order.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -1034,7 +1032,7 @@ class Chip(models.Model):
         self.created_date = timezone.now()
         self.save()
 
-    def __int__(self):
+    def __str__(self):
         """
         Return integer function docstring.
 

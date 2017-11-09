@@ -19,7 +19,7 @@ from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
-from .models import Name_Waveguide
+from .models import Name_Waveguide, Type_Component, Type_Optic
 from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm
 from .forms import ElectronicForm, OpticForm, ChemicalForm, BiologicalForm, InstrumentationForm
 from .forms import OthersForm, SignUpForm, RunForm, WaferForm, ChipForm, WaveguideForm
@@ -235,7 +235,7 @@ def computing_new(request):
             return redirect('blog:computing_detail', pk=computing.pk)
     else:
         form = ComputingForm()
-    return render(request, 'blog/computing_edit.html', {'form': form})
+    return render(request, 'blog/computing_new.html', {'form': form})
 
 
 @login_required
@@ -256,11 +256,25 @@ def computing_edit(request, pk):
     """
     computing = get_object_or_404(Computing, pk=pk)
     if request.method == "POST":
-        form = ComputingForm(data=request.POST, instance=computing)
-        if form.is_valid():
-            computing = form.save(commit=False)
-            computing.save()
-            return redirect('blog:computing_detail', pk=computing.pk)
+        computing_form = ComputingForm(data=request.POST, instance=computing)
+        if computing_form.is_valid():
+            computing = computing_form.save(commit=False)
+            computing_all = Computing.objects.all()
+
+            duplicates = False
+
+            for data in computing_all:
+                if data.name == computing.name and data.pk != computing.pk:
+                    duplicates = True
+
+            if not duplicates:
+                messages.success(request, 'You have updated your computing.')
+                computing.save()
+                return redirect('blog:computing_detail', pk=computing.pk)
+            else:
+                messages.warning(request, 'Already exists a computing with this name.')
+                return redirect('blog:computing_edit', pk=computing.pk)
+
     else:
         form = ComputingForm(instance=computing)
     return render(request, 'blog/computing_edit.html', {'form': form})
@@ -286,7 +300,27 @@ def computing_remove(request, pk):
     return redirect('blog:computing_list')
 
 
-def electronic_list(request):
+def electronic_list_type_components(request):
+    """
+    electronic_list_type_components function docstring.
+
+    This function shows the list of type components that are stored in this web app and
+    they are ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of type components.
+    """
+    # electronics = Electronic.objects.filter(
+    #     created_date__lte=timezone.now()).order_by('created_date').reverse()
+
+    electronics = Type_Component.objects.all()
+
+    return render(request, 'blog/electronic_list_type_components.html',
+                  {'electronics': electronics})
+
+
+def electronic_list(request, component):
     """
     Electronic_list function docstring.
 
@@ -294,15 +328,18 @@ def electronic_list(request):
     they are ordered by creation date.
 
     @param request: HTML request page.
+    @param component: type of component.
 
     @return: list of electronic components.
     """
-    electronics = Electronic.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date').reverse()
+    type_component = Type_Component.objects.get(name=component)
+    electronics = Electronic.objects.filter(type_component=type_component)
+    componentsBack = True
+    type_componBack = False
 
-    print(electronics)
-
-    return render(request, 'blog/electronic_list.html', {'electronics': electronics})
+    return render(request, 'blog/electronic_list.html', {'electronics': electronics,
+                                                         'componentsBack': componentsBack,
+                                                         'type_componBack': type_componBack})
 
 
 def electronic_detail(request, pk):
@@ -320,8 +357,12 @@ def electronic_detail(request, pk):
     @raise 404: electronic component does not exists.
     """
     electronic = get_object_or_404(Electronic, pk=pk)
+    componentsBack = False
+    type_componBack = True
 
-    return render(request, 'blog/electronic_detail.html', {'electronic': electronic})
+    return render(request, 'blog/electronic_detail.html', {'electronic': electronic,
+                                                           'componentsBack': componentsBack,
+                                                           'type_componBack': type_componBack})
 
 
 @login_required
@@ -340,11 +381,12 @@ def electronic_new(request):
         form = ElectronicForm(request.POST)
         if form.is_valid():
             electronic = form.save(commit=False)
+            electronic.name_component = electronic.type_component.name
             electronic.save()
             return redirect('blog:electronic_detail', pk=electronic.pk)
     else:
         form = ElectronicForm()
-    return render(request, 'blog/electronic_edit.html', {'form': form})
+    return render(request, 'blog/electronic_new.html', {'form': form})
 
 
 @login_required
@@ -368,8 +410,23 @@ def electronic_edit(request, pk):
         form = ElectronicForm(data=request.POST, instance=electronic)
         if form.is_valid():
             electronic = form.save(commit=False)
-            electronic.save()
-            return redirect('blog:electronic_detail', pk=electronic.pk)
+            electronic_all = Electronic.objects.all()
+
+            duplicates = False
+
+            for data in electronic_all:
+                if data.value == electronic.value and data.unit == electronic.unit:
+                    if data.pk != electronic.pk:
+                        duplicates = True
+
+            if not duplicates:
+                messages.success(request, 'You have updated your electronic component.')
+                electronic.save()
+                return redirect('blog:electronic_detail', pk=electronic.pk)
+            else:
+                messages.warning(request, 'Already exists an electronic component with this name.')
+                return redirect('blog:electronic_edit', pk=electronic.pk)
+
     else:
         form = ElectronicForm(instance=electronic)
     return render(request, 'blog/electronic_edit.html', {'form': form})
@@ -391,11 +448,28 @@ def electronic_remove(request, pk):
     @raise 404: electronic component does not exists.
     """
     electronic = get_object_or_404(Electronic, pk=pk)
+    name_component = electronic.name_component
     electronic.delete()
-    return redirect('blog:electronic_list')
+    return redirect('blog:electronic_list', component=name_component)
 
 
-def optic_list(request):
+def optic_list_type_optic(request):
+    """
+    Optic_list_type_optic function docstring.
+
+    This function shows the list of type of optic components that are stored in this web app and
+    they are ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of type of optic components.
+    """
+    optics = Type_Optic.objects.all()
+
+    return render(request, 'blog/optic_list_type_optic.html', {'optics': optics})
+
+
+def optic_list(request, component):
     """
     Optic_list function docstring.
 
@@ -403,15 +477,17 @@ def optic_list(request):
     they are ordered by creation date.
 
     @param request: HTML request page.
+    @param component: type of component.
 
     @return: list of optic components.
     """
-    optics = Optic.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date').reverse()
+    type_optic = Type_Optic.objects.get(name=component)
+    optics = Optic.objects.filter(type_optic=type_optic)
+    opticsBack = True
+    type_opticBack = False
 
-    print(optics)
-
-    return render(request, 'blog/optic_list.html', {'optics': optics})
+    return render(request, 'blog/optic_list.html', {'optics': optics, 'opticsBack': opticsBack,
+                                                    'type_opticBack': type_opticBack})
 
 
 def optic_detail(request, pk):
@@ -429,8 +505,11 @@ def optic_detail(request, pk):
     @raise 404: optic component does not exists.
     """
     optic = get_object_or_404(Optic, pk=pk)
+    opticsBack = False
+    type_opticBack = True
 
-    return render(request, 'blog/optic_detail.html', {'optic': optic})
+    return render(request, 'blog/optic_detail.html', {'optic': optic, 'opticsBack': opticsBack,
+                                                      'type_opticBack': type_opticBack})
 
 
 @login_required
@@ -449,11 +528,12 @@ def optic_new(request):
         form = OpticForm(request.POST)
         if form.is_valid():
             optic = form.save(commit=False)
+            optic.name_optic = optic.type_optic.name
             optic.save()
             return redirect('blog:optic_detail', pk=optic.pk)
     else:
         form = OpticForm()
-    return render(request, 'blog/optic_edit.html', {'form': form})
+    return render(request, 'blog/optic_new.html', {'form': form})
 
 
 @login_required
@@ -477,8 +557,21 @@ def optic_edit(request, pk):
         form = OpticForm(data=request.POST, instance=optic)
         if form.is_valid():
             optic = form.save(commit=False)
-            optic.save()
-            return redirect('blog:optic_detail', pk=optic.pk)
+            optic_all = Optic.objects.all()
+
+            duplicates = False
+
+            for data in optic_all:
+                if data.description == optic.description and data.pk != optic.pk:
+                    duplicates = True
+
+            if not duplicates:
+                messages.success(request, 'You have updated your optic component.')
+                optic.save()
+                return redirect('blog:optic_detail', pk=optic.pk)
+            else:
+                messages.warning(request, 'Already exists an optic component with this name.')
+                return redirect('blog:optic_edit', pk=optic.pk)
     else:
         form = OpticForm(instance=optic)
     return render(request, 'blog/optic_edit.html', {'form': form})
@@ -986,16 +1079,74 @@ def order_new(request):
     @return: First time, this shows the form to a new order. If the form is completed, return
     the next step to finish the order.
     """
+    ProductFormSet = formset_factory(ProductForm)
+
     if request.method == "POST":
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
+        order_form = OrderForm(data=request.POST, prefix="orderForm")
+        product_formset = ProductFormSet(data=request.POST, prefix="form")
+
+        print(order_form)
+        print(product_formset)
+
+        if order_form.is_valid() and product_formset.is_valid():
+            order = order_form.save(commit=False)
             order.author = request.user
             order.save()
-            return redirect('blog:order_new_next', pk=order.pk)
+
+            new_products = []
+            duplicates = False
+
+            for product_form in product_formset:
+                description = product_form.cleaned_data.get('description')
+                quantity = product_form.cleaned_data.get('quantity')
+                unit_price = product_form.cleaned_data.get('unit_price')
+
+                if description and quantity and unit_price:
+                    for new_products_data in new_products:
+                        if new_products_data.description == description:
+                            duplicates = True
+
+                    new_products.append(Product(description=description, quantity=quantity,
+                                                unit_price=unit_price, order=order))
+
+            try:
+                with transaction.atomic():
+                    if not duplicates:
+                        Product.objects.bulk_create(new_products)
+
+                        messages.success(request, 'You have created your order.')
+                        return redirect('blog:order_detail', pk=order.pk)
+
+                    else:
+                        messages.warning(request, 'There are repeated products.')
+
+                        context = {
+                            'order_form': order_form,
+                            'products_formset': product_formset
+                        }
+
+                        return render(request, 'blog/order_new.html', context)
+
+            except IntegrityError:
+                messages.error(request, 'There was an error saving your order.')
+
+                context = {
+                    'order_form': order_form,
+                    'products_formset': product_formset
+                }
+
+                return render(request, 'blog/order_new.html', context)
+
     else:
-        form = OrderForm()
-    return render(request, 'blog/order_new.html', {'form': form})
+        order_form = OrderForm(prefix="orderForm")
+        products_formset = ProductFormSet(prefix="form")
+
+    context = {
+        'order_form': order_form,
+        'products_formset': products_formset
+    }
+
+    return render(request, 'blog/order_new.html', context)
 
 
 def setBordersCell(sheet):
@@ -1240,9 +1391,10 @@ def order_send_email(request, pk):
         order = get_object_or_404(Order, pk=pk)
         username = User.objects.get(username=order.author)
         sendEmail_form = SendEmailForm(data=request.POST)
+
         if sendEmail_form.is_valid():
             # sendEmail = sendEmail_form.save(commit=False)
-            print(sendEmail_form.cleaned_data.get('password'))
+            # print(sendEmail_form.cleaned_data.get('password'))
             fromaddr = username.email
             toaddrs = 'pexespada@gmail.com'
             subject = 'Formulario de pedido'
@@ -1296,7 +1448,9 @@ def order_remove(request, pk):
     @raise 404: order does not exists.
     """
     order = get_object_or_404(Order, pk=pk)
+    products = Product.objects.filter(order=order.pk)
     order.delete()
+    products.delete()
     return redirect('blog:order_list')
 
 
@@ -1915,15 +2069,24 @@ def waveguide_edit(request, pk):
 
     @raise 404: waveguide does not exists.
     """
-    waveguide = get_object_or_404(Run, pk=pk)
+    waveguide_data = Waveguide.objects.get(pk=pk)
     if request.method == "POST":
-        form = RunForm(data=request.POST, instance=waveguide)
+        form = WaveguideForm(data=request.POST)
+        waveguide_data = Waveguide.objects.get(pk=pk)
         if form.is_valid():
-            waveguide = form.save(commit=False)
-            waveguide.save()
-            return redirect('blog:waveguide_detail', pk=waveguide.pk)
+            waveguide_data.amplitude = form.cleaned_data['amplitude']
+            waveguide_data.offset = form.cleaned_data['offset']
+            waveguide_data.frecuency = form.cleaned_data['frecuency']
+            waveguide_data.i_up = form.cleaned_data['i_up']
+            waveguide_data.i_down = form.cleaned_data['i_down']
+            waveguide_data.slope = form.cleaned_data['slope']
+            waveguide_data.visibility = form.cleaned_data['visibility']
+            waveguide_data.noise = form.cleaned_data['noise']
+            waveguide_data.lod = form.cleaned_data['lod']
+            waveguide_data.save()
+            return redirect('blog:waveguide_detail', pk=waveguide_data.pk)
     else:
-        form = RunForm(instance=waveguide)
+        form = WaveguideForm(instance=waveguide_data)
     return render(request, 'blog/waveguide_edit.html', {'form': form})
 
 
