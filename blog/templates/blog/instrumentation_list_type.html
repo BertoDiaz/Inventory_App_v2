@@ -1,0 +1,11 @@
+{% extends 'blog/base_instrumentation.html' %}
+
+{% block content %}
+    <div class="col-md-6">
+        {% for instrumentation in instrumentations %}
+            <div class="inventory">
+                <h1><a href="{% url 'blog:instrumentation_list' pk=instrumentation.pk %}">{{ instrumentation.name }}</a></h1>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

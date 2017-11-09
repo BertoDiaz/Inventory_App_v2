@@ -53,14 +53,19 @@ urlpatterns = [
     url(r'^chemical/(?P<pk>\d+)/remove/$', views.chemical_remove, name='chemical_remove'),
 
     # #################### BIOLOGICAL ##################### #
-    url(r'^biological/$', views.biological_list, name='biological_list'),
+    url(r'^biological/component/$', views.biological_list_type_biological,
+        name='biological_list_type_biological'),
+    url(r'^biological/component/(?P<pk>[0-9]+)/$', views.biological_list, name='biological_list'),
     url(r'^biological/(?P<pk>[0-9]+)/$', views.biological_detail, name='biological_detail'),
     url(r'^biological/new/$', views.biological_new, name='biological_new'),
     url(r'^biological/(?P<pk>[0-9]+)/edit/$', views.biological_edit, name='biological_edit'),
     url(r'^biological/(?P<pk>\d+)/remove/$', views.biological_remove, name='biological_remove'),
 
     # #################### INSTRUMENTATION #################### #
-    url(r'^instrumentation/$', views.instrumentation_list, name='instrumentation_list'),
+    url(r'^instrumentation/component/$', views.instrumentation_list_type,
+        name='instrumentation_list_type'),
+    url(r'^instrumentation/component/(?P<pk>[0-9]+)/$', views.instrumentation_list,
+        name='instrumentation_list'),
     url(r'^instrumentation/(?P<pk>[0-9]+)/$', views.instrumentation_detail,
         name='instrumentation_detail'),
     url(r'^instrumentation/new/$', views.instrumentation_new, name='instrumentation_new'),

@@ -1,0 +1,11 @@
+{% extends 'blog/base_biological.html' %}
+
+{% block content %}
+    <div class="col-md-6">
+        {% for biological in biologicals %}
+            <div class="inventory">
+                <h1><a href="{% url 'blog:biological_list' pk=biological.pk %}">{{ biological.name }}</a></h1>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

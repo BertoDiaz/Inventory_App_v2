@@ -19,7 +19,8 @@ from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
-from .models import Name_Waveguide, Type_Component, Type_Optic, Type_Chemical
+from .models import Name_Waveguide, Type_Component, Type_Optic, Type_Chemical, Type_Biological
+from .models import Type_Instrumentation
 from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm
 from .forms import ElectronicForm, OpticForm, ChemicalForm, BiologicalForm, InstrumentationForm
 from .forms import OthersForm, SignUpForm, RunForm, WaferForm, ChipForm, WaveguideForm
@@ -717,6 +718,7 @@ def chemical_edit(request, pk):
             else:
                 messages.warning(request, 'Already exists an chemical with this name.')
                 return redirect('blog:chemical_edit', pk=chemical.pk)
+
     else:
         form = ChemicalForm(instance=chemical)
     return render(request, 'blog/chemical_edit.html', {'form': form})
@@ -742,7 +744,24 @@ def chemical_remove(request, pk):
     return redirect('blog:chemical_list')
 
 
-def biological_list(request):
+def biological_list_type_biological(request):
+    """
+    biological_list_type_biological function docstring.
+
+    This function shows the list of type of biologicals that are stored in this web app and they are
+    ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of type of biologicals.
+    """
+    biologicals = Type_Biological.objects.all()
+
+    return render(request, 'blog/biological_list_type_biological.html',
+                  {'biologicals': biologicals})
+
+
+def biological_list(request, pk):
     """
     Biological_list function docstring.
 
@@ -750,13 +769,18 @@ def biological_list(request):
     ordered by creation date.
 
     @param request: HTML request page.
+    @param pk: primary key of biological types.
 
-    @return: list of biologicals.
+    @return: list of biological types.
     """
-    biologicals = Biological.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date').reverse()
+    type_biological = Type_Biological.objects.get(pk=pk)
+    biologicals = Biological.objects.filter(type_biological=type_biological)
+    biologicalsBack = True
+    type_bioBack = False
 
-    return render(request, 'blog/biological_list.html', {'biologicals': biologicals})
+    return render(request, 'blog/biological_list.html', {'biologicals': biologicals,
+                                                         'biologicalsBack': biologicalsBack,
+                                                         'type_bioBack': type_bioBack})
 
 
 def biological_detail(request, pk):
@@ -774,8 +798,12 @@ def biological_detail(request, pk):
     @raise 404: biological does not exists.
     """
     biological = get_object_or_404(Biological, pk=pk)
+    biologicalsBack = False
+    type_bioBack = True
 
-    return render(request, 'blog/biological_detail.html', {'biological': biological})
+    return render(request, 'blog/biological_detail.html', {'biological': biological,
+                                                           'biologicalsBack': biologicalsBack,
+                                                           'type_bioBack': type_bioBack})
 
 
 @login_required
@@ -798,7 +826,7 @@ def biological_new(request):
             return redirect('blog:biological_detail', pk=biological.pk)
     else:
         form = BiologicalForm()
-    return render(request, 'blog/biological_edit.html', {'form': form})
+    return render(request, 'blog/biological_new.html', {'form': form})
 
 
 @login_required
@@ -822,8 +850,22 @@ def biological_edit(request, pk):
         form = BiologicalForm(data=request.POST, instance=biological)
         if form.is_valid():
             biological = form.save(commit=False)
-            biological.save()
-            return redirect('blog:biological_detail', pk=biological.pk)
+            biological_all = Biological.objects.all()
+
+            duplicates = False
+
+            for data in biological_all:
+                if data.name == biological.name and data.pk != biological.pk:
+                    duplicates = True
+
+            if not duplicates:
+                messages.success(request, 'You have updated your biological.')
+                biological.save()
+                return redirect('blog:biological_detail', pk=biological.pk)
+            else:
+                messages.warning(request, 'Already exists an biological with this name.')
+                return redirect('blog:biological_edit', pk=biological.pk)
+
     else:
         form = BiologicalForm(instance=biological)
     return render(request, 'blog/biological_edit.html', {'form': form})
@@ -849,7 +891,24 @@ def biological_remove(request, pk):
     return redirect('blog:biological_list')
 
 
-def instrumentation_list(request):
+def instrumentation_list_type(request):
+    """
+    Instrumentation_list_type function docstring.
+
+    This function shows the list of instrument types that are stored in this web app and they are
+    ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of instrument types.
+    """
+    instrumentations = Type_Instrumentation.objects.all()
+
+    return render(request, 'blog/instrumentation_list_type.html',
+                  {'instrumentations': instrumentations})
+
+
+def instrumentation_list(request, pk):
     """
     Instrumentation_list function docstring.
 
@@ -857,13 +916,18 @@ def instrumentation_list(request):
     ordered by creation date.
 
     @param request: HTML request page.
+    @param pk: primary key of instrument types..
 
-    @return: list of instruments.
+    @return: list of instrument types.
     """
-    instrumentations = Instrumentation.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date').reverse()
+    type_instrumentation = Type_Instrumentation.objects.get(pk=pk)
+    instrumentations = Instrumentation.objects.filter(type_instrumentation=type_instrumentation)
+    instrumentBack = True
+    type_instrumBack = False
 
-    return render(request, 'blog/instrumentation_list.html', {'instrumentations': instrumentations})
+    return render(request, 'blog/instrumentation_list.html', {'instrumentations': instrumentations,
+                                                              'instrumentBack': instrumentBack,
+                                                              'type_instrumBack': type_instrumBack})
 
 
 def instrumentation_detail(request, pk):
@@ -881,8 +945,13 @@ def instrumentation_detail(request, pk):
     @raise 404: instrument does not exists.
     """
     instrumentation = get_object_or_404(Instrumentation, pk=pk)
+    instrumentBack = False
+    type_instrumBack = True
 
-    return render(request, 'blog/instrumentation_detail.html', {'instrumentation': instrumentation})
+    return render(request, 'blog/instrumentation_detail.html', {'instrumentation': instrumentation,
+                                                                'instrumentBack': instrumentBack,
+                                                                'type_instrumBack': type_instrumBack
+                                                                })
 
 
 @login_required
@@ -905,7 +974,7 @@ def instrumentation_new(request):
             return redirect('blog:instrumentation_detail', pk=instrumentation.pk)
     else:
         form = InstrumentationForm()
-    return render(request, 'blog/instrumentation_edit.html', {'form': form})
+    return render(request, 'blog/instrumentation_new.html', {'form': form})
 
 
 @login_required
@@ -929,8 +998,23 @@ def instrumentation_edit(request, pk):
         form = InstrumentationForm(data=request.POST, instance=instrumentation)
         if form.is_valid():
             instrumentation = form.save(commit=False)
-            instrumentation.save()
-            return redirect('blog:instrumentation_detail', pk=instrumentation.pk)
+            instrumentation_all = Instrumentation.objects.all()
+
+            duplicates = False
+
+            for data in instrumentation_all:
+                if data.characteristics == instrumentation.characteristics:
+                    if data.pk != instrumentation.pk:
+                        duplicates = True
+
+            if not duplicates:
+                messages.success(request, 'You have updated your instrumentation.')
+                instrumentation.save()
+                return redirect('blog:instrumentation_detail', pk=instrumentation.pk)
+            else:
+                messages.warning(request, 'Already exists an instrumentation with this name.')
+                return redirect('blog:instrumentation_edit', pk=instrumentation.pk)
+
     else:
         form = InstrumentationForm(instance=instrumentation)
     return render(request, 'blog/instrumentation_edit.html', {'form': form})

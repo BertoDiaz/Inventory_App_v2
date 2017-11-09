@@ -1,43 +1,52 @@
 {% extends 'blog/base_biological.html' %}
 
 {% block content %}
-    <div class="orderDetail">
-        <div class="button">
-            {% if user.is_authenticated %}
-                <a class="btn btn-default" href="{% url 'blog:biological_edit' pk=biological.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a class="btn btn-default" href="{% url 'blog:biological_remove' pk=biological.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-            {% endif %}
-        </div>
-        <h1>{{ biological.type_biological }}</h1>
-        <div class="date">
-            {% if biological.created_date %}
-                {{ biological.created_date }}
-            {% endif %}
-        </div>
+    <div class="col-md-6">
         <div class="orderDetail">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">NAME: </span>{{ biological.name }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">LOCATION: </span>{{ biological.location }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">CLOSET: </span>{{ computing.closet }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">REFERENCE: </span>{{ biological.reference }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">QUANTITY: </span>{{ biological.quantity }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">SUPPLIER: </span>{{ biological.supplier }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">CONCENTRATION: </span>{{ biological.concentration }} {{ biological.unit_chemical }}</p>
-                </li>
-            </ul>
+            <div class="button">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-default" href="{% url 'blog:biological_edit' pk=biological.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a class="btn btn-default" href="{% url 'blog:biological_remove' pk=biological.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                {% endif %}
+            </div>
+            <h1>{{ biological.type_biological }}</h1>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="date">
+                {% if biological.created_date %}
+                    {{ biological.created_date }}
+                {% endif %}
+            </div>
+            <div class="orderDetail">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">NAME: </span>{{ biological.name }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">LOCATION: </span>{{ biological.location }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">REFERENCE: </span>{{ biological.reference }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">QUANTITY: </span>{{ biological.quantity }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">SUPPLIER: </span>{{ biological.supplier }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">CONCENTRATION: </span>{{ biological.concentration }} {% if biological.concentration %}{{ biological.unit_biological }}{% endif %}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">MOLECULAR WEIGHT: </span>{{ biological.molecular_weight }} {% if biological.molecular_weight %}{{ biological.unit_biological }}{% endif %}</p>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -34,10 +34,15 @@
             ************************************************************************************ -->
             {% if user.is_authenticated %}
                 <a href="{% url 'blog:instrumentation_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+                {% if instrumentBack %}
+                    <a href="{% url 'blog:instrumentation_list_type' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% elif type_instrumBack %}
+                    <a href="{% url 'blog:instrumentation_list' pk=instrumentation.type_instrumentation.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% endif %}
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
-            <h1><a href="{% url 'blog:instrumentation_list' %}">Instrumentation</a></h1>
+            <h1><a href="{% url 'blog:instrumentation_list_type' %}">Instrumentation</a></h1>
         </div>
         <div class="content container">
             <div class="row">
