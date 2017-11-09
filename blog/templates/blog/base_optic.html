@@ -37,7 +37,7 @@
                 {% if opticsBack %}
                     <a href="{% url 'blog:optic_list_type_optic' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% elif type_opticBack %}
-                    <a href="{% url 'blog:optic_list' component=optic.name_optic %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                    <a href="{% url 'blog:optic_list' pk=optic.type_optic.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>

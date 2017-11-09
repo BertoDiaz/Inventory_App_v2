@@ -27,7 +27,7 @@ urlpatterns = [
     # #################### ELECTRONIC #################### #
     url(r'^electronic/component/$', views.electronic_list_type_components,
         name='electronic_list_type_components'),
-    url(r'^electronic/component/(?P<component>[a-zA-Z0-9_]+)/$', views.electronic_list,
+    url(r'^electronic/component/(?P<pk>[0-9]+)/$', views.electronic_list,
         name='electronic_list'),
     url(r'^electronic/(?P<pk>[0-9]+)/$', views.electronic_detail, name='electronic_detail'),
     url(r'^electronic/new/$', views.electronic_new, name='electronic_new'),
@@ -36,14 +36,17 @@ urlpatterns = [
 
     # #################### OPTIC #################### #
     url(r'^optic/component/$', views.optic_list_type_optic, name='optic_list_type_optic'),
-    url(r'^optic/component/(?P<component>[a-zA-Z0-9_]+)/$', views.optic_list, name='optic_list'),
+    url(r'^optic/component/(?P<pk>[0-9]+)/$', views.optic_list, name='optic_list'),
     url(r'^optic/(?P<pk>[0-9]+)/$', views.optic_detail, name='optic_detail'),
     url(r'^optic/new/$', views.optic_new, name='optic_new'),
     url(r'^optic/(?P<pk>[0-9]+)/edit/$', views.optic_edit, name='optic_edit'),
     url(r'^optic/(?P<pk>\d+)/remove/$', views.optic_remove, name='optic_remove'),
 
     # #################### CHEMICAL ##################### #
-    url(r'^chemical/$', views.chemical_list, name='chemical_list'),
+    url(r'^chemical/component/$', views.chemical_list_type_chemical,
+        name='chemical_list_type_chemical'),
+    url(r'^chemical/component/(?P<pk>[0-9]+)/$', views.chemical_list,
+        name='chemical_list'),
     url(r'^chemical/(?P<pk>[0-9]+)/$', views.chemical_detail, name='chemical_detail'),
     url(r'^chemical/new/$', views.chemical_new, name='chemical_new'),
     url(r'^chemical/(?P<pk>[0-9]+)/edit/$', views.chemical_edit, name='chemical_edit'),

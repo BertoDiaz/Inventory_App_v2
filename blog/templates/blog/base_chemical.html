@@ -35,10 +35,15 @@
             ************************************************************************************ -->
             {% if user.is_authenticated %}
                 <a href="{% url 'blog:chemical_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+                {% if chemicalsBack %}
+                    <a href="{% url 'blog:chemical_list_type_chemical' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% elif type_chemicalBack %}
+                    <a href="{% url 'blog:chemical_list' pk=chemical.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% endif %}
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
-            <h1><a href="{% url 'blog:chemical_list' %}">Chemical</a></h1>
+            <h1><a href="{% url 'blog:chemical_list_type_chemical' %}">Chemical</a></h1>
         </div>
         <div class="content container">
             <div class="row">

@@ -1,0 +1,9 @@
+{% extends 'blog/base_chemical.html' %}
+
+{% block content %}
+    {% for chemical in chemicals %}
+        <div class="inventory">
+            <h1><a href="{% url 'blog:chemical_list' pk=chemical.pk %}">{{ chemical.name }}</a></h1>
+        </div>
+    {% endfor %}
+{% endblock content %}

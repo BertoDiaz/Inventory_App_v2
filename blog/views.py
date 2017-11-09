@@ -19,7 +19,7 @@ from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
-from .models import Name_Waveguide, Type_Component, Type_Optic
+from .models import Name_Waveguide, Type_Component, Type_Optic, Type_Chemical
 from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm
 from .forms import ElectronicForm, OpticForm, ChemicalForm, BiologicalForm, InstrumentationForm
 from .forms import OthersForm, SignUpForm, RunForm, WaferForm, ChipForm, WaveguideForm
@@ -320,7 +320,7 @@ def electronic_list_type_components(request):
                   {'electronics': electronics})
 
 
-def electronic_list(request, component):
+def electronic_list(request, pk):
     """
     Electronic_list function docstring.
 
@@ -328,11 +328,11 @@ def electronic_list(request, component):
     they are ordered by creation date.
 
     @param request: HTML request page.
-    @param component: type of component.
+    @param pk: primary key of chemical type.
 
     @return: list of electronic components.
     """
-    type_component = Type_Component.objects.get(name=component)
+    type_component = Type_Component.objects.get(pk=pk)
     electronics = Electronic.objects.filter(type_component=type_component)
     componentsBack = True
     type_componBack = False
@@ -469,7 +469,7 @@ def optic_list_type_optic(request):
     return render(request, 'blog/optic_list_type_optic.html', {'optics': optics})
 
 
-def optic_list(request, component):
+def optic_list(request, pk):
     """
     Optic_list function docstring.
 
@@ -477,11 +477,11 @@ def optic_list(request, component):
     they are ordered by creation date.
 
     @param request: HTML request page.
-    @param component: type of component.
+    @param pk: primary key of chemical type.
 
     @return: list of optic components.
     """
-    type_optic = Type_Optic.objects.get(name=component)
+    type_optic = Type_Optic.objects.get(pk=pk)
     optics = Optic.objects.filter(type_optic=type_optic)
     opticsBack = True
     type_opticBack = False
@@ -597,7 +597,23 @@ def optic_remove(request, pk):
     return redirect('blog:optic_list')
 
 
-def chemical_list(request):
+def chemical_list_type_chemical(request):
+    """
+    Chemical_list_type_chemical function docstring.
+
+    This function shows the list of type of chemicals that are stored in this web app and they are
+    ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of type of chemicals.
+    """
+    chemicals = Type_Chemical.objects.all()
+
+    return render(request, 'blog/chemical_list_type_chemical.html', {'chemicals': chemicals})
+
+
+def chemical_list(request, pk):
     """
     Chemical_list function docstring.
 
@@ -605,13 +621,18 @@ def chemical_list(request):
     ordered by creation date.
 
     @param request: HTML request page.
+    @param pk: primary key of chemical type.
 
     @return: list of chemicals.
     """
-    chemicals = Chemical.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date').reverse()
+    type_chemical = Type_Chemical.objects.get(pk=pk)
+    chemicals = Chemical.objects.filter(type_chemical=type_chemical)
+    chemicalsBack = True
+    type_chemicalBack = False
 
-    return render(request, 'blog/chemical_list.html', {'chemicals': chemicals})
+    return render(request, 'blog/chemical_list.html', {'chemicals': chemicals,
+                                                       'chemicalsBack': chemicalsBack,
+                                                       'type_chemicalBack': type_chemicalBack})
 
 
 def chemical_detail(request, pk):
@@ -629,8 +650,12 @@ def chemical_detail(request, pk):
     @raise 404: chemical does not exists.
     """
     chemical = get_object_or_404(Chemical, pk=pk)
+    chemicalsBack = False
+    type_chemicalBack = True
 
-    return render(request, 'blog/chemical_detail.html', {'chemical': chemical})
+    return render(request, 'blog/chemical_detail.html', {'chemical': chemical,
+                                                         'chemicalsBack': chemicalsBack,
+                                                         'type_chemicalBack': type_chemicalBack})
 
 
 @login_required
@@ -653,7 +678,7 @@ def chemical_new(request):
             return redirect('blog:chemical_detail', pk=chemical.pk)
     else:
         form = ChemicalForm()
-    return render(request, 'blog/chemical_edit.html', {'form': form})
+    return render(request, 'blog/chemical_new.html', {'form': form})
 
 
 @login_required
@@ -677,8 +702,21 @@ def chemical_edit(request, pk):
         form = ChemicalForm(data=request.POST, instance=chemical)
         if form.is_valid():
             chemical = form.save(commit=False)
-            chemical.save()
-            return redirect('blog:chemical_detail', pk=chemical.pk)
+            chemical_all = Chemical.objects.all()
+
+            duplicates = False
+
+            for data in chemical_all:
+                if data.name == chemical.name and data.pk != chemical.pk:
+                    duplicates = True
+
+            if not duplicates:
+                messages.success(request, 'You have updated your chemical.')
+                chemical.save()
+                return redirect('blog:chemical_detail', pk=chemical.pk)
+            else:
+                messages.warning(request, 'Already exists an chemical with this name.')
+                return redirect('blog:chemical_edit', pk=chemical.pk)
     else:
         form = ChemicalForm(instance=chemical)
     return render(request, 'blog/chemical_edit.html', {'form': form})

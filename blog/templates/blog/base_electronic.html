@@ -37,7 +37,7 @@
                 {% if componentsBack %}
                     <a href="{% url 'blog:electronic_list_type_components' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% elif type_componBack %}
-                    <a href="{% url 'blog:electronic_list' component=electronic.name_component %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                    <a href="{% url 'blog:electronic_list' pk=electronic.type_component.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>

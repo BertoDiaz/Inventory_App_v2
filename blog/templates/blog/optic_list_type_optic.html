@@ -4,7 +4,7 @@
     <div class="col-md-6">
         {% for optic in optics %}
             <div class="inventory">
-                <h1><a href="{% url 'blog:optic_list' component=optic.name %}">{{ optic.name }}</a></h1>
+                <h1><a href="{% url 'blog:optic_list' pk=optic.pk %}">{{ optic.name }}</a></h1>
             </div>
         {% endfor %}
     </div>

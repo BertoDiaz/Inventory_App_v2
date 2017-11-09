@@ -1,43 +1,49 @@
 {% extends 'blog/base_chemical.html' %}
 
 {% block content %}
-    <div class="orderDetail">
-        <div class="button">
-            {% if user.is_authenticated %}
-                <a class="btn btn-default" href="{% url 'blog:chemical_edit' pk=chemical.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a class="btn btn-default" href="{% url 'blog:chemical_remove' pk=chemical.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-            {% endif %}
-        </div>
-        <h1>{{ chemical.type_chemical }}</h1>
-        <div class="date">
-            {% if chemical.created_date %}
-                {{ chemical.created_date }}
-            {% endif %}
-        </div>
+    <div class="col-md-6">
         <div class="orderDetail">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">NAME: </span>{{ chemical.name }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">LOCATION: </span>{{ chemical.location }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">CLOSET: </span>{{ computing.closet }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">REFERENCE: </span>{{ chemical.reference }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">QUANTITY: </span>{{ chemical.quantity }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">SUPPLIER: </span>{{ chemical.supplier }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p><span style="font-weight: bold;">CONCENTRATION: </span>{{ chemical.concentration }} {{ chemical.unit_chemical }}</p>
-                </li>
-            </ul>
+            <div class="button">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-default" href="{% url 'blog:chemical_edit' pk=chemical.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a class="btn btn-default" href="{% url 'blog:chemical_remove' pk=chemical.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                {% endif %}
+            </div>
+            <h1>{{ chemical.type_chemical }}</h1>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="date">
+                {% if chemical.created_date %}
+                    {{ chemical.created_date }}
+                {% endif %}
+            </div>
+            <div class="orderDetail">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">NAME: </span>{{ chemical.name }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">LOCATION: </span>{{ chemical.location }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">REFERENCE: </span>{{ chemical.reference }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">QUANTITY: </span>{{ chemical.quantity }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">SUPPLIER: </span>{{ chemical.supplier }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">CONCENTRATION: </span>{{ chemical.concentration }} {{ chemical.unit_chemical }}</p>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 {% endblock %}
