@@ -2,14 +2,14 @@
 
 {% block content %}
     <div class="col-md-6">
-        {% for biological in biologicals %}
-            <div class="inventory">
+        <div class="inventory">
+            {% for biological in biologicals %}
                 <div class="date">
                     {{ biological.created_date }}
                 </div>
                 <h1><a href="{% url 'blog:biological_detail' pk=biological.pk %}">{{ biological.name }}</a></h1>
                 <p>{{ biological.type_biological|linebreaksbr }}</p>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}

@@ -2,14 +2,14 @@
 
 {% block content %}
     <div class="col-md-6">
-        {% for instrumentation in instrumentations %}
-            <div class="inventory">
+        <div class="inventory">
+            {% for instrumentation in instrumentations %}
                 <div class="date">
                     {{ instrumentation.created_date }}
                 </div>
                 <h1><a href="{% url 'blog:instrumentation_detail' pk=instrumentation.pk %}">{{ instrumentation.characteristics }}</a></h1>
                 <p>{{ instrumentation.type_instrumentation|linebreaksbr }}</p>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}

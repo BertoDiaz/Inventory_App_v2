@@ -3,15 +3,15 @@
 {% block content %}
     <div class="row">
         <div class="col-md-6">
-            {% for electronic in electronics %}
-                <div class="inventory">
+            <div class="inventory">
+                {% for electronic in electronics %}
                     <div class="date">
                         {{ electronic.created_date }}
                     </div>
                     <h1><a href="{% url 'blog:electronic_detail' pk=electronic.pk %}">{{ electronic.name_component }}</a></h1>
                     <p>{{ electronic.value|linebreaksbr }}</p>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock content %}

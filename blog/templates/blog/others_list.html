@@ -1,12 +1,12 @@
 {% extends 'blog/base_others.html' %}
 
 {% block content %}
-    {% for others in otherss %}
-        <div class="inventory">
+    <div class="inventory">
+        {% for others in otherss %}
             <div class="date">
                 {{ others.created_date }}
             </div>
             <h1><a href="{% url 'blog:others_detail' pk=others.pk %}">{{ others.name }}</a></h1>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock content %}

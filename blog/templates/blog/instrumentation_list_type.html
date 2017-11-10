@@ -2,10 +2,10 @@
 
 {% block content %}
     <div class="col-md-6">
-        {% for instrumentation in instrumentations %}
-            <div class="inventory">
+        <div class="inventory">
+            {% for instrumentation in instrumentations %}
                 <h1><a href="{% url 'blog:instrumentation_list' pk=instrumentation.pk %}">{{ instrumentation.name }}</a></h1>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}

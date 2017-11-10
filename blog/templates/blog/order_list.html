@@ -1,13 +1,12 @@
 {% extends 'blog/base_order.html' %}
 
 {% block content %}
-    {% for order in orders %}
-        <div class="order">
+    <div class="order">
+        {% for order in orders %}
             <div class="date">
                 {{ order.created_date }}
             </div>
             <h1><a href="{% url 'blog:order_detail' pk=order.pk %}">{{ order.name }}</a></h1>
-            <!-- <p>{{ order.type_item|linebreaksbr }}</p> -->
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock content %}

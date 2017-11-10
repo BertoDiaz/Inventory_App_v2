@@ -2,14 +2,14 @@
 
 {% block content %}
     <div class="col-md-6">
-        {% for computing in computings %}
-            <div class="inventory">
+        <div class="inventory">
+            {% for computing in computings %}
                 <div class="date">
                     {{ computing.created_date }}
                 </div>
                 <h1><a href="{% url 'blog:computing_detail' pk=computing.pk %}">{{ computing.name }}</a></h1>
                 <p>{{ computing.type_object|linebreaksbr }}</p>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}
