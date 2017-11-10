@@ -207,7 +207,7 @@ class Biological(models.Model):
     This model stores the biological components.
     """
 
-    type_biological = models.ForeignKey('Type_Biological',
+    type_biological = models.ForeignKey('Type_Biological_2',
                                         help_text="Type of the biological component.")
     name = models.CharField(max_length=200, blank=True,
                             help_text="Name of the biological component.")
@@ -442,6 +442,7 @@ class Type_Chemical(models.Model):
     """
 
     name = models.CharField(max_length=200, help_text="Name of the type of chemical.")
+    state = models.ForeignKey('State', null=True)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -464,14 +465,77 @@ class Type_Chemical(models.Model):
         return self.name
 
 
-class Type_Biological(models.Model):
+class State(models.Model):
     """
-    Type biological model docstring.
+    State model docstring.
+
+    This model stores the different states of a chemical.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the state of chemical.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+
+    def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the state of chemical was created
+        and save the info.
+        """
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the state of chemical.
+
+        @return: a string with the name of the state of chemical.
+        """
+        return self.name
+
+
+class Type_Biological_1(models.Model):
+    """
+    Type biological 1 model docstring.
 
     This model stores the different biological components.
     """
 
     name = models.CharField(max_length=200, help_text="Name of the type of biological component.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+
+    def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the type of biological component was created
+        and save the info.
+        """
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the type of biological component.
+
+        @return: a string with the name of the type of biological component.
+        """
+        return self.name
+
+
+class Type_Biological_2(models.Model):
+    """
+    Type biological 2 model docstring.
+
+    This model stores the different biological components.
+    """
+
+    name = models.CharField(max_length=200, help_text="Name of the type of biological component.")
+    type_biological_1 = models.ForeignKey('Type_Biological_1')
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):

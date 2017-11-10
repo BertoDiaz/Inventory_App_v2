@@ -19,8 +19,8 @@ from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Others, Full_Name_Users, Run, Chip, Wafer, Waveguide
-from .models import Name_Waveguide, Type_Component, Type_Optic, Type_Chemical, Type_Biological
-from .models import Type_Instrumentation
+from .models import Name_Waveguide, Type_Component, Type_Optic, Type_Chemical, State
+from .models import Type_Biological_1, Type_Biological_2, Type_Instrumentation
 from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm
 from .forms import ElectronicForm, OpticForm, ChemicalForm, BiologicalForm, InstrumentationForm
 from .forms import OthersForm, SignUpForm, RunForm, WaferForm, ChipForm, WaveguideForm
@@ -609,9 +609,11 @@ def chemical_list_type_chemical(request):
 
     @return: list of type of chemicals.
     """
+    states = State.objects.all()
     chemicals = Type_Chemical.objects.all()
 
-    return render(request, 'blog/chemical_list_type_chemical.html', {'chemicals': chemicals})
+    return render(request, 'blog/chemical_list_type_chemical.html', {'states': states,
+                                                                     'chemicals': chemicals})
 
 
 def chemical_list(request, pk):
@@ -755,10 +757,20 @@ def biological_list_type_biological(request):
 
     @return: list of type of biologicals.
     """
-    biologicals = Type_Biological.objects.all()
+    biologicals = Type_Biological_1.objects.all()
+
+    biologicals_2 = []
+
+    for biological in biologicals:
+        data = Type_Biological_2.objects.filter(type_biological_1=biological)
+        biologicals_2.append(data)
+
+    # for bios in biologicals_2:
+    #     for bio in bios:
+    #         print(bio.type_biological_1)
 
     return render(request, 'blog/biological_list_type_biological.html',
-                  {'biologicals': biologicals})
+                  {'biologicals': biologicals, 'biologicals_2': biologicals_2})
 
 
 def biological_list(request, pk):
@@ -773,8 +785,9 @@ def biological_list(request, pk):
 
     @return: list of biological types.
     """
-    type_biological = Type_Biological.objects.get(pk=pk)
-    biologicals = Biological.objects.filter(type_biological=type_biological)
+    type_biological_2 = Type_Biological_2.objects.get(pk=pk)
+    biologicals = Biological.objects.filter(type_biological=type_biological_2)
+    print(biologicals)
     biologicalsBack = True
     type_bioBack = False
 

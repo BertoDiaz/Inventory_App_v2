@@ -2,10 +2,17 @@
 
 {% block content %}
     <div class="col-md-6">
-        {% for biological in biologicals %}
-            <div class="inventory">
-                <h1><a href="{% url 'blog:biological_list' pk=biological.pk %}">{{ biological.name }}</a></h1>
-            </div>
-        {% endfor %}
+        <div class="inventory">
+            {% for biological in biologicals %}
+                <h1>{{ biological }}</h1>
+                {% for bios in biologicals_2 %}
+                    {% for bio in bios %}
+                        {% if bio.type_biological_1 == biological %}
+                            <h2><a class="inventory-secondCol" href="{% url 'blog:biological_list' pk=bio.pk %}">{{ bio }}</a></h2>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}

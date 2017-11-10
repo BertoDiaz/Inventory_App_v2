@@ -3,10 +3,10 @@
 {% block content %}
     <div class="inventory">
         <h1><a href="{% url 'blog:computing_list' %}">Computing</a></h1>
-        <h1><a href="{% url 'blog:electronic_list' %}">Electronic</a></h1>
-        <h1><a href="{% url 'blog:optic_list' %}">Optic</a></h1>
-        <h1><a href="{% url 'blog:chemical_list' %}">Chemical</a></h1>
-        <h1><a href="{% url 'blog:biological_list' %}">Biological</a></h1>
-        <h1><a href="{% url 'blog:instrumentation_list' %}">Instrumentation</a></h1>
+        <h1><a href="{% url 'blog:electronic_list_type_components' %}">Electronic</a></h1>
+        <h1><a href="{% url 'blog:optic_list_type_optic' %}">Optic</a></h1>
+        <h1><a href="{% url 'blog:chemical_list_type_chemical' %}">Chemical</a></h1>
+        <h1><a href="{% url 'blog:biological_list_type_biological' %}">Biological</a></h1>
+        <h1><a href="{% url 'blog:instrumentation_list_type' %}">Instrumentation</a></h1>
     </div>
 {% endblock content %}

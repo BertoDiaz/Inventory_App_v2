@@ -9,7 +9,7 @@
                     <a class="btn btn-default" href="{% url 'blog:biological_remove' pk=biological.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                 {% endif %}
             </div>
-            <h1>{{ biological.type_biological }}</h1>
+            <h1>{{ biological.name }}</h1>
             {% if messages %}
                 <div class="messages">
                     {% for message in messages %}
@@ -25,7 +25,7 @@
             <div class="orderDetail">
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <p><span style="font-weight: bold;">NAME: </span>{{ biological.name }}</p>
+                        <p><span style="font-weight: bold;">TYPE BIOLOGICAL: </span>{{ biological.type_biological }}</p>
                     </li>
                     <li class="list-group-item">
                         <p><span style="font-weight: bold;">LOCATION: </span>{{ biological.location }}</p>

@@ -1,9 +1,14 @@
 {% extends 'blog/base_chemical.html' %}
 
 {% block content %}
-    {% for chemical in chemicals %}
-        <div class="inventory">
-            <h1><a href="{% url 'blog:chemical_list' pk=chemical.pk %}">{{ chemical.name }}</a></h1>
-        </div>
-    {% endfor %}
+    <div class="inventory">
+        {% for state in states %}
+            <h1>{{ state.name }}</h1>
+            {% for chemical in chemicals %}
+                {% if chemical.state == state %}
+                    <h2><a class="inventory-secondCol" href="{% url 'blog:chemical_list' pk=chemical.pk %}">{{ chemical.name }}</a></h2>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock content %}

@@ -161,6 +161,12 @@ h1, h2, h3 {
 
 .inventory-secondCol {
     margin-left: 30px;
+    color: #3b649f;
+}
+
+.inventory-thirdCol {
+    margin-left: 80px;
+    color: #5d8367;
 }
 
 .order-form textarea, .order-form input {

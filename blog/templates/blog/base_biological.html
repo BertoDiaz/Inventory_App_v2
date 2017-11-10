@@ -38,7 +38,7 @@
                 {% if biologicalsBack %}
                     <a href="{% url 'blog:biological_list_type_biological' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% elif type_bioBack %}
-                    <a href="{% url 'blog:biological_list' pk=biological.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                    <a href="{% url 'blog:biological_list' pk=biological.type_biological.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
