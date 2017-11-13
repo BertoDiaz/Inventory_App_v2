@@ -213,7 +213,10 @@ def computing_detail(request, pk):
     """
     computing = get_object_or_404(Computing, pk=pk)
 
-    return render(request, 'blog/computing_detail.html', {'computing': computing})
+    backList = True
+
+    return render(request, 'blog/computing_detail.html', {'computing': computing,
+                                                          'backList': backList})
 
 
 @login_required
