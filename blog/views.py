@@ -1172,7 +1172,7 @@ def order_list(request):
     @return: list of orders.
     """
     orders = Order.objects.filter(
-        created_date__lte=timezone.now()).order_by('created_date').reverse()
+        created_date__lte=timezone.now(), author=request.user).order_by('created_date').reverse()
 
     return render(request, 'blog/order_list.html', {'orders': orders})
 
@@ -1198,8 +1198,12 @@ def order_detail(request, pk):
     if not products.exists():
         noItem = True
 
+    backList = True
+    backDetail = False
+
     return render(request, 'blog/order_detail.html', {'order': order, 'products': products,
-                                                      'noItem': noItem})
+                                                      'noItem': noItem, 'backList': backList,
+                                                      'backDetail': backDetail})
 
 
 @login_required
@@ -1303,9 +1307,14 @@ def order_new(request):
         order_form = OrderForm(prefix="orderForm")
         products_formset = ProductFormSet(prefix="form")
 
+        backList = True
+        backDetail = False
+
     context = {
         'order_form': order_form,
-        'products_formset': products_formset
+        'products_formset': products_formset,
+        'backList': backList,
+        'backDetail': backDetail
     }
 
     return render(request, 'blog/order_new.html', context)
@@ -1524,11 +1533,17 @@ def order_edit(request, pk):
         products_formset = ProductFormSet(initial=product_data, prefix="form")
         count = products.count()
 
+        backList = False
+        backDetail = True
+
     context = {
+        'order': order_data,
         'order_form': order_form,
         'products_formset': products_formset,
         'noItem': noItem,
-        'count': count
+        'count': count,
+        'backList': backList,
+        'backDetail': backDetail
     }
 
     return render(request, 'blog/order_edit.html', context)
@@ -1549,8 +1564,9 @@ def order_send_email(request, pk):
 
     @raise 404: order does not exists.
     """
+    order = get_object_or_404(Order, pk=pk)
+
     if request.method == "POST":
-        order = get_object_or_404(Order, pk=pk)
         username = User.objects.get(username=order.author)
         sendEmail_form = SendEmailForm(data=request.POST)
 
@@ -1559,8 +1575,15 @@ def order_send_email(request, pk):
             # print(sendEmail_form.cleaned_data.get('password'))
             fromaddr = username.email
             toaddrs = 'pexespada@gmail.com'
-            subject = 'Formulario de pedido'
-            message = "<p>Buenas,</p><p>Adjunto a este correo el formulario de pedido.</p>"
+            subject = 'Order form'
+
+            if (order.file_exists):
+                message_1 = "<p>Dear,</p><p>Attached to this email the order form and budget.</p>"
+                message_2 = "<p></p><p>Best regards,</p><p>" + username.first_name + "</p>"
+                message = message_1 + message_2
+            else:
+                message = "<p>Dear,</p><p>Attached to this email the order form.</p>"
+
             msg = MIMEMultipart('related')
             msg['From'] = fromaddr
             msg['To'] = toaddrs
@@ -1569,15 +1592,26 @@ def order_send_email(request, pk):
             # Content-type:text/html
             message = MIMEText(message, 'html')
             msg.attach(message)
+
             # ADJUNTO
-            file = 'blog/formulariosPedidos/FP_' + order.name + '.xlsx'
-            if (os.path.isfile(file)):
+            orderForm = 'blog/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx'
+            if (os.path.isfile(orderForm)):
                 adjunto = MIMEBase('application', 'octet-stream')
-                adjunto.set_payload(open(file, "rb").read())
+                adjunto.set_payload(open(orderForm, "rb").read())
                 encode_base64(adjunto)
                 adjunto.add_header('Content-Disposition',
-                                   'attachment; filename = "%s"' % os.path.basename(file))
+                                   'attachment; filename = "%s"' % os.path.basename(orderForm))
                 msg.attach(adjunto)
+
+            uploadFile = 'blog/orderForm/' + order.author.username + '/' + order.name_file_attach
+            if (os.path.isfile(uploadFile)):
+                adjunto = MIMEBase('application', 'octet-stream')
+                adjunto.set_payload(open(uploadFile, "rb").read())
+                encode_base64(adjunto)
+                adjunto.add_header('Content-Disposition',
+                                   'attachment; filename = "%s"' % os.path.basename(uploadFile))
+                msg.attach(adjunto)
+
             # ENVIAR
             server = smtplib.SMTP('mail.icn2.cat', 587)
             # protocolo de cifrado de datos utilizado por gmail
@@ -1591,7 +1625,13 @@ def order_send_email(request, pk):
         return redirect('blog:order_detail', pk=pk)
     else:
         form = SendEmailForm()
-        return render(request, 'blog/order_send_email.html', {'form': form})
+
+        backList = False
+        backDetail = True
+
+        return render(request, 'blog/order_send_email.html', {'form': form, 'order': order,
+                                                              'backList': backList,
+                                                              'backDetail': backDetail})
 
 
 @login_required
@@ -1618,6 +1658,9 @@ def order_add_file(request, pk):
             handle_uploaded_file(request.FILES['file'], order)
 
             order.file_exists = True
+            f = request.FILES['file']
+            name, extension = os.path.splitext(f.name)
+            order.name_file_attach = 'UF_' + order.name + extension
             order.save()
 
             messages.success(request, 'The file have been upload to your order.')
@@ -1626,7 +1669,13 @@ def order_add_file(request, pk):
 
     else:
         form = UploadFileForm()
-        return render(request, 'blog/order_add_file.html', {'form': form, 'order': order})
+
+        backList = False
+        backDetail = True
+
+        return render(request, 'blog/order_add_file.html', {'form': form, 'order': order,
+                                                            'backList': backList,
+                                                            'backDetail': backDetail})
 
 
 def handle_uploaded_file(f, order):

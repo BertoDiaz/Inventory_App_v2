@@ -90,7 +90,7 @@ class OrderForm(forms.ModelForm):
         # fields = ('name', 'applicant', 'budget', 'type_of_purchase', 'payment_conditions',
         #           'supplier', 'number_product',)
         fields = ('name', 'applicant', 'budget', 'type_of_purchase', 'payment_conditions',
-                  'supplier',)
+                  'supplier', 'file_exists',)
 
 
 class SendEmailForm(forms.Form):

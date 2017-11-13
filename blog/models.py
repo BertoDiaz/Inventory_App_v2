@@ -825,6 +825,8 @@ class Order(models.Model):
     supplier = models.ForeignKey('Supplier', help_text="Who provide of components of the order.")
     file_exists = models.BooleanField(default=False,
                                       help_text="To know if this order has a file assigned.")
+    name_file_attach = models.CharField(max_length=200, help_text="Name of the file upload.",
+                                        null=True, blank=True)
     # product = models.ForeignKey('Product', null=True)
     # number_product = models.IntegerField(default=1, help_text="Number of products to order.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
