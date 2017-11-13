@@ -823,6 +823,8 @@ class Order(models.Model):
     payment_conditions = models.ForeignKey('Payment',
                                            help_text="Conditions of payment of the order.")
     supplier = models.ForeignKey('Supplier', help_text="Who provide of components of the order.")
+    file_exists = models.BooleanField(default=False,
+                                      help_text="To know if this order has a file assigned.")
     # product = models.ForeignKey('Product', null=True)
     # number_product = models.IntegerField(default=1, help_text="Number of products to order.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")

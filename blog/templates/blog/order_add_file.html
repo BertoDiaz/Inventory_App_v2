@@ -1,0 +1,21 @@
+{% extends "blog/base_order.html" %}
+
+{% block content %}
+    <div class="login">
+        {% if order.file_exists %}
+            <p class="messageserror">This order already has a file, if you continue this file will be replaced.</p>
+        {% endif %}
+        <h4>Select your file *:</h4>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+            <tr>
+                <td style="padding-bottom: 10px;">{{ form.file }}</td>
+            </tr>
+            </table>
+
+            <button type="submit" class="send btn btn-default">Send</button>
+        </form>
+        <!-- <span class="form-text text-muted">*If this order already has a file assigned, this file will be replaced.</span> -->
+    </div>
+{% endblock %}

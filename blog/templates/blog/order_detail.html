@@ -7,6 +7,7 @@
                 <a class="btn btn-default" href="{% url 'blog:order_edit' pk=order.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
                 <a class="btn btn-default" href="{% url 'blog:order_remove' pk=order.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                 <a class="btn btn-default" href="{% url 'blog:order_send_email' pk=order.pk %}"><span class="glyphicon glyphicon-share-alt"></span></a>
+                <a class="btn btn-default" href="{% url 'blog:order_add_file' pk=order.pk %}"><span class="glyphicon glyphicon-file"></span></a>
             {% endif %}
         </div>
         <h1>{{ order.name }}</h1>

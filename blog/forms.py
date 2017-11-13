@@ -104,6 +104,16 @@ class SendEmailForm(forms.Form):
     password = forms.CharField(max_length=20, widget=forms.PasswordInput)
 
 
+class UploadFileForm(forms.Form):
+    """
+    Upload file form docstring.
+
+    This form is useds to upload a file to the server.
+    """
+
+    file = forms.FileField()
+
+
 class ProductForm(forms.ModelForm):
     """
     Product form docstring.

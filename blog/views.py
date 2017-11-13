@@ -24,7 +24,7 @@ from .models import Type_Biological_1, Type_Biological_2, Type_Instrumentation
 from .forms import InventoryForm, OrderForm, ProductForm, ComputingForm
 from .forms import ElectronicForm, OpticForm, ChemicalForm, BiologicalForm, InstrumentationForm
 from .forms import OthersForm, SignUpForm, RunForm, WaferForm, ChipForm, WaveguideForm
-from .forms import SendEmailForm
+from .forms import SendEmailForm, UploadFileForm
 
 
 def home(request):
@@ -1220,8 +1220,8 @@ def order_new(request):
         order_form = OrderForm(data=request.POST, prefix="orderForm")
         product_formset = ProductFormSet(data=request.POST, prefix="form")
 
-        print(order_form)
-        print(product_formset)
+        # print(order_form)
+        # print(product_formset)
 
         if order_form.is_valid() and product_formset.is_valid():
             order = order_form.save(commit=False)
@@ -1230,6 +1230,17 @@ def order_new(request):
 
             new_products = []
             duplicates = False
+
+            doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
+            doc.get_sheet_names()
+            sheet = doc.get_sheet_by_name('Order Form')
+            sheet['C6'] = order.applicant
+            sheet['C7'] = order.budget.name
+            sheet['C10'] = order.type_of_purchase.name
+            sheet['C12'] = order.payment_conditions.name
+            sheet['C17'] = order.supplier.name
+            num = 37
+            nameFile = "OF_" + order.name
 
             for product_form in product_formset:
                 description = product_form.cleaned_data.get('description')
@@ -1241,6 +1252,12 @@ def order_new(request):
                         if new_products_data.description == description:
                             duplicates = True
 
+                    numString = str(num)
+                    sheet['A' + numString] = description
+                    sheet['H' + numString] = quantity
+                    sheet['I' + numString] = unit_price
+                    num = num + 1
+
                     new_products.append(Product(description=description, quantity=quantity,
                                                 unit_price=unit_price, order=order))
 
@@ -1248,6 +1265,16 @@ def order_new(request):
                 with transaction.atomic():
                     if not duplicates:
                         Product.objects.bulk_create(new_products)
+
+                        sheet = setBordersCell(sheet)
+
+                        # print(order.author.username)
+
+                        if not os.path.exists('blog/orderForm/' + order.author.username + '/'):
+                            os.makedirs('blog/orderForm/' + order.author.username + '/')
+
+                        doc.save('blog/orderForm/' + order.author.username + '/' +
+                                 nameFile + '.xlsx')
 
                         messages.success(request, 'You have created your order.')
                         return redirect('blog:order_detail', pk=order.pk)
@@ -1329,29 +1356,29 @@ def setBordersCell(sheet):
     sheet.cell('D14').border = border_TopBottomThin
     sheet.cell('E14').border = border_TopBottomThin
     sheet.cell('F14').border = border_TopBottomThin
-    sheet.cell('G14').border = border_TopBottomThin
+    sheet.cell('G14').border = border_RightTopBottomThin
 
-    sheet.cell('D18').border = border_TopBottomThin
-    sheet.cell('E18').border = border_TopBottomThin
-    sheet.cell('F18').border = border_TopBottomThin
-    sheet.cell('G18').border = border_TopBottomThin
-    sheet.cell('H18').border = border_RightTopBottomThin
+    sheet.cell('D17').border = border_TopBottomThin
+    sheet.cell('E17').border = border_TopBottomThin
+    sheet.cell('F17').border = border_TopBottomThin
+    sheet.cell('G17').border = border_TopBottomThin
+    sheet.cell('H17').border = border_RightTopBottomThin
 
-    sheet.cell('G30').border = border_RightTopBottomThin
+    sheet.cell('G29').border = border_RightTopBottomThin
 
-    sheet.cell('B36').border = border_TopThin
-    sheet.cell('C36').border = border_TopThin
-    sheet.cell('D36').border = border_TopThin
-    sheet.cell('E36').border = border_TopThin
+    sheet.cell('B35').border = border_TopThin
+    sheet.cell('C35').border = border_TopThin
+    sheet.cell('D35').border = border_TopThin
+    sheet.cell('E35').border = border_TopThin
 
-    sheet.cell('B37').border = border_BottomThin
-    sheet.cell('C37').border = border_BottomThin
-    sheet.cell('D37').border = border_BottomThin
-    sheet.cell('E37').border = border_BottomThin
-    sheet.cell('F37').border = border_BottomThin
-    sheet.cell('G37').border = border_BottomThin
+    sheet.cell('B36').border = border_BottomThin
+    sheet.cell('C36').border = border_BottomThin
+    sheet.cell('D36').border = border_BottomThin
+    sheet.cell('E36').border = border_BottomThin
+    sheet.cell('F36').border = border_BottomThin
+    sheet.cell('G36').border = border_BottomThin
 
-    for num in range(38, 65):
+    for num in range(37, 63):
         numStr = str(num)
         sheet.cell('B' + numStr).border = border_TopBottomThin
         sheet.cell('C' + numStr).border = border_TopBottomThin
@@ -1360,9 +1387,9 @@ def setBordersCell(sheet):
         sheet.cell('F' + numStr).border = border_TopBottomThin
         sheet.cell('G' + numStr).border = border_RightTopBottomThin
 
+    sheet.cell('I66').border = border_TopBottomThin
     sheet.cell('I67').border = border_TopBottomThin
-    sheet.cell('I68').border = border_TopBottomThin
-    sheet.cell('I69').border = border_TopThinBottomDouble
+    sheet.cell('I68').border = border_TopThinBottomDouble
 
     img = Image('blog/static/images/icn2.png')
     # img.anchor(sheet.cell('H2'))
@@ -1370,56 +1397,56 @@ def setBordersCell(sheet):
     return sheet
 
 
-@login_required
-def order_new_next(request, pk):
-    """
-    order_new_next function docstring.
-
-    This function shows the second step of the form to create a new order.
-
-    @param request: HTML request page.
-
-    @param pk: primary key of the new order.
-
-    @return: First time, this shows the form to complete a new order. If the form is completed,
-    the Excel sheet is completed with the data and return the details of the new order.
-
-    @raise 404: order does not exists.
-    """
-    order = get_object_or_404(Order, pk=pk)
-    ProductFormSet = formset_factory(ProductForm, extra=order.number_product)
-    if request.method == "POST":
-        product = ProductForm()
-        formset = ProductFormSet(request.POST)
-        doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
-        doc.get_sheet_names()
-        sheet = doc.get_sheet_by_name('Order Form')
-        sheet['C6'] = order.applicant
-        sheet['C7'] = order.budget.name
-        sheet['C10'] = order.type_of_purchase.name
-        sheet['C12'] = order.payment_conditions.name
-        sheet['C18'] = order.supplier.name
-        num = 38
-        nameFile = "FP_" + order.name
-        if (formset.is_valid()):
-            for form in formset:
-                product = form.cleaned_data
-                product = form.save(commit=False)
-                numString = str(num)
-                sheet['A' + numString] = product.description
-                sheet['H' + numString] = product.quantity
-                sheet['I' + numString] = product.unit_price
-                num = num + 1
-                product.order = order
-                product.save()
-
-            sheet = setBordersCell(sheet)
-            doc.save('blog/orderForm/' + nameFile + '.xlsx')
-
-            return redirect('blog:order_detail', pk=order.pk)
-    else:
-        formset = ProductFormSet()
-    return render(request, 'blog/order_new_next.html', {'formset': formset})
+# @login_required
+# def order_new_next(request, pk):
+#     """
+#     order_new_next function docstring.
+#
+#     This function shows the second step of the form to create a new order.
+#
+#     @param request: HTML request page.
+#
+#     @param pk: primary key of the new order.
+#
+#     @return: First time, this shows the form to complete a new order. If the form is completed,
+#     the Excel sheet is completed with the data and return the details of the new order.
+#
+#     @raise 404: order does not exists.
+#     """
+#     order = get_object_or_404(Order, pk=pk)
+#     ProductFormSet = formset_factory(ProductForm, extra=order.number_product)
+#     if request.method == "POST":
+#         product = ProductForm()
+#         formset = ProductFormSet(request.POST)
+#         doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
+#         doc.get_sheet_names()
+#         sheet = doc.get_sheet_by_name('Order Form')
+#         sheet['C6'] = order.applicant
+#         sheet['C7'] = order.budget.name
+#         sheet['C10'] = order.type_of_purchase.name
+#         sheet['C12'] = order.payment_conditions.name
+#         sheet['C18'] = order.supplier.name
+#         num = 38
+#         nameFile = "FP_" + order.name
+#         if (formset.is_valid()):
+#             for form in formset:
+#                 product = form.cleaned_data
+#                 product = form.save(commit=False)
+#                 numString = str(num)
+#                 sheet['A' + numString] = product.description
+#                 sheet['H' + numString] = product.quantity
+#                 sheet['I' + numString] = product.unit_price
+#                 num = num + 1
+#                 product.order = order
+#                 product.save()
+#
+#             sheet = setBordersCell(sheet)
+#             doc.save('blog/orderForm/' + nameFile + '.xlsx')
+#
+#             return redirect('blog:order_detail', pk=order.pk)
+#     else:
+#         formset = ProductFormSet()
+#     return render(request, 'blog/order_new_next.html', {'formset': formset})
 
 
 @login_required
@@ -1565,6 +1592,60 @@ def order_send_email(request, pk):
     else:
         form = SendEmailForm()
         return render(request, 'blog/order_send_email.html', {'form': form})
+
+
+@login_required
+def order_add_file(request, pk):
+    """
+    Order_add_file function docstring.
+
+    This function add a file to the order.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the order.
+
+    @return: detail page of the order.
+
+    @raise 404: order does not exists.
+    """
+    order = get_object_or_404(Order, pk=pk)
+
+    if request.method == "POST":
+        form = UploadFileForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'], order)
+
+            order.file_exists = True
+            order.save()
+
+            messages.success(request, 'The file have been upload to your order.')
+
+        return redirect('blog:order_detail', pk=pk)
+
+    else:
+        form = UploadFileForm()
+        return render(request, 'blog/order_add_file.html', {'form': form, 'order': order})
+
+
+def handle_uploaded_file(f, order):
+    """
+    Handle_uploaded_file function docstring.
+
+    This function save a file in the server.
+
+    @param f: file to upload.
+
+    @param order: order of the file.
+    """
+    name, extension = os.path.splitext(f.name)
+    # print(name)
+    # print(extension)
+    with open('blog/orderForm/' + order.author.username + '/UF_' +
+              order.name + extension, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
 @login_required
