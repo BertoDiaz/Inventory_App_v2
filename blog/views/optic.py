@@ -1,0 +1,152 @@
+"""optic.py."""
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from blog.models import Optic, Type_Optic
+from blog.forms import OpticForm
+
+
+def optic_list_type_optic(request):
+    """
+    Optic_list_type_optic function docstring.
+
+    This function shows the list of type of optic components that are stored in this web app and
+    they are ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of type of optic components.
+    """
+    optics = Type_Optic.objects.all()
+
+    return render(request, 'blog/optic_list_type_optic.html', {'optics': optics})
+
+
+def optic_list(request, pk):
+    """
+    Optic_list function docstring.
+
+    This function shows the list of optic components that are stored in this web app and
+    they are ordered by creation date.
+
+    @param request: HTML request page.
+    @param pk: primary key of chemical type.
+
+    @return: list of optic components.
+    """
+    type_optic = Type_Optic.objects.get(pk=pk)
+    optics = Optic.objects.filter(type_optic=type_optic).order_by('name_optic')
+    opticsBack = True
+    type_opticBack = False
+
+    return render(request, 'blog/optic_list.html', {'optics': optics, 'opticsBack': opticsBack,
+                                                    'type_opticBack': type_opticBack})
+
+
+def optic_detail(request, pk):
+    """
+    Optic_detail function docstring.
+
+    This function shows the information of a optic component.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the optic component.
+
+    @return: one optic component.
+
+    @raise 404: optic component does not exists.
+    """
+    optic = get_object_or_404(Optic, pk=pk)
+    opticsBack = False
+    type_opticBack = True
+
+    return render(request, 'blog/optic_detail.html', {'optic': optic, 'opticsBack': opticsBack,
+                                                      'type_opticBack': type_opticBack})
+
+
+@login_required
+def optic_new(request):
+    """
+    Optic_new function docstring.
+
+    This function shows the form to create a new optic component.
+
+    @param request: HTML request page.
+
+    @return: First time, this shows the form to a new optic component. If the form is
+    completed, return the details of this new optic component.
+    """
+    if request.method == "POST":
+        form = OpticForm(request.POST)
+        if form.is_valid():
+            optic = form.save(commit=False)
+            optic.name_optic = optic.type_optic.name
+            optic.save()
+            return redirect('blog:optic_detail', pk=optic.pk)
+    else:
+        form = OpticForm()
+    return render(request, 'blog/optic_new.html', {'form': form})
+
+
+@login_required
+def optic_edit(request, pk):
+    """
+    Optic_edit function docstring.
+
+    This function shows the form to modify a optic component.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the optic component to modify.
+
+    @return: First time, this shows the form to edit the optic component information. If the
+    form is completed, return the details of this optic component.
+
+    @raise 404: optic component does not exists.
+    """
+    optic = get_object_or_404(Optic, pk=pk)
+    if request.method == "POST":
+        form = OpticForm(data=request.POST, instance=optic)
+        if form.is_valid():
+            optic = form.save(commit=False)
+            optic_all = Optic.objects.all()
+
+            duplicates = False
+
+            for data in optic_all:
+                if data.description == optic.description and data.pk != optic.pk:
+                    duplicates = True
+
+            if not duplicates:
+                messages.success(request, 'You have updated your optic component.')
+                optic.save()
+                return redirect('blog:optic_detail', pk=optic.pk)
+            else:
+                messages.warning(request, 'Already exists an optic component with this name.')
+                return redirect('blog:optic_edit', pk=optic.pk)
+    else:
+        form = OpticForm(instance=optic)
+    return render(request, 'blog/optic_edit.html', {'form': form})
+
+
+@login_required
+def optic_remove(request, pk):
+    """
+    Optic_remove function docstring.
+
+    This function removes a optic component.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the optic component to remove.
+
+    @return: list of optic components.
+
+    @raise 404: optic component does not exists.
+    """
+    optic = get_object_or_404(Optic, pk=pk)
+    optic.delete()
+    return redirect('blog:optic_list')

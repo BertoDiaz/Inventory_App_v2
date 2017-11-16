@@ -9,6 +9,7 @@ from .models import Optic, Type_Optic
 from .models import Chemical, Type_Chemical, Unit_Chemical, State
 from .models import Biological, Type_Biological_1, Type_Biological_2
 from .models import Instrumentation, Type_Instrumentation
+from .models import Consumable
 from .models import Others
 from .models import Run, Wafer, Chip, Waveguide, Name_Waveguide
 
@@ -39,6 +40,7 @@ admin.site.register(Type_Biological_1)
 admin.site.register(Type_Biological_2)
 admin.site.register(Instrumentation)
 admin.site.register(Type_Instrumentation)
+admin.site.register(Consumable)
 admin.site.register(Others)
 admin.site.register(Run)
 admin.site.register(Wafer)

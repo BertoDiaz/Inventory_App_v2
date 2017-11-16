@@ -1,0 +1,15 @@
+{% extends 'blog/base_consumable.html' %}
+
+{% block content %}
+    <div class="col-md-6">
+        <div class="inventory">
+            {% for consumable in consumables %}
+                <div class="date">
+                    {{ consumable.created_date }}
+                </div>
+                <h1><a href="{% url 'blog:consumable_detail' pk=consumable.pk %}">{{ consumable.name }}</a></h1>
+                <p>{{ consumable.characteristics|linebreaksbr }}</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

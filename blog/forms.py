@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from django.forms.formsets import BaseFormSet
 # from django.utils.encoding import smart_text
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
-from .models import Instrumentation, Others, Full_Name_Users, Run, Wafer, Chip, Waveguide
+from .models import Instrumentation, Consumable, Others, Full_Name_Users, Run, Wafer, Chip
+from .models import Waveguide
 
 
 class SignUpForm(UserCreationForm):
@@ -288,6 +289,28 @@ class InstrumentationForm(forms.ModelForm):
         model = Instrumentation
         fields = ('type_instrumentation', 'characteristics', 'manufacturer', 'supplier',
                   'location',)
+        widgets = {
+            'characteristics': forms.Textarea,
+        }
+
+
+class ConsumableForm(forms.ModelForm):
+    """
+    Consumable form docstring.
+
+    This form is useds to create a new consumable.
+    """
+
+    class Meta:
+        """
+        Meta docstring.
+
+        This function use the Consumable model and the fields: characteristics, manufacturer,
+        supplier and location.
+        """
+
+        model = Consumable
+        fields = ('name', 'characteristics', 'manufacturer', 'supplier', 'location',)
         widgets = {
             'characteristics': forms.Textarea,
         }

@@ -281,6 +281,42 @@ class Instrumentation(models.Model):
         return self.manufacturer
 
 
+class Consumable(models.Model):
+    """
+    Consumable model docstring.
+
+    This model stores the consumables.
+    """
+
+    name = models.CharField(max_length=200, blank=True, help_text="Name of the consumable.")
+    characteristics = models.CharField(max_length=200, blank=True,
+                                       help_text="Important features of the consumable.")
+    manufacturer = models.CharField(max_length=200, blank=True,
+                                    help_text="Manufacturer of the consumable.")
+    supplier = models.ForeignKey('Supplier', help_text="Seller of the consumable.")
+    location = models.ForeignKey('Location', help_text="Where it is the consumable.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+
+    def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the consumable was created and save the info.
+        """
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the name of the consumable.
+
+        @return: a string with the name of the consumable.
+        """
+        return self.name
+
+
 class Others(models.Model):
     """
     Others model docstring.

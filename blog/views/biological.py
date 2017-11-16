@@ -1,0 +1,166 @@
+"""biological.py."""
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from blog.models import Biological, Type_Biological_1, Type_Biological_2
+from blog.forms import BiologicalForm
+
+
+def biological_list_type_biological(request):
+    """
+    biological_list_type_biological function docstring.
+
+    This function shows the list of type of biologicals that are stored in this web app and they are
+    ordered by creation date.
+
+    @param request: HTML request page.
+
+    @return: list of type of biologicals.
+    """
+    biologicals = Type_Biological_1.objects.all()
+
+    biologicals_2 = []
+
+    for biological in biologicals:
+        data = Type_Biological_2.objects.filter(type_biological_1=biological)
+        biologicals_2.append(data)
+
+    # for bios in biologicals_2:
+    #     for bio in bios:
+    #         print(bio.type_biological_1)
+
+    return render(request, 'blog/biological_list_type_biological.html',
+                  {'biologicals': biologicals, 'biologicals_2': biologicals_2})
+
+
+def biological_list(request, pk):
+    """
+    Biological_list function docstring.
+
+    This function shows the list of biologicals that are stored in this web app and they are
+    ordered by creation date.
+
+    @param request: HTML request page.
+    @param pk: primary key of biological types.
+
+    @return: list of biological types.
+    """
+    type_biological_2 = Type_Biological_2.objects.get(pk=pk)
+    biologicals = Biological.objects.filter(type_biological=type_biological_2).order_by('name')
+    print(biologicals)
+    biologicalsBack = True
+    type_bioBack = False
+
+    return render(request, 'blog/biological_list.html', {'biologicals': biologicals,
+                                                         'biologicalsBack': biologicalsBack,
+                                                         'type_bioBack': type_bioBack})
+
+
+def biological_detail(request, pk):
+    """
+    Biological_detail function docstring.
+
+    This function shows the information of a biological.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the biological.
+
+    @return: one biological.
+
+    @raise 404: biological does not exists.
+    """
+    biological = get_object_or_404(Biological, pk=pk)
+    biologicalsBack = False
+    type_bioBack = True
+
+    return render(request, 'blog/biological_detail.html', {'biological': biological,
+                                                           'biologicalsBack': biologicalsBack,
+                                                           'type_bioBack': type_bioBack})
+
+
+@login_required
+def biological_new(request):
+    """
+    Biological_new function docstring.
+
+    This function shows the form to create a new biological.
+
+    @param request: HTML request page.
+
+    @return: First time, this shows the form to a new biological. If the form is completed, return
+    the details of this new biological.
+    """
+    if request.method == "POST":
+        form = BiologicalForm(request.POST)
+        if form.is_valid():
+            biological = form.save(commit=False)
+            biological.save()
+            return redirect('blog:biological_detail', pk=biological.pk)
+    else:
+        form = BiologicalForm()
+    return render(request, 'blog/biological_new.html', {'form': form})
+
+
+@login_required
+def biological_edit(request, pk):
+    """
+    Biological_edit function docstring.
+
+    This function shows the form to modify a biological.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the biological to modify.
+
+    @return: First time, this shows the form to edit the biological information. If the form is
+    completed, return the details of this biological.
+
+    @raise 404: biological does not exists.
+    """
+    biological = get_object_or_404(Biological, pk=pk)
+    if request.method == "POST":
+        form = BiologicalForm(data=request.POST, instance=biological)
+        if form.is_valid():
+            biological = form.save(commit=False)
+            biological_all = Biological.objects.all()
+
+            duplicates = False
+
+            for data in biological_all:
+                if data.name == biological.name and data.pk != biological.pk:
+                    duplicates = True
+
+            if not duplicates:
+                messages.success(request, 'You have updated your biological.')
+                biological.save()
+                return redirect('blog:biological_detail', pk=biological.pk)
+            else:
+                messages.warning(request, 'Already exists an biological with this name.')
+                return redirect('blog:biological_edit', pk=biological.pk)
+
+    else:
+        form = BiologicalForm(instance=biological)
+    return render(request, 'blog/biological_edit.html', {'form': form})
+
+
+@login_required
+def biological_remove(request, pk):
+    """
+    Biological_remove function docstring.
+
+    This function removes a biological.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the biological to remove.
+
+    @return: list of biologicals.
+
+    @raise 404: biological does not exists.
+    """
+    biological = get_object_or_404(Biological, pk=pk)
+    biological.delete()
+    return redirect('blog:biological_list')

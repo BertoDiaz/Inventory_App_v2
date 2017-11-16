@@ -74,6 +74,13 @@ urlpatterns = [
     url(r'^instrumentation/(?P<pk>\d+)/remove/$', views.instrumentation_remove,
         name='instrumentation_remove'),
 
+    # #################### CONSUMABLE #################### #
+    url(r'^consumable/$', views.consumable_list, name='consumable_list'),
+    url(r'^consumable/(?P<pk>[0-9]+)/$', views.consumable_detail, name='consumable_detail'),
+    url(r'^consumable/new/$', views.consumable_new, name='consumable_new'),
+    url(r'^consumable/(?P<pk>[0-9]+)/edit/$', views.consumable_edit, name='consumable_edit'),
+    url(r'^consumable/(?P<pk>\d+)/remove/$', views.consumable_remove, name='consumable_remove'),
+
     # #################### OTHERS #################### #
     # This is not active.
     # url(r'^others/$', views.others_list, name='others_list'),
