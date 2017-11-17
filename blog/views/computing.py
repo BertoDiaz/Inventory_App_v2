@@ -19,7 +19,20 @@ def computing_list(request):
 
     @return: list of computers.
     """
-    computings = Computing.objects.all().order_by('name')
+    computing_list = Computing.objects.all().order_by('name')
+
+    # Show 25 contacts per page
+    paginator = Paginator(computing_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        computings = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        computings = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        computings = paginator.page(paginator.num_pages)
 
     return render(request, 'blog/computing_list.html', {'computings': computings})
 

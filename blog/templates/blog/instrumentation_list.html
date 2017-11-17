@@ -1,15 +1,46 @@
 {% extends 'blog/base_instrumentation.html' %}
 
 {% block content %}
-    <div class="col-md-6">
-        <div class="inventory">
-            {% for instrumentation in instrumentations %}
-                <div class="date">
-                    {{ instrumentation.created_date }}
-                </div>
-                <h1><a href="{% url 'blog:instrumentation_detail' pk=instrumentation.pk %}">{{ instrumentation.characteristics }}</a></h1>
-                <p>{{ instrumentation.type_instrumentation|linebreaksbr }}</p>
-            {% endfor %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="inventory">
+                {% for instrumentation in instrumentations %}
+                    <div class="date">
+                        {{ instrumentation.created_date }}
+                    </div>
+                    <h1><a href="{% url 'blog:instrumentation_detail' pk=instrumentation.pk %}">{{ instrumentation.characteristics }}</a></h1>
+                    <p>{{ instrumentation.type_instrumentation|linebreaksbr }}</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
+    {% if instrumentations.has_other_pages %}
+        <div class="row">
+            <div class="col-md-6">
+                <div style="text-align: center;">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm">
+                            {% if instrumentations.has_previous %}
+                                <li><a href="?page={{ instrumentations.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in instrumentations.paginator.page_range %}
+                                {% if instrumentations.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if instrumentations.has_next %}
+                                <li><a href="?page={{ instrumentations.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

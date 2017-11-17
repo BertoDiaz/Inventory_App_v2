@@ -1,15 +1,46 @@
 {% extends 'blog/base_computing.html' %}
 
 {% block content %}
-    <div class="col-md-6">
-        <div class="inventory">
-            {% for computing in computings %}
-                <div class="date">
-                    {{ computing.created_date }}
-                </div>
-                <h1><a href="{% url 'blog:computing_detail' pk=computing.pk %}">{{ computing.name }}</a></h1>
-                <p>{{ computing.type_object|linebreaksbr }}</p>
-            {% endfor %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="inventory">
+                {% for computing in computings %}
+                    <div class="date">
+                        {{ computing.created_date }}
+                    </div>
+                    <h1><a href="{% url 'blog:computing_detail' pk=computing.pk %}">{{ computing.name }}</a></h1>
+                    <p>{{ computing.type_object|linebreaksbr }}</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
+    {% if computings.has_other_pages %}
+        <div class="row">
+            <div class="col-md-6">
+                <div style="text-align: center;">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm">
+                            {% if computings.has_previous %}
+                                <li><a href="?page={{ computings.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in computings.paginator.page_range %}
+                                {% if computings.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if computings.has_next %}
+                                <li><a href="?page={{ computings.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

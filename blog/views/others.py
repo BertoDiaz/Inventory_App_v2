@@ -1,6 +1,7 @@
 """others.py."""
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from blog.models import Others
@@ -18,8 +19,21 @@ def others_list(request):
 
     @return: list of components whithout type.
     """
-    otherss = Others.objects.filter(
+    others_list = Others.objects.filter(
         created_date__lte=timezone.now()).order_by('created_date').reverse()
+
+    # Show 25 contacts per page
+    paginator = Paginator(others_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        otherss = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        otherss = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        otherss = paginator.page(paginator.num_pages)
 
     return render(request, 'blog/others_list.html', {'otherss': otherss})
 

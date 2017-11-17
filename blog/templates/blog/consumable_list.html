@@ -1,15 +1,46 @@
 {% extends 'blog/base_consumable.html' %}
 
 {% block content %}
-    <div class="col-md-6">
-        <div class="inventory">
-            {% for consumable in consumables %}
-                <div class="date">
-                    {{ consumable.created_date }}
-                </div>
-                <h1><a href="{% url 'blog:consumable_detail' pk=consumable.pk %}">{{ consumable.name }}</a></h1>
-                <p>{{ consumable.characteristics|linebreaksbr }}</p>
-            {% endfor %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="inventory">
+                {% for consumable in consumables %}
+                    <div class="date">
+                        {{ consumable.created_date }}
+                    </div>
+                    <h1><a href="{% url 'blog:consumable_detail' pk=consumable.pk %}">{{ consumable.name }}</a></h1>
+                    <p>{{ consumable.characteristics|linebreaksbr }}</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
+    {% if consumables.has_other_pages %}
+        <div class="row">
+            <div class="col-md-6">
+                <div style="text-align: center;">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm">
+                            {% if consumables.has_previous %}
+                                <li><a href="?page={{ consumables.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in consumables.paginator.page_range %}
+                                {% if consumables.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if consumables.has_next %}
+                                <li><a href="?page={{ consumables.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

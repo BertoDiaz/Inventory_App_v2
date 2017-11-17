@@ -1,15 +1,46 @@
 {% extends 'blog/base_biological.html' %}
 
 {% block content %}
-    <div class="col-md-6">
-        <div class="inventory">
-            {% for biological in biologicals %}
-                <div class="date">
-                    {{ biological.created_date }}
-                </div>
-                <h1><a href="{% url 'blog:biological_detail' pk=biological.pk %}">{{ biological.name }}</a></h1>
-                <p>{{ biological.type_biological|linebreaksbr }}</p>
-            {% endfor %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="inventory">
+                {% for biological in biologicals %}
+                    <div class="date">
+                        {{ biological.created_date }}
+                    </div>
+                    <h1><a href="{% url 'blog:biological_detail' pk=biological.pk %}">{{ biological.name }}</a></h1>
+                    <p>{{ biological.type_biological|linebreaksbr }}</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
+    {% if biologicals.has_other_pages %}
+        <div class="row">
+            <div class="col-md-6">
+                <div style="text-align: center;">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm">
+                            {% if biologicals.has_previous %}
+                                <li><a href="?page={{ biologicals.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in biologicals.paginator.page_range %}
+                                {% if biologicals.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if biologicals.has_next %}
+                                <li><a href="?page={{ biologicals.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

@@ -19,7 +19,21 @@ def consumable_list(request):
 
     @return: list of consumables.
     """
-    consumables = Consumable.objects.all().order_by('name')
+    consumable_list = Consumable.objects.all().order_by('name')
+
+    # Show 25 contacts per page
+    paginator = Paginator(consumable_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        consumables = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        consumables = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        consumables = paginator.page(paginator.num_pages)
+
     consumableBack = False
     # type_instrumBack = False
 

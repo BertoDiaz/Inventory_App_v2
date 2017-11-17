@@ -41,8 +41,22 @@ def electronic_list(request, pk):
     @return: list of electronic components.
     """
     type_component = Type_Component.objects.get(pk=pk)
-    electronics = Electronic.objects.filter(
+    electronic_list = Electronic.objects.filter(
         type_component=type_component).order_by('name_component')
+
+    # Show 25 contacts per page
+    paginator = Paginator(electronic_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        electronics = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        electronics = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        electronics = paginator.page(paginator.num_pages)
+
     componentsBack = True
     type_componBack = False
 

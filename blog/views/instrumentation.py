@@ -38,8 +38,22 @@ def instrumentation_list(request, pk):
     @return: list of instrument types.
     """
     type_instrumentation = Type_Instrumentation.objects.get(pk=pk)
-    instrumentations = Instrumentation.objects.filter(
+    instrumentation_list = Instrumentation.objects.filter(
         type_instrumentation=type_instrumentation).order_by('characteristics')
+
+    # Show 25 contacts per page
+    paginator = Paginator(instrumentation_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        instrumentations = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        instrumentations = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        instrumentations = paginator.page(paginator.num_pages)
+
     instrumentBack = True
     type_instrumBack = False
 

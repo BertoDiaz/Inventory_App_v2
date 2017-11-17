@@ -37,7 +37,21 @@ def optic_list(request, pk):
     @return: list of optic components.
     """
     type_optic = Type_Optic.objects.get(pk=pk)
-    optics = Optic.objects.filter(type_optic=type_optic).order_by('name_optic')
+    optic_list = Optic.objects.filter(type_optic=type_optic).order_by('name_optic')
+
+    # Show 25 contacts per page
+    paginator = Paginator(optic_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        optics = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        optics = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        optics = paginator.page(paginator.num_pages)
+
     opticsBack = True
     type_opticBack = False
 

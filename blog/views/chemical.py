@@ -39,7 +39,21 @@ def chemical_list(request, pk):
     @return: list of chemicals.
     """
     type_chemical = Type_Chemical.objects.get(pk=pk)
-    chemicals = Chemical.objects.filter(type_chemical=type_chemical).order_by('name')
+    chemical_list = Chemical.objects.filter(type_chemical=type_chemical).order_by('name')
+
+    # Show 25 contacts per page
+    paginator = Paginator(chemical_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        chemicals = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        chemicals = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        chemicals = paginator.page(paginator.num_pages)
+
     chemicalsBack = True
     type_chemicalBack = False
 

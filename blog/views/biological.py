@@ -48,8 +48,21 @@ def biological_list(request, pk):
     @return: list of biological types.
     """
     type_biological_2 = Type_Biological_2.objects.get(pk=pk)
-    biologicals = Biological.objects.filter(type_biological=type_biological_2).order_by('name')
-    print(biologicals)
+    biological_list = Biological.objects.filter(type_biological=type_biological_2).order_by('name')
+
+    # Show 25 contacts per page
+    paginator = Paginator(biological_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        biologicals = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        biologicals = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        biologicals = paginator.page(paginator.num_pages)
+
     biologicalsBack = True
     type_bioBack = False
 
