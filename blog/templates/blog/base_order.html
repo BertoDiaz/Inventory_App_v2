@@ -32,6 +32,7 @@
                 This part verifies if the username is logged in. If not, this shows an image to
                 indicate that the username is not logged in.
             ************************************************************************************ -->
+
             {% if user.is_authenticated %}
                 <a href="{% url 'blog:order_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
                 {% if backList %}
@@ -39,10 +40,11 @@
                 {% elif backDetail %}
                     <a href="{% url 'blog:order_detail' pk=order.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
+
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
-            <h1><a href="{% url 'blog:order_list' %}">Order</a></h1>
+            <h1 class="col-md-2"><a href="{% url 'blog:order_list' %}">Order</a></h1>
         </div>
         <div class="content container">
             <div class="row">

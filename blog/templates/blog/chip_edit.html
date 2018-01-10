@@ -12,7 +12,6 @@
                 {{ chipForm.as_p }} -->
                 {% for runField in runForm %}
                     <div id="{{ runField.auto_id }}_container">
-                        {{ runField.help_text }}
                         <table style="width:100%">
                             <tr>
                                 <th>
@@ -21,7 +20,7 @@
                             </tr>
                             <tr>
                                 <th>
-                                    {{ runField }}
+                                    {{ runField }} <span class="form-text text-muted">{{ runField.help_text }}</span>
                                 </th>
                             </tr>
                         </table>
@@ -32,7 +31,6 @@
                 {% endfor %}
                 {% for waferField in waferForm %}
                     <div id="{{ waferField.auto_id }}_container">
-                        {{ waferField.help_text }}
                         <table style="width:100%">
                             <tr>
                                 <th>
@@ -41,7 +39,7 @@
                             </tr>
                             <tr>
                                 <th>
-                                    {{ waferField }}
+                                    {{ waferField }} <span class="form-text text-muted">{{ waferField.help_text }}</span>
                                 </th>
                             </tr>
                         </table>
@@ -52,7 +50,6 @@
                 {% endfor %}
                 {% for chipField in chipForm %}
                     <div id="{{ chipField.auto_id }}_container">
-                        {{ chipField.help_text }}
                         <table style="width:100%">
                             <tr>
                                 <th>
@@ -61,7 +58,7 @@
                             </tr>
                             <tr>
                                 <th>
-                                    {{ chipField }}
+                                    {{ chipField }} <span class="form-text text-muted">{{ chipField.help_text }}</span>
                                 </th>
                             </tr>
                         </table>
