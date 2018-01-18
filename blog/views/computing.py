@@ -1,5 +1,5 @@
 """
-File name: computing.py
+File name: computing.py.
 
 Name: Inventory App
 
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -31,10 +31,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import Computing
+from django.core.exceptions import ObjectDoesNotExist
+from blog.views.search import get_query
+from blog.models import Computing, Type_Object, Location, Full_Name_Users, Setup
 from blog.forms import ComputingForm
 
 
+@login_required
 def computing_list(request):
     """
     Computing_list function docstring.
@@ -64,6 +67,60 @@ def computing_list(request):
     return render(request, 'blog/computing_list.html', {'computings': computings})
 
 
+@login_required
+def computing_search(request):
+    """
+    Computing_search function docstring.
+
+    This function search the computers that are stored in this web app and they are
+    ordered by name.
+
+    @param request: HTML request page.
+
+    @return: list of computers.
+    """
+    query_string = ''
+    found_entries = None
+    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
+        query_string = request.GET['searchfield']
+        try:
+            query_string = Type_Object.objects.get(name=query_string)
+            computing_list = Computing.objects.filter(type_object=query_string.pk).order_by('name')
+        except ObjectDoesNotExist:
+            try:
+                query_string = Location.objects.get(name=query_string)
+                computing_list = Computing.objects.filter(location=query_string.pk).order_by('name')
+            except ObjectDoesNotExist:
+                try:
+                    query_string = Full_Name_Users.objects.get(name=query_string)
+                    computing_list = Computing.objects.filter(user_name=query_string.pk).order_by('name')
+                except ObjectDoesNotExist:
+                    try:
+                        query_string = Setup.objects.get(name=query_string)
+                        computing_list = Computing.objects.filter(setup=query_string.pk).order_by('name')
+                    except ObjectDoesNotExist:
+                        entry_query = get_query(query_string, ['name', 'model', 'processor',
+                                                               'memory', 'screen_1', 'screen_2',
+                                                               'keyboard', 'mouse'])
+                        computing_list = Computing.objects.filter(entry_query).order_by('name')
+
+    # Show 25 contacts per page
+    paginator = Paginator(computing_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        computings = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        computings = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        computings = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/computing_list.html', {'computings': computings})
+
+
+@login_required
 def computing_detail(request, pk):
     """
     Computing_detail function docstring.

@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -35,6 +35,7 @@ from blog.models import Run, Chip
 from blog.forms import RunForm
 
 
+@login_required
 def run_list(request):
     """
     Run_list function docstring.
@@ -51,6 +52,7 @@ def run_list(request):
     return render(request, 'blog/run_list.html', {'runs': runs})
 
 
+@login_required
 def run_detail(request, pk):
     """
     Run_detail function docstring.
@@ -141,6 +143,7 @@ def run_remove(request, pk):
     return redirect('blog:run_list')
 
 
+@login_required
 def run_chip_list(request, pk):
     """
     Run_chip_list function docstring.

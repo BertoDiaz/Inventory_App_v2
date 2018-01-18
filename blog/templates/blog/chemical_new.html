@@ -23,27 +23,29 @@
                     <small class="form-text text-muted">{{ form.reference.help_text|safe }}</small>
                 </div>
                 <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.cas_number.label_tag}}</span>
+                    {{ form.cas_number }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.number_bottle.label_tag}}</span>
+                    {{ form.number_bottle }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.quantity.label_tag}}</span>
                     {{ form.quantity }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.state.label_tag}}</span>
+                    {{ form.state }}
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.supplier.label_tag}}</span>
                     {{ form.supplier }}
                 </div>
                 <div class="row" style="padding-top: 10px;">
-                    <span class="col-md-3">{{ form.concentration.label_tag}}</span>
-                    {{ form.concentration }}
-                    <small class="form-text text-muted">{{ form.concentration.help_text|safe }}</small>
-                </div>
-                <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.molecular_weight.label_tag}}</span>
-                    {{ form.molecular_weight }}
+                    {{ form.molecular_weight }} {{ form.unit_chemical }}
                     <small class="form-text text-muted">{{ form.molecular_weight.help_text|safe }}</small>
-                </div>
-                <div class="row" style="padding-top: 10px;">
-                    <span class="col-md-3">{{ form.unit_chemical.label_tag}}</span>
-                    {{ form.unit_chemical }}
-                    <small class="form-text text-muted">{{ form.unit_chemical.help_text|safe }}</small>
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.location.label_tag}}</span>

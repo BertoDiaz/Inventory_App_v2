@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -31,6 +31,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from blog.views.search import get_query
 from django.contrib.auth.models import User
 from django.forms.formsets import formset_factory
 from django.utils import timezone
@@ -44,10 +46,11 @@ import os
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
-from blog.models import Order, Product
+from blog.models import Order, Product, Budget, Type_of_purchase, Supplier
 from blog.forms import OrderForm, ProductForm, SendEmailForm, UploadFileForm
 
 
+@login_required
 def order_list(request):
     """
     Order_list function docstring.
@@ -59,8 +62,58 @@ def order_list(request):
 
     @return: list of orders.
     """
-    order_list = Order.objects.filter(
-        created_date__lte=timezone.now(), author=request.user).order_by('created_date').reverse()
+    order_list = Order.objects.filter(created_date__lte=timezone.now()).order_by('created_date').reverse()
+
+    # Show 25 contacts per page
+    paginator = Paginator(order_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        orders = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        orders = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        orders = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/order_list.html', {'orders': orders})
+
+
+@login_required
+def order_search(request):
+    """
+    Order_search function docstring.
+
+    This function search the orders that are stored in this web app and they are
+    ordered by name.
+
+    @param request: HTML request page.
+
+    @return: list of orders.
+    """
+    query_string = ''
+    found_entries = None
+    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
+        query_string = request.GET['searchfield']
+        try:
+            query_string = User.objects.get(first_name=query_string)
+            order_list = Order.objects.filter(author=query_string.pk).order_by('name')
+        except ObjectDoesNotExist:
+            try:
+                query_string = Budget.objects.get(name=query_string)
+                order_list = Order.objects.filter(budget=query_string.pk).order_by('name')
+            except ObjectDoesNotExist:
+                try:
+                    query_string = Type_of_purchase.objects.get(name=query_string)
+                    order_list = Order.objects.filter(type_of_purchase=query_string.pk).order_by('name')
+                except ObjectDoesNotExist:
+                    try:
+                        query_string = Supplier.objects.get(name=query_string)
+                        order_list = Order.objects.filter(supplier=query_string.pk).order_by('name')
+                    except ObjectDoesNotExist:
+                        entry_query = get_query(query_string, ['name', 'applicant'])
+                        order_list = Order.objects.filter(entry_query).order_by('name')
 
     # Show 25 contacts per page
     paginator = Paginator(order_list, 25)
@@ -137,7 +190,8 @@ def order_new(request):
             new_products = []
             duplicates = False
 
-            doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
+            # doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
+            doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderForm/Order_Form.xlsx'))
             doc.get_sheet_names()
             sheet = doc.get_sheet_by_name('Order Form')
             sheet['C6'] = order.applicant
@@ -176,11 +230,15 @@ def order_new(request):
 
                         # print(order.author.username)
 
-                        if not os.path.exists('blog/orderForm/' + order.author.username + '/'):
-                            os.makedirs('blog/orderForm/' + order.author.username + '/')
+                        # if not os.path.exists('blog/orderForm/' + order.author.username + '/'):
+                        #     os.makedirs('blog/orderForm/' + order.author.username + '/')
+                        if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderFrom/' + order.author.username + '/')):
+                            os.makedirs(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderFrom/' + order.author.username + '/'))
 
-                        doc.save('blog/orderForm/' + order.author.username + '/' +
-                                 nameFile + '.xlsx')
+                        # doc.save('blog/orderForm/' + order.author.username + '/' +
+                        #          nameFile + '.xlsx')
+                        doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderFrom/' + order.author.username + '/' +
+                                 nameFile + '.xlsx'))
 
                         messages.success(request, 'You have created your order.')
                         return redirect('blog:order_detail', pk=order.pk)
@@ -302,7 +360,8 @@ def setBordersCell(sheet):
     sheet.cell('I67').border = border_TopBottomThin
     sheet.cell('I68').border = border_TopThinBottomDouble
 
-    img = Image('blog/static/images/icn2.png')
+    # img = Image('blog/static/images/icn2.png')
+    img = Image(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/images/icn2.png'))
     # img.anchor(sheet.cell('H2'))
     sheet.add_image(img, 'H2')
     return sheet
@@ -496,7 +555,8 @@ def order_send_email(request, pk):
             msg.attach(message)
 
             # ADJUNTO
-            orderForm = 'blog/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx'
+            # orderForm = 'blog/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx'
+            orderForm = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderForm/' + order.author.username + '/OF_' + order.name + 'xlsx')
             if (os.path.isfile(orderForm)):
                 adjunto = MIMEBase('application', 'octet-stream')
                 adjunto.set_payload(open(orderForm, "rb").read())
@@ -505,14 +565,16 @@ def order_send_email(request, pk):
                                    'attachment; filename = "%s"' % os.path.basename(orderForm))
                 msg.attach(adjunto)
 
-            uploadFile = 'blog/orderForm/' + order.author.username + '/' + order.name_file_attach
-            if (os.path.isfile(uploadFile)):
-                adjunto = MIMEBase('application', 'octet-stream')
-                adjunto.set_payload(open(uploadFile, "rb").read())
-                encode_base64(adjunto)
-                adjunto.add_header('Content-Disposition',
-                                   'attachment; filename = "%s"' % os.path.basename(uploadFile))
-                msg.attach(adjunto)
+            # uploadFile = 'blog/orderForm/' + order.author.username + '/' + order.name_file_attach
+            if order.file_exists:
+                uploadFile = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderForm/' + order.author.username + '/' + order.name_file_attach)
+                if (os.path.isfile(uploadFile)):
+                    adjunto = MIMEBase('application', 'octet-stream')
+                    adjunto.set_payload(open(uploadFile, "rb").read())
+                    encode_base64(adjunto)
+                    adjunto.add_header('Content-Disposition',
+                                       'attachment; filename = "%s"' % os.path.basename(uploadFile))
+                    msg.attach(adjunto)
 
             # ENVIAR
             server = smtplib.SMTP('mail.icn2.cat', 587)
@@ -593,8 +655,10 @@ def handle_uploaded_file(f, order):
     name, extension = os.path.splitext(f.name)
     # print(name)
     # print(extension)
-    with open('blog/orderForm/' + order.author.username + '/UF_' +
-              order.name + extension, 'wb+') as destination:
+    # with open('blog/orderForm/' + order.author.username + '/UF_' +
+    #           order.name + extension, 'wb+') as destination:
+    with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderForm/' + order.author.username + '/UF_' +
+              order.name + extension), 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 

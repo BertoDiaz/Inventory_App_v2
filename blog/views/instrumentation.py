@@ -1,5 +1,5 @@
 """
-File name: instrumentation.py
+File name: instrumentation.py.
 
 Name: Inventory App
 
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -31,7 +31,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import Instrumentation, Type_Instrumentation
+from django.core.exceptions import ObjectDoesNotExist
+from blog.views.search import get_query
+from blog.models import Instrumentation, Type_Instrumentation, Supplier, Location
 from blog.forms import InstrumentationForm
 
 
@@ -52,6 +54,7 @@ def instrumentation_list_type(request):
                   {'instrumentations': instrumentations})
 
 
+@login_required
 def instrumentation_list(request, pk):
     """
     Instrumentation_list function docstring.
@@ -89,6 +92,54 @@ def instrumentation_list(request, pk):
                                                               'type_instrumBack': type_instrumBack})
 
 
+@login_required
+def instrumentation_search(request):
+    """
+    Instrumentation_search function docstring.
+
+    This function search the instruments that are stored in this web app and they are
+    ordered by name.
+
+    @param request: HTML request page.
+
+    @return: list of instruments.
+    """
+    query_string = ''
+    found_entries = None
+    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
+        query_string = request.GET['searchfield']
+        try:
+            query_string = Type_Instrumentation.objects.get(name=query_string)
+            instrumentation_list = Instrumentation.objects.filter(type_instrumentation=query_string.pk).order_by('type_instrumentation')
+        except ObjectDoesNotExist:
+            try:
+                query_string = Supplier.objects.get(name=query_string)
+                instrumentation_list = Instrumentation.objects.filter(supplier=query_string.pk).order_by('type_instrumentation')
+            except ObjectDoesNotExist:
+                try:
+                    query_string = Location.objects.get(name=query_string)
+                    instrumentation_list = Instrumentation.objects.filter(location=query_string.pk).order_by('type_instrumentation')
+                except ObjectDoesNotExist:
+                    entry_query = get_query(query_string, ['characteristics', 'manufacturer'])
+                    instrumentation_list = Instrumentation.objects.filter(entry_query).order_by('type_instrumentation')
+
+    # Show 25 contacts per page
+    paginator = Paginator(instrumentation_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        instrumentations = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        instrumentations = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        instrumentations = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/instrumentation_list.html', {'instrumentations': instrumentations})
+
+
+@login_required
 def instrumentation_detail(request, pk):
     """
     Instrumentation_detail function docstring.

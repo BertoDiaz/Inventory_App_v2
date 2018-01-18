@@ -34,6 +34,9 @@
                         <p><span style="font-weight: bold;">REFERENCE: </span>{{ biological.reference }}</p>
                     </li>
                     <li class="list-group-item">
+                        <p><span style="font-weight: bold;">NUMBER OF BOTTLES: </span>{{ biological.number_bottle }}</p>
+                    </li>
+                    <li class="list-group-item">
                         <p><span style="font-weight: bold;">QUANTITY: </span>{{ biological.quantity }}</p>
                     </li>
                     <li class="list-group-item">
@@ -41,9 +44,6 @@
                     </li>
                     <li class="list-group-item">
                         <p><span style="font-weight: bold;">CONCENTRATION: </span>{{ biological.concentration }} {% if biological.concentration %}{{ biological.unit_biological }}{% endif %}</p>
-                    </li>
-                    <li class="list-group-item">
-                        <p><span style="font-weight: bold;">MOLECULAR WEIGHT: </span>{{ biological.molecular_weight }} {% if biological.molecular_weight %}{{ biological.unit_biological }}{% endif %}</p>
                     </li>
                 </ul>
             </div>

@@ -1,5 +1,5 @@
 """
-File name: electronic.py
+File name: electronic.py.
 
 Name: Inventory App
 
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -31,8 +31,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import Electronic, Type_Component
+from django.core.exceptions import ObjectDoesNotExist
+from blog.models import Electronic, Type_Component, Location
 from blog.forms import ElectronicForm
+from blog.views.search import get_query
 
 
 def electronic_list_type_components(request):
@@ -55,6 +57,7 @@ def electronic_list_type_components(request):
                   {'electronics': electronics})
 
 
+@login_required
 def electronic_list(request, pk):
     """
     Electronic_list function docstring.
@@ -92,6 +95,50 @@ def electronic_list(request, pk):
                                                          'type_componBack': type_componBack})
 
 
+@login_required
+def electronic_search(request):
+    """
+    Electronic_search function docstring.
+
+    This function search the electronic components that are stored in this web app and they are
+    ordered by name.
+
+    @param request: HTML request page.
+
+    @return: list of electronic components.
+    """
+    query_string = ''
+    found_entries = None
+    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
+        query_string = request.GET['searchfield']
+        try:
+            query_string = Type_Component.objects.get(name=query_string)
+            electronic_list = Electronic.objects.filter(type_component=query_string.pk).order_by('name_component')
+        except ObjectDoesNotExist:
+            try:
+                query_string = Location.objects.get(name=query_string)
+                electronic_list = Electronic.objects.filter(location=query_string.pk).order_by('name_component')
+            except ObjectDoesNotExist:
+                entry_query = get_query(query_string, ['name_component', 'value'])
+                electronic_list = Electronic.objects.filter(entry_query).order_by('name_component')
+
+    # Show 25 contacts per page
+    paginator = Paginator(electronic_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        electronics = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        electronics = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        electronics = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/electronic_list.html', {'electronics': electronics})
+
+
+@login_required
 def electronic_detail(request, pk):
     """
     Electronic_detail function docstring.

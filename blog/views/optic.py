@@ -1,5 +1,5 @@
 """
-File name: optic.py
+File name: optic.py.
 
 Name: Inventory App
 
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -31,8 +31,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import Optic, Type_Optic
+from django.core.exceptions import ObjectDoesNotExist
+from blog.models import Optic, Type_Optic, Location
 from blog.forms import OpticForm
+from blog.views.search import get_query
 
 
 def optic_list_type_optic(request):
@@ -51,6 +53,7 @@ def optic_list_type_optic(request):
     return render(request, 'blog/optic_list_type_optic.html', {'optics': optics})
 
 
+@login_required
 def optic_list(request, pk):
     """
     Optic_list function docstring.
@@ -86,6 +89,50 @@ def optic_list(request, pk):
                                                     'type_opticBack': type_opticBack})
 
 
+@login_required
+def optic_search(request):
+    """
+    Optic_search function docstring.
+
+    This function search the optic components that are stored in this web app and they are
+    ordered by name.
+
+    @param request: HTML request page.
+
+    @return: list of optic components.
+    """
+    query_string = ''
+    found_entries = None
+    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
+        query_string = request.GET['searchfield']
+        try:
+            query_string = Type_Optic.objects.get(name=query_string)
+            optic_list = Optic.objects.filter(type_optic=query_string.pk).order_by('name_optic')
+        except ObjectDoesNotExist:
+            try:
+                query_string = Location.objects.get(name=query_string)
+                optic_list = Optic.objects.filter(location=query_string.pk).order_by('name_optic')
+            except ObjectDoesNotExist:
+                entry_query = get_query(query_string, ['name_optic', 'description'])
+                optic_list = Optic.objects.filter(entry_query).order_by('name_optic')
+
+    # Show 25 contacts per page
+    paginator = Paginator(optic_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        optics = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        optics = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        optics = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/optic_list.html', {'optics': optics})
+
+
+@login_required
 def optic_detail(request, pk):
     """
     Optic_detail function docstring.

@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -34,6 +34,7 @@ from blog.models import Run, Wafer, Chip, Name_Waveguide
 from blog.forms import RunForm, WaferForm, ChipForm, WaveguideForm
 
 
+@login_required
 def wafer_list(request, pk):
     """
     wafer_list function docstring.
@@ -99,6 +100,7 @@ def wafer_new(request):
     return render(request, 'blog/wafer_edit.html', {'runForm': runForm, 'waferForm': waferForm})
 
 
+@login_required
 def wafer_chip_new(run, wafer):
     """
     Wafer_chip_new function docstring.
@@ -144,6 +146,7 @@ def wafer_chip_new(run, wafer):
         chip_waveguide_new(run, wafer, newChip)
 
 
+@login_required
 def wafer_chip_list(request, pk):
     """
     Wafer_chip_list function docstring.
@@ -167,6 +170,7 @@ def wafer_chip_list(request, pk):
                                                    'runback': runback, 'waferback': waferback})
 
 
+@login_required
 def chip_waveguide_new(run, wafer, chip):
     """
     Chip_waveguide_new function docstring.

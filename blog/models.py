@@ -1,5 +1,5 @@
 """
-File name: models.py
+File name: models.py.
 
 Name: Inventory App
 
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -196,14 +196,15 @@ class Chemical(models.Model):
     type_chemical = models.ForeignKey('Type_Chemical', help_text="Type of the chemical.")
     name = models.CharField(max_length=200, blank=True, help_text="Name of the chemical.")
     reference = models.CharField(max_length=200, blank=True, help_text="Reference of the chemical.")
+    cas_number = models.CharField(max_length=200, blank=True, help_text="CAS number of the chemical.")
+    number_bottle = models.CharField(max_length=200, blank=True, help_text="Number of bottles of the chemical.")
     quantity = models.CharField(max_length=20, help_text="Quantity of the chemical.")
+    state = models.ForeignKey('State', default=0, help_text="State of the chemical.")
     supplier = models.ForeignKey('Supplier', help_text="Supplier of the chemical.")
-    concentration = models.CharField(max_length=200, blank=True,
-                                     help_text="Concentration of the chemical.")
     molecular_weight = models.CharField(max_length=200, blank=True,
                                         help_text="Molecular weight of the chemical.")
     unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
-                                      "concentration/molecular weight of the chemical.")
+                                      "molecular weight of the chemical.")
     location = models.ForeignKey('Location', help_text="Where it is the chemical.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
@@ -240,14 +241,13 @@ class Biological(models.Model):
                             help_text="Name of the biological component.")
     reference = models.CharField(max_length=200, blank=True,
                                  help_text="Reference of the biological component.")
+    number_bottle = models.CharField(max_length=20, default="", help_text="Number of bottles of the biological component.")
     quantity = models.CharField(max_length=20, help_text="Quantity of the biological component.")
     supplier = models.ForeignKey('Supplier', help_text="Supplier of the biological component.")
     concentration = models.CharField(max_length=200, blank=True,
                                      help_text="Concentration of the biological component.")
-    molecular_weight = models.CharField(max_length=200, blank=True,
-                                        help_text="Molecular weight of the biological component.")
     unit_biological = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
-                                        "concentration/molecular weight of the biological.")
+                                        "concentration of the biological.")
     location = models.ForeignKey('Location', help_text="Where it is the biological component.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
@@ -505,7 +505,7 @@ class Type_Chemical(models.Model):
     """
 
     name = models.CharField(max_length=200, help_text="Name of the type of chemical.")
-    state = models.ForeignKey('State', null=True)
+    # state = models.ForeignKey('State', null=True)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):

@@ -1,5 +1,5 @@
 """
-File name: chemical.py
+File name: chemical.py.
 
 Name: Inventory App
 
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -31,7 +31,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import Chemical, Type_Chemical, State
+from django.core.exceptions import ObjectDoesNotExist
+from blog.views.search import get_query
+from blog.models import Chemical, Type_Chemical, State, Supplier, Location
 from blog.forms import ChemicalForm
 
 
@@ -46,13 +48,13 @@ def chemical_list_type_chemical(request):
 
     @return: list of type of chemicals.
     """
-    states = State.objects.all()
+    # states = State.objects.all()
     chemicals = Type_Chemical.objects.all()
 
-    return render(request, 'blog/chemical_list_type_chemical.html', {'states': states,
-                                                                     'chemicals': chemicals})
+    return render(request, 'blog/chemical_list_type_chemical.html', {'chemicals': chemicals})
 
 
+@login_required
 def chemical_list(request, pk):
     """
     Chemical_list function docstring.
@@ -89,6 +91,58 @@ def chemical_list(request, pk):
                                                        'type_chemicalBack': type_chemicalBack})
 
 
+@login_required
+def chemical_search(request):
+    """
+    Chemical_search function docstring.
+
+    This function search the chemicals that are stored in this web app and they are
+    ordered by name.
+
+    @param request: HTML request page.
+
+    @return: list of chemicals.
+    """
+    query_string = ''
+    found_entries = None
+    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
+        query_string = request.GET['searchfield']
+        try:
+            query_string = Type_Chemical.objects.get(name=query_string)
+            chemical_list = Chemical.objects.filter(type_chemical=query_string.pk).order_by('name')
+        except ObjectDoesNotExist:
+            try:
+                query_string = State.objects.get(name=query_string)
+                chemical_list = Chemical.objects.filter(state=query_string.pk).order_by('name')
+            except ObjectDoesNotExist:
+                try:
+                    query_string = Supplier.objects.get(name=query_string)
+                    chemical_list = Chemical.objects.filter(supplier=query_string.pk).order_by('name')
+                except ObjectDoesNotExist:
+                    try:
+                        query_string = Location.objects.get(name=query_string)
+                        chemical_list = Chemical.objects.filter(location=query_string.pk).order_by('name')
+                    except ObjectDoesNotExist:
+                        entry_query = get_query(query_string, ['name', 'reference', 'cas_number', 'quantity'])
+                        chemical_list = Chemical.objects.filter(entry_query).order_by('name')
+
+    # Show 25 contacts per page
+    paginator = Paginator(chemical_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        chemicals = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        chemicals = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        chemicals = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/chemical_list.html', {'chemicals': chemicals})
+
+
+@login_required
 def chemical_detail(request, pk):
     """
     Chemical_detail function docstring.

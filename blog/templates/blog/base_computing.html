@@ -37,6 +37,20 @@
                 {% if backList %}
                     <a href="{% url 'blog:computing_list' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
+                <div class="top-menu col-md-2">
+                    <form id="searchform" action="{% url 'blog:computing_search' %}" method="get" accept-charset="utf-8">
+                        <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                                <input type="text" class=" search-query form-control" name="searchfield" placeholder="Search" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary" type="button">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}

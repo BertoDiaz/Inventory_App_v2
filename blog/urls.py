@@ -1,5 +1,5 @@
 """
-File name: urls.py
+File name: urls.py.
 
 Name: Inventory App
 
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -46,6 +46,7 @@ urlpatterns = [
 
     # #################### COMPUTING #################### #
     url(r'^computing/$', views.computing_list, name='computing_list'),
+    url(r'^computing/search/$', views.computing_search, name='computing_search'),
     url(r'^computing/(?P<pk>[0-9]+)/$', views.computing_detail, name='computing_detail'),
     url(r'^computing/new/$', views.computing_new, name='computing_new'),
     url(r'^computing/(?P<pk>[0-9]+)/edit/$', views.computing_edit, name='computing_edit'),
@@ -56,6 +57,7 @@ urlpatterns = [
         name='electronic_list_type_components'),
     url(r'^electronic/component/(?P<pk>[0-9]+)/$', views.electronic_list,
         name='electronic_list'),
+    url(r'^electronic/search/$', views.electronic_search, name='electronic_search'),
     url(r'^electronic/(?P<pk>[0-9]+)/$', views.electronic_detail, name='electronic_detail'),
     url(r'^electronic/new/$', views.electronic_new, name='electronic_new'),
     url(r'^electronic/(?P<pk>[0-9]+)/edit/$', views.electronic_edit, name='electronic_edit'),
@@ -64,6 +66,7 @@ urlpatterns = [
     # #################### OPTIC #################### #
     url(r'^optic/component/$', views.optic_list_type_optic, name='optic_list_type_optic'),
     url(r'^optic/component/(?P<pk>[0-9]+)/$', views.optic_list, name='optic_list'),
+    url(r'^optic/search/$', views.optic_search, name='optic_search'),
     url(r'^optic/(?P<pk>[0-9]+)/$', views.optic_detail, name='optic_detail'),
     url(r'^optic/new/$', views.optic_new, name='optic_new'),
     url(r'^optic/(?P<pk>[0-9]+)/edit/$', views.optic_edit, name='optic_edit'),
@@ -74,6 +77,7 @@ urlpatterns = [
         name='chemical_list_type_chemical'),
     url(r'^chemical/component/(?P<pk>[0-9]+)/$', views.chemical_list,
         name='chemical_list'),
+    url(r'^chemical/search/$', views.chemical_search, name='chemical_search'),
     url(r'^chemical/(?P<pk>[0-9]+)/$', views.chemical_detail, name='chemical_detail'),
     url(r'^chemical/new/$', views.chemical_new, name='chemical_new'),
     url(r'^chemical/(?P<pk>[0-9]+)/edit/$', views.chemical_edit, name='chemical_edit'),
@@ -83,6 +87,7 @@ urlpatterns = [
     url(r'^biological/component/$', views.biological_list_type_biological,
         name='biological_list_type_biological'),
     url(r'^biological/component/(?P<pk>[0-9]+)/$', views.biological_list, name='biological_list'),
+    url(r'^biological/search/$', views.biological_search, name='biological_search'),
     url(r'^biological/(?P<pk>[0-9]+)/$', views.biological_detail, name='biological_detail'),
     url(r'^biological/new/$', views.biological_new, name='biological_new'),
     url(r'^biological/(?P<pk>[0-9]+)/edit/$', views.biological_edit, name='biological_edit'),
@@ -93,6 +98,7 @@ urlpatterns = [
         name='instrumentation_list_type'),
     url(r'^instrumentation/component/(?P<pk>[0-9]+)/$', views.instrumentation_list,
         name='instrumentation_list'),
+    url(r'^instrumentation/search/$', views.instrumentation_search, name='instrumentation_search'),
     url(r'^instrumentation/(?P<pk>[0-9]+)/$', views.instrumentation_detail,
         name='instrumentation_detail'),
     url(r'^instrumentation/new/$', views.instrumentation_new, name='instrumentation_new'),
@@ -103,6 +109,7 @@ urlpatterns = [
 
     # #################### CONSUMABLE #################### #
     url(r'^consumable/$', views.consumable_list, name='consumable_list'),
+    url(r'^consumable/search/$', views.consumable_search, name='consumable_search'),
     url(r'^consumable/(?P<pk>[0-9]+)/$', views.consumable_detail, name='consumable_detail'),
     url(r'^consumable/new/$', views.consumable_new, name='consumable_new'),
     url(r'^consumable/(?P<pk>[0-9]+)/edit/$', views.consumable_edit, name='consumable_edit'),
@@ -118,6 +125,7 @@ urlpatterns = [
 
     # #################### ORDER #################### #
     url(r'^order/$', views.order_list, name='order_list'),
+    url(r'^order/search/$', views.order_search, name='order_search'),
     url(r'^order/detail/(?P<pk>[0-9]+)/$', views.order_detail, name='order_detail'),
     url(r'^order/new/$', views.order_new, name='order_new'),
     # url(r'^order/new/(?P<pk>[0-9]+)/$', views.order_new_next, name='order_new_next'),

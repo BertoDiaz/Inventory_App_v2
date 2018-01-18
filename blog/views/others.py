@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -35,6 +35,7 @@ from blog.models import Others
 from blog.forms import OthersForm
 
 
+@login_required
 def others_list(request):
     """
     Others_list function docstring.
@@ -65,6 +66,7 @@ def others_list(request):
     return render(request, 'blog/others_list.html', {'otherss': otherss})
 
 
+@login_required
 def others_detail(request, pk):
     """
     Others_detail function docstring.

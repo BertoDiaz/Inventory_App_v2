@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -40,6 +40,7 @@ from blog.forms import WaveguideForm
 #
 #     return render(request, 'blog/waveguide_list.html', {'waveguides': waveguides})
 
+@login_required
 def waveguide_list(request, pk):
     """
     Waveguide_list function docstring.
@@ -62,6 +63,7 @@ def waveguide_list(request, pk):
 
 
 # def waveguide_detail(request, pk, pk2):
+@login_required
 def waveguide_detail(request, pk):
     """
     Waveguide_detail function docstring.
@@ -87,6 +89,7 @@ def waveguide_detail(request, pk):
                                                           'waveguideBack': waveguideBack})
 
 
+@login_required
 def waveguide_detail_exist(request, pk, pk2):
     """
     Waveguide_detail_exist function docstring.

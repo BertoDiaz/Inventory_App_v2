@@ -2,13 +2,8 @@
 
 {% block content %}
     <div class="inventory">
-        {% for state in states %}
-            <h1>{{ state.name }}</h1>
-            {% for chemical in chemicals %}
-                {% if chemical.state == state %}
-                    <h2><a class="inventory-secondCol" href="{% url 'blog:chemical_list' pk=chemical.pk %}">{{ chemical.name }}</a></h2>
-                {% endif %}
-            {% endfor %}
+        {% for chemical in chemicals %}
+            <h2><a class="inventory-secondCol" href="{% url 'blog:chemical_list' pk=chemical.pk %}">{{ chemical.name }}</a></h2>
         {% endfor %}
     </div>
 {% endblock content %}

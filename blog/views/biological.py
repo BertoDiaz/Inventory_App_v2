@@ -1,5 +1,5 @@
 """
-File name: biological.py
+File name: biological.py.
 
 Name: Inventory App
 
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -31,7 +31,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import Biological, Type_Biological_1, Type_Biological_2
+from django.core.exceptions import ObjectDoesNotExist
+from blog.views.search import get_query
+from blog.models import Biological, Type_Biological_1, Type_Biological_2, Supplier, Location
 from blog.forms import BiologicalForm
 
 
@@ -62,6 +64,7 @@ def biological_list_type_biological(request):
                   {'biologicals': biologicals, 'biologicals_2': biologicals_2})
 
 
+@login_required
 def biological_list(request, pk):
     """
     Biological_list function docstring.
@@ -98,6 +101,54 @@ def biological_list(request, pk):
                                                          'type_bioBack': type_bioBack})
 
 
+@login_required
+def biological_search(request):
+    """
+    Biological_search function docstring.
+
+    This function search the biologicals that are stored in this web app and they are
+    ordered by name.
+
+    @param request: HTML request page.
+
+    @return: list of biologicals.
+    """
+    query_string = ''
+    found_entries = None
+    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
+        query_string = request.GET['searchfield']
+        try:
+            query_string = Type_Biological_2.objects.get(name=query_string)
+            biological_list = Biological.objects.filter(type_biological=query_string.pk).order_by('name')
+        except ObjectDoesNotExist:
+            try:
+                query_string = Supplier.objects.get(name=query_string)
+                biological_list = Biological.objects.filter(supplier=query_string.pk).order_by('name')
+            except ObjectDoesNotExist:
+                try:
+                    query_string = Location.objects.get(name=query_string)
+                    biological_list = Biological.objects.filter(location=query_string.pk).order_by('name')
+                except ObjectDoesNotExist:
+                    entry_query = get_query(query_string, ['name', 'reference', 'quantity'])
+                    biological_list = Biological.objects.filter(entry_query).order_by('name')
+
+    # Show 25 contacts per page
+    paginator = Paginator(biological_list, 25)
+
+    page = request.GET.get('page')
+    try:
+        biologicals = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        biologicals = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        biologicals = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/biological_list.html', {'biologicals': biologicals})
+
+
+@login_required
 def biological_detail(request, pk):
     """
     Biological_detail function docstring.

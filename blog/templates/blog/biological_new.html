@@ -23,6 +23,10 @@
                     {{ form.reference }}
                 </div>
                 <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.number_bottle.label_tag}}</span>
+                    {{ form.number_bottle }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.quantity.label_tag}}</span>
                     {{ form.quantity }}
                 </div>
@@ -32,18 +36,8 @@
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.concentration.label_tag}}</span>
-                    {{ form.concentration }}
+                    {{ form.concentration }} {{ form.unit_biological }}
                     <small class="form-text text-muted">{{ form.concentration.help_text|safe }}</small>
-                </div>
-                <div class="row" style="padding-top: 10px;">
-                    <span class="col-md-3">{{ form.molecular_weight.label_tag}}</span>
-                    {{ form.molecular_weight }}
-                    <small class="form-text text-muted">{{ form.molecular_weight.help_text|safe }}</small>
-                </div>
-                <div class="row" style="padding-top: 10px;">
-                    <span class="col-md-3">{{ form.unit_biological.label_tag }}</span>
-                    {{ form.unit_biological }}
-                    <small class="form-text text-muted">{{ form.unit_biological.help_text|safe }}</small>
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.location.label_tag}}</span>

@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see http://www.gnu.org/licenses/.
 
 Email: heriberto.diazluis@gmail.com
 """
@@ -31,7 +31,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms.formsets import BaseFormSet
-# from django.utils.encoding import smart_text
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Consumable, Others, Full_Name_Users, Run, Wafer, Chip
 from .models import Waveguide
@@ -270,12 +269,13 @@ class ChemicalForm(forms.ModelForm):
         Meta docstring.
 
         This function use the Chemical model and the fields: type_chemical, name, reference,
-        quantity, supplier, concentration, molecular_weight, unit_chemical and location.
+        cas_number, number_bottle, quantity, state, supplier, molecular_weight, unit_chemical
+        and location.
         """
 
         model = Chemical
-        fields = ('type_chemical', 'name', 'reference', 'quantity', 'supplier', 'concentration',
-                  'molecular_weight', 'unit_chemical', 'location',)
+        fields = ('type_chemical', 'name', 'reference', 'cas_number', 'number_bottle', 'quantity',
+                  'state', 'supplier', 'molecular_weight', 'unit_chemical', 'location',)
 
 
 class BiologicalForm(forms.ModelForm):
@@ -290,12 +290,12 @@ class BiologicalForm(forms.ModelForm):
         Meta docstring.
 
         This function use the Biological model and the fields: type_biological, name, reference,
-        quantity, supplier, concentration, molecular_weight, unit_biological and location.
+        number_bottle, quantity, supplier, concentration, unit_biological and location.
         """
 
         model = Biological
-        fields = ('type_biological', 'name', 'reference', 'quantity', 'supplier', 'concentration',
-                  'molecular_weight', 'unit_biological', 'location',)
+        fields = ('type_biological', 'name', 'reference', 'number_bottle', 'quantity', 'supplier',
+                  'concentration', 'unit_biological', 'location',)
 
 
 class InstrumentationForm(forms.ModelForm):
