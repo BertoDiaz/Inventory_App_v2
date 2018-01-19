@@ -171,8 +171,23 @@ def optic_new(request):
         form = OpticForm(request.POST)
         if form.is_valid():
             optic = form.save(commit=False)
-            optic.name_optic = optic.type_optic.name
-            optic.save()
+            optic_all = Optic.objects.all()
+
+            duplicates = False
+
+            for data in optic_all:
+                if data.description == optic.description:
+                    duplicates = True
+                    optic_ex = data
+
+            if not duplicates:
+                messages.success(request, 'You have added your optic component successfully.')
+                optic.name_optic = optic.type_optic.name
+                optic.save()
+            else:
+                messages.warning(request, 'Ups!! A optic component with this description already exists. If you want to add a new to the stock, please edit it.')
+                optic = optic_ex
+
             return redirect('blog:optic_detail', pk=optic.pk)
     else:
         form = OpticForm()

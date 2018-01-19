@@ -159,7 +159,22 @@ def computing_new(request):
         form = ComputingForm(request.POST)
         if form.is_valid():
             computing = form.save(commit=False)
-            computing.save()
+            computing_all = Computing.objects.all()
+
+            duplicates = False
+
+            for data in computing_all:
+                if data.name == computing.name:
+                    duplicates = True
+                    computing_ex = data
+
+            if not duplicates:
+                messages.success(request, 'You have added your computing successfully.')
+                computing.save()
+            else:
+                messages.warning(request, 'Ups!! A computing with this name already exists. If you want to do any change, please edit it.')
+                computing = computing_ex
+
             return redirect('blog:computing_detail', pk=computing.pk)
     else:
         form = ComputingForm()

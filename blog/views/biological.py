@@ -188,8 +188,24 @@ def biological_new(request):
         form = BiologicalForm(request.POST)
         if form.is_valid():
             biological = form.save(commit=False)
-            biological.save()
+            biological_all = Biological.objects.all()
+
+            duplicates = False
+
+            for data in biological_all:
+                if data.reference == biological.reference:
+                    duplicates = True
+                    biological_ex = data
+
+            if not duplicates:
+                messages.success(request, 'You have added your biological successfully.')
+                biological.save()
+            else:
+                messages.warning(request, 'Ups!! A biological with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
+                biological = biological_ex
+
             return redirect('blog:biological_detail', pk=biological.pk)
+
     else:
         form = BiologicalForm()
     return render(request, 'blog/biological_new.html', {'form': form})

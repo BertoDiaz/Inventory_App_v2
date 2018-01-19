@@ -180,7 +180,22 @@ def instrumentation_new(request):
         form = InstrumentationForm(request.POST)
         if form.is_valid():
             instrumentation = form.save(commit=False)
-            instrumentation.save()
+            instrumentation_all = Instrumentation.objects.all()
+
+            duplicates = False
+
+            for data in instrumentation_all:
+                if data.characteristics == instrumentation.characteristics:
+                    duplicates = True
+                    instrumentation_ex = data
+
+            if not duplicates:
+                messages.success(request, 'You have added your instrument successfully.')
+                instrumentation.save()
+            else:
+                messages.warning(request, 'Ups!! A instrument with these characteristics already exists. If you want to add a new to the stock, please edit it.')
+                instrumentation = instrumentation_ex
+
             return redirect('blog:instrumentation_detail', pk=instrumentation.pk)
     else:
         form = InstrumentationForm()

@@ -7,29 +7,31 @@
             <h1>New Wafer</h1>
             <form method="POST">
                 {% csrf_token %}
-                {% for runField in runForm %}
-                    <div id="{{ runField.auto_id }}_container">
-                        {{ runField.help_text }}
-                        <table style="width:100%">
-                            <tr>
-                                <th>
-                                    {{ runField.label_tag }}
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ runField }}
-                                </th>
-                            </tr>
-                        </table>
-                        <div id="{{ runField.auto_id }}_errors">
-                            {{ runField.errors }}
+                {% if runForm %}
+                    {% for runField in runForm %}
+                        <div id="{{ runField.auto_id }}_container">
+                            <!-- {{ runField.help_text }} -->
+                            <table style="width:100%">
+                                <tr>
+                                    <th>
+                                        {{ runField.label_tag }}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        {{ runField }}
+                                    </th>
+                                </tr>
+                            </table>
+                            <div id="{{ runField.auto_id }}_errors">
+                                {{ runField.errors }}
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
                 {% for waferField in waferForm %}
                     <div id="{{ waferField.auto_id }}_container">
-                        {{ waferField.help_text }}
+                        <!-- {{ waferField.help_text }} -->
                         <table style="width:100%">
                             <tr>
                                 <th>

@@ -50,6 +50,10 @@
                     {{ form.lod }}
                     <small class="form-text text-muted">{{ form.lod.help_text|safe }}</small>
                 </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.comments.label_tag }}</span>
+                    {{ form.comments }}
+                </div>
 
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>

@@ -38,7 +38,7 @@
                 {% if chemicalsBack %}
                     <a href="{% url 'blog:chemical_list_type_chemical' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% elif type_chemicalBack %}
-                    <a href="{% url 'blog:chemical_list' pk=chemical.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                    <a href="{% url 'blog:chemical_list' pk=chemical.type_chemical.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
                 <div class="top-menu col-md-2">
                     <form id="searchform" action="{% url 'blog:chemical_search' %}" method="get" accept-charset="utf-8">

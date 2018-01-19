@@ -10,8 +10,21 @@
                         {{ chip.created_date }}
                     </div> -->
                     <!-- <p>{{ chip.chip }}</p> -->
-                    <h1><a href="{% url 'blog:wafer_chip_list' pk=wafer.pk %}">Wafer: {{ wafer.wafer }}</a></h1>
-                    <p><span style="font-weight: bold;">Run: </span>{{ wafer.run.run }}</p>
+                    <div class="row">
+                        <div class="col-md-1">
+                            <p style="height:15px"></p>
+                            <div class="button">
+                                {% if user.is_authenticated %}
+                                    <a class="btn btn-default" href="{% url 'blog:wafer_edit' pk=wafer.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-11">
+                            <h1><a href="{% url 'blog:wafer_chip_list' pk=wafer.pk %}">Wafer: {{ wafer.wafer }}</a></h1>
+                            <p><span style="font-weight: bold;">Run: </span>{{ wafer.run.run }}</p>
+                            <p><span style="font-weight: bold;">Comments: </span>{{ wafer.comments }}</p>
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
         </div>

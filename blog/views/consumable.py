@@ -153,7 +153,22 @@ def consumable_new(request):
         form = ConsumableForm(request.POST)
         if form.is_valid():
             consumable = form.save(commit=False)
-            consumable.save()
+            consumable_all = Consumable.objects.all()
+
+            duplicates = False
+
+            for data in consumable_all:
+                if data.name == consumable.name:
+                    duplicates = True
+                    consumable_ex = data
+
+            if not duplicates:
+                messages.success(request, 'You have added your consumable successfully.')
+                consumable.save()
+            else:
+                messages.warning(request, 'Ups!! A consumable with this name already exists. If you want to add a new to the stock, please edit it.')
+                consumable = consumable_ex
+
             return redirect('blog:consumable_detail', pk=consumable.pk)
     else:
         form = ConsumableForm()

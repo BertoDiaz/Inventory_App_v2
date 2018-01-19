@@ -1,5 +1,5 @@
 """
-File name: order.py
+File name: order.py.
 
 Name: Inventory App
 
@@ -526,9 +526,9 @@ def order_send_email(request, pk):
     @raise 404: order does not exists.
     """
     order = get_object_or_404(Order, pk=pk)
+    username = User.objects.get(username=order.author)
 
     if request.method == "POST":
-        username = User.objects.get(username=order.author)
         sendEmail_form = SendEmailForm(data=request.POST)
 
         if sendEmail_form.is_valid():
@@ -539,11 +539,12 @@ def order_send_email(request, pk):
             subject = 'Order form'
 
             if (order.file_exists):
-                message_1 = "<p>Dear,</p><p>Attached to this email the order form and budget.</p>"
+                message_1 = "<p>Dear Jessica,</p><p>" + request.POST['message'] + "</p>"
                 message_2 = "<p></p><p>Best regards,</p><p>" + username.first_name + "</p>"
                 message = message_1 + message_2
+                # message = request.POST['message']
             else:
-                message = "<p>Dear,</p><p>Attached to this email the order form.</p>"
+                message = "<p>Dear Jessica,</p><p>" + request.POST['message'] + "</p>"
 
             msg = MIMEMultipart('related')
             msg['From'] = fromaddr
@@ -593,9 +594,30 @@ def order_send_email(request, pk):
         backList = False
         backDetail = True
 
-        return render(request, 'blog/order_send_email.html', {'form': form, 'order': order,
-                                                              'backList': backList,
-                                                              'backDetail': backDetail})
+        if (order.file_exists):
+            message_1 = "Dear Jessica,"
+            message_2 = "Attached to this email the order form and budget."
+            message_3 = "Best regards,"
+            message_4 = str(username.first_name)
+
+        else:
+            message_1 = "Dear Jessica,"
+            message_2 = "Attached to this email the order form."
+            message_3 = "Best regards,"
+            message_4 = str(username.first_name)
+
+        context ={
+        'form': form,
+        'order': order,
+        'backList': backList,
+        'backDetail': backDetail,
+        'message_1': message_1,
+        'message_2': message_2,
+        'message_3': message_3,
+        'message_4': message_4
+        }
+
+        return render(request, 'blog/order_send_email.html', context)
 
 
 @login_required

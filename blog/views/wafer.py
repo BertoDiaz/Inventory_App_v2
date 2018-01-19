@@ -1,5 +1,5 @@
 """
-File name: wafer.py
+File name: wafer.py.
 
 Name: Inventory App
 
@@ -27,7 +27,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 Email: heriberto.diazluis@gmail.com
 """
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from blog.models import Run, Wafer, Chip, Name_Waveguide
@@ -49,6 +49,98 @@ def wafer_list(request, pk):
     wafers = Wafer.objects.filter(run=pk).order_by('created_date').reverse()
 
     return render(request, 'blog/wafer_list.html', {'wafers': wafers})
+
+
+@login_required
+def wafer_edit(request, pk):
+    """
+    Wafer_edit function docstring.
+
+    This function shows the form to modify a wafer.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the wafer to modify.
+
+    @return: First time, this shows the form to edit the wafer information. If the form is
+    completed, return the wafer list.
+
+    @raise 404: wafer does not exists.
+    """
+    wafer = get_object_or_404(Wafer, pk=pk)
+    # wafer = Wafer.objects.filter(pk=pk)
+    if request.method == "POST":
+        form = WaferForm(data=request.POST, instance=wafer)
+        if form.is_valid():
+            wafer = form.save(commit=False)
+            wafer_all = Wafer.objects.all()
+
+            duplicates = False
+
+            for data in wafer_all:
+                if data.wafer == wafer.wafer and data.pk != wafer.pk:
+                    duplicates = True
+                    wafer_ex = data
+
+            if not duplicates:
+                # messages.success(request, 'You have added your chemical successfully.')
+                wafer.name_wafer = str(wafer.wafer)
+                wafer.comments = wafer.comments
+                wafer.save()
+            else:
+                # messages.warning(request, 'Ups!! A chemical with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
+                wafer = wafer_ex
+
+            return redirect('blog:wafer_list', pk=wafer.run.pk)
+    else:
+        waferForm = WaferForm(instance=wafer)
+        # print(waferForm)
+    return render(request, 'blog/wafer_edit.html', {'waferForm': waferForm})
+
+
+def wafer_chip_new(run, wafer):
+    """
+    Wafer_chip_new function docstring.
+
+    This function creates all chips of a wafer. This function uses a forms to create the new
+    chips (Chip form).
+
+    @param run: primary key of the run.
+    @param wafer: primary key of the wafer.
+    """
+    chipsName = ['CHIP1', 'CHIP2', 'CHIP3', 'CHIP4', 'CHIP5']
+    chipsGName = ['CHIPG1', 'CHIPG2', 'CHIPG3', 'CHIPG4', 'CHIPG5']
+    chipsPName = ['CHIP6P', 'CHIPG6P']
+
+    for chipName in chipsName:
+        chipForm = ChipForm()
+        newChip = chipForm.save(commit=False)
+        newChip.run = run
+        newChip.wafer = wafer
+        newChip.chip = chipName
+        # print(newChip)
+        newChip.save()
+        chip_waveguide_new(run, wafer, newChip)
+
+    for chipGName in chipsGName:
+        chipForm = ChipForm()
+        newChip = chipForm.save(commit=False)
+        newChip.run = run
+        newChip.wafer = wafer
+        newChip.chip = chipGName
+        # print(newChip)
+        newChip.save()
+        chip_waveguide_new(run, wafer, newChip)
+
+    for chipPName in chipsPName:
+        chipForm = ChipForm()
+        newChip = chipForm.save(commit=False)
+        newChip.run = run
+        newChip.wafer = wafer
+        newChip.chip = chipPName
+        # print(newChip)
+        newChip.save()
+        chip_waveguide_new(run, wafer, newChip)
 
 
 @login_required
@@ -82,11 +174,12 @@ def wafer_new(request):
         if waferForm.is_valid():
             wafer = waferForm.save(commit=False)
             # wafer_ex = Wafer.objects.get(wafer=wafer.wafer, run=run)
-            wafer_ex = Wafer.objects.filter(wafer=wafer.wafer, run=run).exists()
+            wafer_ex = Wafer.objects.filter(name_wafer=wafer.name_wafer, run=run).exists()
             # print("Wafer: " + str(wafer_ex))
             if not wafer_ex:
                 # print(wafer_ex)
                 wafer.run = run
+                wafer.name_wafer = str(wafer.wafer)
                 wafer.save()
                 wafer_chip_new(run, wafer)
                 return redirect('blog:wafer_chip_list', pk=wafer.pk)
@@ -98,52 +191,6 @@ def wafer_new(request):
         runForm = RunForm(prefix='run')
         waferForm = WaferForm(prefix='wafer')
     return render(request, 'blog/wafer_edit.html', {'runForm': runForm, 'waferForm': waferForm})
-
-
-@login_required
-def wafer_chip_new(run, wafer):
-    """
-    Wafer_chip_new function docstring.
-
-    This function creates all chips of a wafer. This function uses a forms to create the new
-    chips (Chip form).
-
-    @param run: primary key of the run.
-    @param wafer: primary key of the wafer.
-    """
-    chipName = ['CHIP1', 'CHIP2', 'CHIP3', 'CHIP4', 'CHIP5']
-    chipGName = ['CHIPG1', 'CHIPG2', 'CHIPG3', 'CHIPG4', 'CHIPG5']
-    chipPName = ['CHIP6P', 'CHIPG6P']
-
-    for chip in chipName:
-        chipForm = ChipForm()
-        newChip = chipForm.save(commit=False)
-        newChip.run = run
-        newChip.wafer = wafer
-        newChip.chip = chip
-        # print(newChip)
-        newChip.save()
-        chip_waveguide_new(run, wafer, newChip)
-
-    for chip in chipGName:
-        chipForm = ChipForm()
-        newChip = chipForm.save(commit=False)
-        newChip.run = run
-        newChip.wafer = wafer
-        newChip.chip = chip
-        # print(newChip)
-        newChip.save()
-        chip_waveguide_new(run, wafer, newChip)
-
-    for chip in chipPName:
-        chipForm = ChipForm()
-        newChip = chipForm.save(commit=False)
-        newChip.run = run
-        newChip.wafer = wafer
-        newChip.chip = chip
-        # print(newChip)
-        newChip.save()
-        chip_waveguide_new(run, wafer, newChip)
 
 
 @login_required
@@ -170,7 +217,6 @@ def wafer_chip_list(request, pk):
                                                    'runback': runback, 'waferback': waferback})
 
 
-@login_required
 def chip_waveguide_new(run, wafer, chip):
     """
     Chip_waveguide_new function docstring.

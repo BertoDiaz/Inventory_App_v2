@@ -1,5 +1,5 @@
 """
-File name: chip.py
+File name: chip.py.
 
 Name: Inventory App
 
@@ -117,7 +117,7 @@ def chip_new(request):
         if runForm.is_valid():
             run = runForm.save(commit=False)
             run_ex = Run.objects.get(run=run.run)
-            print(run)
+            # print(run)
             if not run_ex:
                 # print(run_ex)
                 run.save()

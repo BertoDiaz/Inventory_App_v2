@@ -1,5 +1,5 @@
 """
-File name: run.py
+File name: run.py.
 
 Name: Inventory App
 
@@ -117,7 +117,8 @@ def run_edit(request, pk):
         if form.is_valid():
             run = form.save(commit=False)
             run.save()
-            return redirect('blog:run_detail', pk=run.pk)
+            # return redirect('blog:run_detail', pk=run.pk)
+            return redirect('blog:run_list')
     else:
         form = RunForm(instance=run)
     return render(request, 'blog/run_edit.html', {'form': form})

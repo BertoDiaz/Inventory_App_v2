@@ -1,5 +1,5 @@
 """
-File name: forms.py
+File name: forms.py.
 
 Name: Inventory App
 
@@ -394,7 +394,7 @@ class WaferForm(forms.ModelForm):
         """
 
         model = Wafer
-        fields = ('wafer',)
+        fields = ('wafer', 'comments',)
 
 
 class ChipForm(forms.ModelForm):
@@ -413,7 +413,7 @@ class ChipForm(forms.ModelForm):
         """
 
         model = Chip
-        fields = ('chip', 'date', 'laser_source', 'readout', 'user_name',)
+        fields = ('chip', 'date', 'laser_source', 'readout', 'user_name', 'comments',)
 
 
 class WaveguideForm(forms.ModelForm):
@@ -433,4 +433,4 @@ class WaveguideForm(forms.ModelForm):
 
         model = Waveguide
         fields = ('name', 'amplitude', 'offset', 'frecuency', 'i_up', 'i_down',
-                  'slope', 'visibility', 'noise', 'lod',)
+                  'slope', 'visibility', 'noise', 'lod', 'comments',)

@@ -1,5 +1,5 @@
 """
-File name: waveguide.py
+File name: waveguide.py.
 
 Name: Inventory App
 
@@ -171,7 +171,7 @@ def waveguide_new(request, pk):
                 return redirect('blog:waveguide_detail', pk=chip.pk, pk2=waveguide.pk)
             else:
                 waveguide = waveguide_ex
-                print(waveguide.pk)
+                # print(waveguide.pk)
                 return redirect('blog:waveguide_detail_exist', pk=chip.pk, pk2=waveguide.pk)
     else:
         # runForm = RunForm(prefix='run')

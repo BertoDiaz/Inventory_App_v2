@@ -182,8 +182,24 @@ def chemical_new(request):
         form = ChemicalForm(request.POST)
         if form.is_valid():
             chemical = form.save(commit=False)
-            chemical.save()
+            chemical_all = Chemical.objects.all()
+
+            duplicates = False
+
+            for data in chemical_all:
+                if data.reference == chemical.reference:
+                    duplicates = True
+                    chemical_ex = data
+
+            if not duplicates:
+                messages.success(request, 'You have added your chemical successfully.')
+                chemical.save()
+            else:
+                messages.warning(request, 'Ups!! A chemical with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
+                chemical = chemical_ex
+
             return redirect('blog:chemical_detail', pk=chemical.pk)
+
     else:
         form = ChemicalForm()
     return render(request, 'blog/chemical_new.html', {'form': form})

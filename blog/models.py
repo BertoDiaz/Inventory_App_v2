@@ -199,7 +199,7 @@ class Chemical(models.Model):
     cas_number = models.CharField(max_length=200, blank=True, help_text="CAS number of the chemical.")
     number_bottle = models.CharField(max_length=200, blank=True, help_text="Number of bottles of the chemical.")
     quantity = models.CharField(max_length=20, help_text="Quantity of the chemical.")
-    state = models.ForeignKey('State', default=0, help_text="State of the chemical.")
+    state = models.ForeignKey('State', help_text="State of the chemical.")
     supplier = models.ForeignKey('Supplier', help_text="Supplier of the chemical.")
     molecular_weight = models.CharField(max_length=200, blank=True,
                                         help_text="Molecular weight of the chemical.")
@@ -1112,6 +1112,8 @@ class Wafer(models.Model):
 
     run = models.ForeignKey('Run', help_text="To what run is assigned.")
     wafer = models.IntegerField(help_text="Id of the wafer.")
+    name_wafer = models.CharField(max_length=50, default="", help_text="ID of the wafer.")
+    comments = models.TextField(max_length=500, blank=True, default="", help_text="Comments of the wafer.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -1123,20 +1125,20 @@ class Wafer(models.Model):
         self.created_date = timezone.now()
         self.save()
 
-    def __int__(self):
+    def __str__(self):
         """
-        Return integer function docstring.
+        Return string function docstring.
 
         This function returns the ID of the wafer.
 
-        @return: a integer with the ID of the wafer.
+        @return: a string with the ID of the wafer.
         """
-        return self.wafer
+        return self.name_wafer
 
 
 class Chip(models.Model):
     """
-    Wafer model docstring.
+    Chip model docstring.
 
     This model stores the different chips.
     """
@@ -1152,6 +1154,7 @@ class Chip(models.Model):
                                help_text="What type of sensor is used to read.")
     user_name = models.ForeignKey('Full_Name_Users', blank=True, null=True,
                                   help_text="Who have the chip.")
+    comments = models.TextField(max_length=500, blank=True, default="", help_text="Comments of the chip.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -1195,6 +1198,7 @@ class Waveguide(models.Model):
     visibility = models.FloatField(blank=True, null=True, help_text="Visibility of th e signal.")
     noise = models.FloatField(blank=True, null=True, help_text="Noise in the signal.")
     lod = models.FloatField(blank=True, null=True, help_text="")
+    comments = models.TextField(max_length=500, blank=True, default="", help_text="Comments of the waveguide.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):

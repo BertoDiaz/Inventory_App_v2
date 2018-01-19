@@ -178,8 +178,23 @@ def electronic_new(request):
         form = ElectronicForm(request.POST)
         if form.is_valid():
             electronic = form.save(commit=False)
-            electronic.name_component = electronic.type_component.name
-            electronic.save()
+            electronic_all = Electronic.objects.all()
+
+            duplicates = False
+
+            for data in electronic_all:
+                if data.unit == electronic.unit and data.value == electronic.value:
+                    duplicates = True
+                    electronic_ex = data
+
+            if not duplicates:
+                messages.success(request, 'You have added your electronic component successfully.')
+                electronic.name_component = electronic.type_component.name
+                electronic.save()
+            else:
+                messages.warning(request, 'Ups!! A electronic component with this value already exists. If you want to add a new to the stock, please edit it.')
+                electronic = electronic_ex
+
             return redirect('blog:electronic_detail', pk=electronic.pk)
     else:
         form = ElectronicForm()

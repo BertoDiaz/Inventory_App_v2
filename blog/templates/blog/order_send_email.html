@@ -6,9 +6,25 @@
             <p>Your username and password didn't match. Please try again.</p>
         {% endif %}
 
-        <h4>Introduce your username and password of ICN2 account.</h4>
         <form method="POST">
         {% csrf_token %}
+            <table style="border:2px solid">
+                <tr>
+                    <td style="padding:5px"></td>
+                    <td>
+                        {{ message_1 }}
+                        <p></p>
+                        <textarea name="message" rows="8" cols="80">{{ message_2 }}</textarea>
+                        <p></p>
+                        {{ message_3 }}
+                        <p></p>
+                        {{ message_4 }}
+                    </td>
+                    <td style="padding:5px"></td>
+                </tr>
+            </table>
+
+            <h4>Introduce your username and password of ICN2 account.</h4>
             <table>
             <tr>
                 <td>{{ form.username.label_tag }}</td>
