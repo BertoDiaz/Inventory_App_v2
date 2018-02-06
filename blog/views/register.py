@@ -1,5 +1,5 @@
 """
-File name: register.py
+File name: register.py.
 
 Name: Inventory App
 
@@ -29,7 +29,8 @@ Email: heriberto.diazluis@gmail.com
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from blog.models import Full_Name_Users
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from blog.models import Full_Name_Users, Messages
 from blog.forms import SignUpForm
 
 
@@ -43,7 +44,22 @@ def home(request):
 
     @return: Main page.
     """
-    return render(request, 'blog/home.html')
+    messages_list = Messages.objects.filter(show=True).order_by('created_date').reverse()
+
+    # Show 25 contacts per page
+    paginator = Paginator(messages_list, 8)
+
+    page = request.GET.get('page')
+    try:
+        messagesInfo = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        messagesInfo = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        messagesInfo = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/home.html', {'messagesInfo': messagesInfo})
 
 
 def signup(request):

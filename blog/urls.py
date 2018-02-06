@@ -169,4 +169,12 @@ urlpatterns = [
     url(r'^waveguide/new/(?P<pk>[0-9]+)/$', views.waveguide_new, name='waveguide_new'),
     url(r'^waveguide/(?P<pk>[0-9]+)/edit/$', views.waveguide_edit, name='waveguide_edit'),
     url(r'^waveguide/(?P<pk>\d+)/remove/$', views.waveguide_remove, name='waveguide_remove'),
+
+    # #################### MESSAGES #################### #
+    url(r'^messages/$', views.messages_list, name='messages_list'),
+    url(r'^messages/search/$', views.messages_search, name='messages_search'),
+    url(r'^messages/(?P<pk>[0-9]+)/$', views.messages_detail, name='messages_detail'),
+    url(r'^messages/new/$', views.messages_new, name='messages_new'),
+    url(r'^messages/(?P<pk>[0-9]+)/edit/$', views.messages_edit, name='messages_edit'),
+    url(r'^messages/(?P<pk>\d+)/remove/$', views.messages_remove, name='messages_remove'),
 ]

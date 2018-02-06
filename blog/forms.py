@@ -33,7 +33,7 @@ from django.contrib.auth.models import User
 from django.forms.formsets import BaseFormSet
 from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
 from .models import Instrumentation, Consumable, Others, Full_Name_Users, Run, Wafer, Chip
-from .models import Waveguide
+from .models import Waveguide, Messages
 
 
 class SignUpForm(UserCreationForm):
@@ -434,3 +434,21 @@ class WaveguideForm(forms.ModelForm):
         model = Waveguide
         fields = ('name', 'amplitude', 'offset', 'frecuency', 'i_up', 'i_down',
                   'slope', 'visibility', 'noise', 'lod', 'comments',)
+
+
+class MessagesForm(forms.ModelForm):
+    """
+    Messages form docstring.
+
+    This form is useds to create a new Message.
+    """
+
+    class Meta:
+        """
+        Meta docstring.
+
+        This function use the Messages model and the fields: messageText and show.
+        """
+
+        model = Messages
+        fields = ('messageText', 'show',)

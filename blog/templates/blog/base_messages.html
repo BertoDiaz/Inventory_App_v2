@@ -2,13 +2,13 @@
 {% load staticfiles %}
 
 <!-- ***********************************************************************************************
-    This HTML page is used as a base page to create similar the Home pages.
+    This HTML page is used as a base page to create similar pages of the Messages category.
 ************************************************************************************************ -->
 
 <html>
     <head>
 
-        <title>NANOB2A</title>
+        <title>Messages</title>
 
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
@@ -21,18 +21,40 @@
     </head>
     <body>
 
+        <!-- ***************************************************************************************
+            This line includes the navigation bar.
+        **************************************************************************************** -->
+        {% include 'blog/navbar.html' %}
+
         <div class="page-header">
+
             <!-- ***********************************************************************************
                 This part verifies if the username is logged in. If not, this shows an image to
                 indicate that the username is not logged in.
             ************************************************************************************ -->
-            {% if not user.is_authenticated %}
+            {% if user.is_authenticated %}
+                <a href="{% url 'blog:messages_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+                {% if backList and user.is_staff %}
+                    <a href="{% url 'blog:messages_list' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% endif %}
+                <div class="top-menu col-md-2">
+                    <form id="searchform" action="{% url 'blog:messages_search' %}" method="get" accept-charset="utf-8">
+                        <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                                <input type="text" class=" search-query form-control" name="searchfield" placeholder="Search" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary" type="button">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
-            <!-- ***********************************************************************************
-                Logo of the group in the navbar.
-            ************************************************************************************ -->
-            <h1><a href="{% url 'blog:home' %}"><img src="{% static 'images/Nanob2A Logo Completo.png' %}" alt="Logo NANOB2A" height="50"></a></h1>
+            <h1><a href="{% url 'blog:messages_list' %}">Messages</a></h1>
         </div>
         <div class="content container">
             <div class="row">
@@ -46,8 +68,9 @@
                 </div>
             </div>
         </div>
-
         <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="{% static 'js/navbarAction.js' %}"></script>
+        <script src="{% static 'js/showHide_v2.js' %}"></script>
     </body>
 </html>

@@ -8,10 +8,12 @@ from .consumable import *
 from .electronic import *
 from .instrumentation import *
 from .inventory import *
+from .messages import *
 from .optic import *
 from .order import *
 from .others import *
 from .register import *
 from .run import *
+from .search import *
 from .wafer import *
 from .waveguide import *

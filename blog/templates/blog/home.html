@@ -1,16 +1,80 @@
 {% extends 'blog/base_home.html' %}
 
 {% block content %}
-    <div class="inventory">
-        <h1><a href="{% url 'blog:inventory_list' %}">Inventory</a></h1>
-            <h2><a class="inventory-secondCol" href="{% url 'blog:computing_list' %}">Computing</a></h2>
-            <h2><a class="inventory-secondCol" href="{% url 'blog:electronic_list_type_components' %}">Electronic</a></h2>
-            <h2><a class="inventory-secondCol" href="{% url 'blog:optic_list_type_optic' %}">Optic</a></h2>
-            <h2><a class="inventory-secondCol" href="{% url 'blog:chemical_list_type_chemical' %}">Chemical</a></h2>
-            <h2><a class="inventory-secondCol" href="{% url 'blog:biological_list_type_biological' %}">Biological</a></h2>
-            <h2><a class="inventory-secondCol" href="{% url 'blog:instrumentation_list_type' %}">Instrumentation</a></h2>
-            <h2><a class="inventory-secondCol" href="{% url 'blog:consumable_list' %}">Consumable</a></h2>
-        <h1><a href="{% url 'blog:order_list' %}">Order</a></h1>
-        <h1><a href="{% url 'blog:run_list' %}">RUN</a></h1>
+    <div class="col-md-5">
+        <div class="inventory">
+            <h1><a href="{% url 'blog:inventory_list' %}">Inventory</a></h1>
+                <h2><a class="inventory-secondCol" href="{% url 'blog:computing_list' %}">Computing</a></h2>
+                <h2><a class="inventory-secondCol" href="{% url 'blog:electronic_list_type_components' %}">Electronic</a></h2>
+                <h2><a class="inventory-secondCol" href="{% url 'blog:optic_list_type_optic' %}">Optic</a></h2>
+                <h2><a class="inventory-secondCol" href="{% url 'blog:chemical_list_type_chemical' %}">Chemical</a></h2>
+                <h2><a class="inventory-secondCol" href="{% url 'blog:biological_list_type_biological' %}">Biological</a></h2>
+                <h2><a class="inventory-secondCol" href="{% url 'blog:instrumentation_list_type' %}">Instrumentation</a></h2>
+                <h2><a class="inventory-secondCol" href="{% url 'blog:consumable_list' %}">Consumable</a></h2>
+            <h1><a href="{% url 'blog:order_list' %}">Order</a></h1>
+            <h1><a href="{% url 'blog:run_list' %}">RUN</a></h1>
+            {% if user.is_staff %}
+                <h1><a href="{% url 'blog:messages_list' %}" class="navbar-link">Messages</a></h1>
+            {% endif %}
+        </div>
     </div>
+    {% if messagesInfo %}
+        <div class="col-md-7">
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-1">
+                    <div class="buttonComment">
+                        {% if user.is_authenticated %}
+                            <a class="btn btn-default" href="{% url 'blog:messages_new' %}"><span class="glyphicon glyphicon-comment" title="New Comment"></span></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for messageInfo in messagesInfo %}
+                    <div class="col-md-11">
+                        <div class="alert alert-info">
+                            <strong>{{ messageInfo.author.first_name }}: </strong>{{ messageInfo.messageText }}
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="button">
+                            {% if user.is_authenticated and user == messageInfo.author %}
+                                <a class="btn btn-default" href="{% url 'blog:messages_edit' pk=messageInfo.pk %}"><span class="glyphicon glyphicon-pencil" title="Edit Comment"></span></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% if messagesInfo.has_other_pages %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div style="text-align: center;">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-sm">
+                                        {% if messagesInfo.has_previous %}
+                                            <li><a href="?page={{ messagesInfo.previous_page_number }}">&laquo;</a></li>
+                                        {% else %}
+                                            <li class="disabled"><span>&laquo;</span></li>
+                                        {% endif %}
+                                        {% for i in messagesInfo.paginator.page_range %}
+                                            {% if messagesInfo.number == i %}
+                                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                            {% else %}
+                                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if messagesInfo.has_next %}
+                                            <li><a href="?page={{ messagesInfo.next_page_number }}">&raquo;</a></li>
+                                        {% else %}
+                                            <li class="disabled"><span>&raquo;</span></li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

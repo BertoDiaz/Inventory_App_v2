@@ -39,6 +39,7 @@ from .models import Instrumentation, Type_Instrumentation
 from .models import Consumable
 from .models import Others
 from .models import Run, Wafer, Chip, Waveguide, Name_Waveguide
+from .models import Messages
 
 admin.site.register(Inventory)
 admin.site.register(Type)
@@ -74,3 +75,4 @@ admin.site.register(Wafer)
 admin.site.register(Chip)
 admin.site.register(Waveguide)
 admin.site.register(Name_Waveguide)
+admin.site.register(Messages)

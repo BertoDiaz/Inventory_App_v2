@@ -1251,3 +1251,36 @@ class Name_Waveguide(models.Model):
         @return: a string with the name of the waveguide.
         """
         return self.name
+
+
+class Messages(models.Model):
+    """
+    Messages model docstring.
+
+    This model stores the different messages about the updates.
+    """
+
+    messageText = models.TextField(help_text="Message about the update.")
+    show = models.BooleanField(default=True, help_text="It is used to show the message.")
+    author = models.ForeignKey('auth.User',
+                               help_text="Name of the author that created the message.")
+    created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
+
+    def create(self):
+        """
+        Create function docstring.
+
+        This function stores the date when the message was created and save the info.
+        """
+        self.created_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        """
+        Return string function docstring.
+
+        This function returns the message.
+
+        @return: a string with the message.
+        """
+        return self.messageText
