@@ -191,7 +191,7 @@ def order_new(request):
             duplicates = False
 
             # doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
-            doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderForm/Order_Form.xlsx'))
+            doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/Order_Form.xlsx'))
             doc.get_sheet_names()
             sheet = doc.get_sheet_by_name('Order Form')
             sheet['C6'] = order.applicant
@@ -232,12 +232,12 @@ def order_new(request):
 
                         # if not os.path.exists('blog/orderForm/' + order.author.username + '/'):
                         #     os.makedirs('blog/orderForm/' + order.author.username + '/')
-                        if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderFrom/' + order.author.username + '/')):
-                            os.makedirs(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderFrom/' + order.author.username + '/'))
+                        if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/')):
+                            os.makedirs(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/'))
 
                         # doc.save('blog/orderForm/' + order.author.username + '/' +
                         #          nameFile + '.xlsx')
-                        doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderFrom/' + order.author.username + '/' +
+                        doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/' +
                                  nameFile + '.xlsx'))
 
                         messages.success(request, 'You have created your order.')
@@ -544,7 +544,7 @@ def order_send_email(request, pk):
                 message = message_1 + message_2
                 # message = request.POST['message']
             else:
-                message = "<p>Dear Jessica,</p><p>" + request.POST['message'] + "</p>"
+                message = "<p>Dear Jessica,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" + username.first_name + "</p>"
 
             msg = MIMEMultipart('related')
             msg['From'] = fromaddr
@@ -577,16 +577,26 @@ def order_send_email(request, pk):
                                        'attachment; filename = "%s"' % os.path.basename(uploadFile))
                     msg.attach(adjunto)
 
-            # ENVIAR
-            server = smtplib.SMTP('mail.icn2.cat', 587)
-            # protocolo de cifrado de datos utilizado por gmail
-            server.starttls()
-            # Credenciales
-            # server.login(username.email, 'heriberto_20')
-            server.login('icn2\\' + username.username, sendEmail_form.cleaned_data.get('password'))
-            server.set_debuglevel(1)
-            server.sendmail(fromaddr, toaddrs, msg.as_string())
-            server.quit()
+            try:
+                # ENVIAR
+                server = smtplib.SMTP('mail.icn2.cat', 587)
+                # protocolo de cifrado de datos utilizado por gmail
+                server.starttls()
+                # Credenciales
+                # server.login(username.email, 'heriberto_20')
+                server.login('icn2\\' + username.username, sendEmail_form.cleaned_data.get('password'))
+                server.set_debuglevel(1)
+                server.sendmail(fromaddr, toaddrs, msg.as_string())
+                server.quit()
+
+                order.order_sent = True
+                order.save()
+
+                messages.success(request, 'The order has been sent successfully.')
+
+            except:
+                messages.error(request, 'Username or password is incorrect.')
+
         return redirect('blog:order_detail', pk=pk)
     else:
         form = SendEmailForm()
@@ -606,6 +616,9 @@ def order_send_email(request, pk):
             message_3 = "Best regards,"
             message_4 = str(username.first_name)
 
+        if (order.order_sent):
+            messages.warning(request, 'This order has already been sent.')
+
         context ={
         'form': form,
         'order': order,
@@ -618,6 +631,102 @@ def order_send_email(request, pk):
         }
 
         return render(request, 'blog/order_send_email.html', context)
+
+
+@login_required
+def order_notify(request, pk):
+    """
+    Order_notify function docstring.
+
+    This function notify to an group that an order is going to be send.
+
+    @param request: HTML request page.
+
+    @param pk: primary key of the order to notify.
+
+    @return: detail page of the order.
+
+    @raise 404: order does not exists.
+    """
+    order = get_object_or_404(Order, pk=pk)
+    username = User.objects.get(username=order.author)
+    users = User.objects.exclude(username=order.author)
+
+    usersAdd = []
+
+    for userID in users:
+        usersAdd.append(userID.email)
+
+    if request.method == "POST":
+        sendEmail_form = SendEmailForm(data=request.POST)
+
+        if sendEmail_form.is_valid():
+            # sendEmail = sendEmail_form.save(commit=False)
+            # print(sendEmail_form.cleaned_data.get('password'))
+            fromaddr = username.email
+            toaddrs = usersAdd
+            subject = 'New Order'
+
+            message = "<p>Hello everybody,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" + username.first_name + "</p>"
+
+            msg = MIMEMultipart('related')
+            msg['From'] = fromaddr
+            msg['To'] = ", ".join(toaddrs)
+            msg['Subject'] = subject
+
+            # Content-type:text/html
+            message = MIMEText(message, 'html')
+            msg.attach(message)
+
+            try:
+                # ENVIAR
+                server = smtplib.SMTP('mail.icn2.cat', 587)
+                # protocolo de cifrado de datos utilizado por gmail
+                server.starttls()
+                # Credenciales
+                # server.login(username.email, 'heriberto_20')
+                server.login('icn2\\' + username.username, sendEmail_form.cleaned_data.get('password'))
+                server.set_debuglevel(1)
+                server.sendmail(fromaddr, toaddrs, msg.as_string())
+                server.quit()
+
+                order.group_notified = True
+                order.save()
+
+                messages.success(request, 'The group has been notified successfully.')
+
+            except:
+                messages.error(request, 'Username or password is incorrect.')
+
+        return redirect('blog:order_detail', pk=pk)
+    else:
+        form = SendEmailForm()
+
+        backList = False
+        backDetail = True
+
+        message_1 = "Hello everybody,"
+        message_2 = "I am about to place an order for " + str(order.supplier) + "."
+        message_3 = " Please, let me know if anybody need anything."
+        message_4 = "Best regards,"
+        message_5 = str(username.first_name)
+
+        if (order.group_notified):
+            messages.warning(request, 'The group has already been notified.')
+
+        context ={
+        'form': form,
+        'order': order,
+        'backList': backList,
+        'backDetail': backDetail,
+        'message_1': message_1,
+        'message_2': message_2,
+        'message_3': message_3,
+        'message_4': message_4,
+        'message_5': message_5
+        }
+
+        return render(request, 'blog/order_notify_email.html', context)
 
 
 @login_required

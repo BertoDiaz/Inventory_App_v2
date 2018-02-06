@@ -132,6 +132,7 @@ urlpatterns = [
     url(r'^order/(?P<pk>[0-9]+)/edit/$', views.order_edit, name='order_edit'),
     url(r'^order/(?P<pk>\d+)/remove/$', views.order_remove, name='order_remove'),
     url(r'^order/(?P<pk>\d+)/send/$', views.order_send_email, name='order_send_email'),
+    url(r'^order/(?P<pk>\d+)/notify/$', views.order_notify, name='order_notify'),
     url(r'^order/(?P<pk>\d+)/upload/$', views.order_add_file, name='order_add_file'),
 
     # #################### RUN #################### #
