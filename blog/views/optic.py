@@ -171,6 +171,7 @@ def optic_new(request):
         form = OpticForm(request.POST)
         if form.is_valid():
             optic = form.save(commit=False)
+            optic.author = request.user
             optic_all = Optic.objects.all()
 
             duplicates = False
@@ -215,6 +216,7 @@ def optic_edit(request, pk):
         form = OpticForm(data=request.POST, instance=optic)
         if form.is_valid():
             optic = form.save(commit=False)
+            optic.author = request.user
             optic_all = Optic.objects.all()
 
             duplicates = False

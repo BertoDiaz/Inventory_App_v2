@@ -178,6 +178,7 @@ def electronic_new(request):
         form = ElectronicForm(request.POST)
         if form.is_valid():
             electronic = form.save(commit=False)
+            electronic.author = request.user
             electronic_all = Electronic.objects.all()
 
             duplicates = False
@@ -222,6 +223,7 @@ def electronic_edit(request, pk):
         form = ElectronicForm(data=request.POST, instance=electronic)
         if form.is_valid():
             electronic = form.save(commit=False)
+            electronic.author = request.user
             electronic_all = Electronic.objects.all()
 
             duplicates = False

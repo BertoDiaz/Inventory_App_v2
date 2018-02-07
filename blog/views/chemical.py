@@ -182,6 +182,7 @@ def chemical_new(request):
         form = ChemicalForm(request.POST)
         if form.is_valid():
             chemical = form.save(commit=False)
+            chemical.author = request.user
             chemical_all = Chemical.objects.all()
 
             duplicates = False
@@ -226,6 +227,7 @@ def chemical_edit(request, pk):
         form = ChemicalForm(data=request.POST, instance=chemical)
         if form.is_valid():
             chemical = form.save(commit=False)
+            chemical.author = request.user
             chemical_all = Chemical.objects.all()
 
             duplicates = False

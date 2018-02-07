@@ -188,6 +188,7 @@ def biological_new(request):
         form = BiologicalForm(request.POST)
         if form.is_valid():
             biological = form.save(commit=False)
+            biological.author = request.user
             biological_all = Biological.objects.all()
 
             duplicates = False
@@ -232,6 +233,7 @@ def biological_edit(request, pk):
         form = BiologicalForm(data=request.POST, instance=biological)
         if form.is_valid():
             biological = form.save(commit=False)
+            biological.author = request.user
             biological_all = Biological.objects.all()
 
             duplicates = False

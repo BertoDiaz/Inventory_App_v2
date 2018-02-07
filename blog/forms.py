@@ -31,9 +31,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms.formsets import BaseFormSet
-from .models import Inventory, Order, Product, Computing, Electronic, Optic, Chemical, Biological
-from .models import Instrumentation, Consumable, Others, Full_Name_Users, Run, Wafer, Chip
-from .models import Waveguide, Messages
+from .models import Inventory, Order, Product, Supplier, Computing, Electronic, Optic, Chemical
+from .models import Biological, Instrumentation, Consumable, Others, Full_Name_Users, Run, Wafer
+from .models import Chip, Waveguide, Messages
 
 
 class SignUpForm(UserCreationForm):
@@ -195,6 +195,25 @@ class BaseProductFormSet(BaseFormSet):
                         'Descriptions must be unique.',
                         code='duplicate_descriptions'
                     )
+
+
+class SupplierForm(forms.ModelForm):
+    """
+    Supplier form docstring.
+
+    This form is useds to create a new Supplier.
+    """
+
+    class Meta:
+        """
+        Meta docstring.
+
+        This function use the Supplier model and the fields: name, attention, address,
+        city_postCode, phone, fax and email.
+        """
+
+        model = Supplier
+        fields = ('name', 'attention', 'address', 'city_postCode', 'phone', 'fax', 'email',)
 
 
 class ComputingForm(forms.ModelForm):

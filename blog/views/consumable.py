@@ -153,6 +153,7 @@ def consumable_new(request):
         form = ConsumableForm(request.POST)
         if form.is_valid():
             consumable = form.save(commit=False)
+            consumable.author = request.user
             consumable_all = Consumable.objects.all()
 
             duplicates = False
@@ -196,6 +197,7 @@ def consumable_edit(request, pk):
         form = ConsumableForm(data=request.POST, instance=consumable)
         if form.is_valid():
             consumable = form.save(commit=False)
+            consumable.author = request.user
             consumable_all = Consumable.objects.all()
 
             duplicates = False

@@ -180,6 +180,7 @@ def instrumentation_new(request):
         form = InstrumentationForm(request.POST)
         if form.is_valid():
             instrumentation = form.save(commit=False)
+            instrumentation.author = request.user
             instrumentation_all = Instrumentation.objects.all()
 
             duplicates = False
@@ -223,6 +224,7 @@ def instrumentation_edit(request, pk):
         form = InstrumentationForm(data=request.POST, instance=instrumentation)
         if form.is_valid():
             instrumentation = form.save(commit=False)
+            instrumentation.author = request.user
             instrumentation_all = Instrumentation.objects.all()
 
             duplicates = False

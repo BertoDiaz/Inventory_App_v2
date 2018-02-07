@@ -159,6 +159,7 @@ def computing_new(request):
         form = ComputingForm(request.POST)
         if form.is_valid():
             computing = form.save(commit=False)
+            computing.author = request.user
             computing_all = Computing.objects.all()
 
             duplicates = False
@@ -202,6 +203,7 @@ def computing_edit(request, pk):
         computing_form = ComputingForm(data=request.POST, instance=computing)
         if computing_form.is_valid():
             computing = computing_form.save(commit=False)
+            computing.author = request.user
             computing_all = Computing.objects.all()
 
             duplicates = False

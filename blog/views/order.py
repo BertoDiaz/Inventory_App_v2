@@ -47,7 +47,7 @@ import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.drawing.image import Image
 from blog.models import Order, Product, Budget, Type_of_purchase, Supplier
-from blog.forms import OrderForm, ProductForm, SendEmailForm, UploadFileForm
+from blog.forms import OrderForm, ProductForm, SendEmailForm, UploadFileForm, SupplierForm
 
 
 @login_required
@@ -185,83 +185,128 @@ def order_new(request):
         if order_form.is_valid() and product_formset.is_valid():
             order = order_form.save(commit=False)
             order.author = request.user
-            order.save()
 
-            new_products = []
-            duplicates = False
+            supplier_form = SupplierForm(data=request.POST, prefix="supplierForm")
 
-            # doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
-            doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/Order_Form.xlsx'))
-            doc.get_sheet_names()
-            sheet = doc.get_sheet_by_name('Order Form')
-            sheet['C6'] = order.applicant
-            sheet['C7'] = order.budget.name
-            sheet['C10'] = order.type_of_purchase.name
-            sheet['C12'] = order.payment_conditions.name
-            sheet['C17'] = order.supplier.name
-            num = 37
-            nameFile = "OF_" + order.name
+            if order.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
 
-            for product_form in product_formset:
-                description = product_form.cleaned_data.get('description')
-                quantity = product_form.cleaned_data.get('quantity')
-                unit_price = product_form.cleaned_data.get('unit_price')
+                # order_form = OrderForm(prefix="orderForm")
+                # products_formset = ProductFormSet(prefix="form")
+                products_formset = product_formset
 
-                if description and quantity and unit_price:
-                    for new_products_data in new_products:
-                        if new_products_data.description == description:
-                            duplicates = True
+                supplier_form = SupplierForm(prefix="supplierForm")
+                addSupplier = True
 
-                    numString = str(num)
-                    sheet['A' + numString] = description
-                    sheet['H' + numString] = quantity
-                    sheet['I' + numString] = unit_price
-                    num = num + 1
+                messages.warning(request, 'You have to write the next information about the supplier.')
 
-                    new_products.append(Product(description=description, quantity=quantity,
-                                                unit_price=unit_price, order=order))
-
-            try:
-                with transaction.atomic():
-                    if not duplicates:
-                        Product.objects.bulk_create(new_products)
-
-                        sheet = setBordersCell(sheet)
-
-                        # print(order.author.username)
-
-                        # if not os.path.exists('blog/orderForm/' + order.author.username + '/'):
-                        #     os.makedirs('blog/orderForm/' + order.author.username + '/')
-                        if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/')):
-                            os.makedirs(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/'))
-
-                        # doc.save('blog/orderForm/' + order.author.username + '/' +
-                        #          nameFile + '.xlsx')
-                        doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/' +
-                                 nameFile + '.xlsx'))
-
-                        messages.success(request, 'You have created your order.')
-                        return redirect('blog:order_detail', pk=order.pk)
-
-                    else:
-                        messages.warning(request, 'There are repeated products.')
-
-                        context = {
-                            'order_form': order_form,
-                            'products_formset': product_formset
-                        }
-
-                        return render(request, 'blog/order_new.html', context)
-
-            except IntegrityError:
-                messages.error(request, 'There was an error saving your order.')
+                backList = True
+                backDetail = False
 
                 context = {
                     'order_form': order_form,
-                    'products_formset': product_formset
+                    'products_formset': products_formset,
+                    'supplier_form': supplier_form,
+                    'backList': backList,
+                    'backDetail': backDetail,
+                    'addSupplier': addSupplier
                 }
 
                 return render(request, 'blog/order_new.html', context)
+
+            else:
+
+                if supplier_form.is_valid():
+                    supplier = supplier_form.save(commit=False)
+                    order.name_supplier = supplier.name
+                    supplier.save()
+
+                order.save()
+
+                new_products = []
+                duplicates = False
+
+                # doc = openpyxl.load_workbook('blog/orderForm/Order_Form.xlsx')
+                doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/Order_Form.xlsx'))
+                doc.get_sheet_names()
+                sheet = doc.get_sheet_by_name('Order Form')
+                sheet['C6'] = order.applicant
+                sheet['C7'] = order.budget.name
+                sheet['C10'] = order.type_of_purchase.name
+                sheet['C12'] = order.payment_conditions.name
+                sheet['C17'] = order.supplier.name
+
+                if order.supplier.name == "SUPPLIER NOT REGISTERED":
+                    sheet['C19'] = supplier.name
+                    sheet['C20'] = supplier.attention
+                    sheet['C21'] = supplier.address
+                    sheet['C22'] = supplier.city_postCode
+                    sheet['C23'] = supplier.phone
+                    sheet['C24'] = supplier.fax
+                    sheet['C25'] = supplier.email
+
+                num = 37
+                nameFile = "OF_" + order.name
+
+                for product_form in product_formset:
+                    description = product_form.cleaned_data.get('description')
+                    quantity = product_form.cleaned_data.get('quantity')
+                    unit_price = product_form.cleaned_data.get('unit_price')
+
+                    if description and quantity and unit_price:
+                        for new_products_data in new_products:
+                            if new_products_data.description == description:
+                                duplicates = True
+
+                        numString = str(num)
+                        sheet['A' + numString] = description
+                        sheet['H' + numString] = quantity
+                        sheet['I' + numString] = unit_price
+                        num = num + 1
+
+                        new_products.append(Product(description=description, quantity=quantity,
+                                                    unit_price=unit_price, order=order))
+
+                try:
+                    with transaction.atomic():
+                        if not duplicates:
+                            Product.objects.bulk_create(new_products)
+
+                            sheet = setBordersCell(sheet)
+
+                            # print(order.author.username)
+
+                            # if not os.path.exists('blog/orderForm/' + order.author.username + '/'):
+                            #     os.makedirs('blog/orderForm/' + order.author.username + '/')
+                            if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/')):
+                                os.makedirs(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/'))
+
+                            # doc.save('blog/orderForm/' + order.author.username + '/' +
+                            #          nameFile + '.xlsx')
+                            doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/' +
+                                     nameFile + '.xlsx'))
+
+                            messages.success(request, 'You have created your order.')
+                            return redirect('blog:order_detail', pk=order.pk)
+
+                        else:
+                            messages.warning(request, 'There are repeated products.')
+
+                            context = {
+                                'order_form': order_form,
+                                'products_formset': product_formset
+                            }
+
+                            return render(request, 'blog/order_new.html', context)
+
+                except IntegrityError:
+                    messages.error(request, 'There was an error saving your order.')
+
+                    context = {
+                        'order_form': order_form,
+                        'products_formset': product_formset
+                    }
+
+                    return render(request, 'blog/order_new.html', context)
 
     else:
         order_form = OrderForm(prefix="orderForm")
@@ -269,12 +314,14 @@ def order_new(request):
 
         backList = True
         backDetail = False
+        addSupplier = False
 
     context = {
         'order_form': order_form,
         'products_formset': products_formset,
         'backList': backList,
-        'backDetail': backDetail
+        'backDetail': backDetail,
+        'addSupplier': addSupplier
     }
 
     return render(request, 'blog/order_new.html', context)
@@ -437,6 +484,9 @@ def order_edit(request, pk):
     """
     order_data = get_object_or_404(Order, pk=pk)
 
+    if order_data.supplier.name == "SUPPLIER NOT REGISTERED":
+        supplier_data = Supplier.objects.get(name=order_data.name_supplier)
+
     ProductFormSet = formset_factory(ProductForm)
 
     products = Product.objects.filter(order=order_data.pk).order_by('created_date')
@@ -450,6 +500,29 @@ def order_edit(request, pk):
         if order_form.is_valid() and product_formset.is_valid():
             order = order_form.save(commit=False)
             order.author = request.user
+
+            if order.supplier.name == "SUPPLIER NOT REGISTERED":
+                supplier_form = SupplierForm(data=request.POST, instance=supplier_data, prefix="supplierForm")
+                supplier = supplier_form.save(commit=False)
+                order.name_supplier = supplier.name
+
+                if Supplier.objects.filter(pk=supplier.pk).exists():
+                    supplier_data = Supplier.objects.get(pk=supplier.pk)
+                    supplier_data.name = supplier.name
+                    supplier_data.attention = supplier.attention
+                    supplier_data.address = supplier.address
+                    supplier_data.city_postCode = supplier.city_postCode
+                    supplier_data.phone = supplier.phone
+                    supplier_data.fax = supplier.fax
+                    supplier_data.email = supplier.email
+                    supplier_data.save()
+
+                else:
+                    supplier.save()
+
+            else:
+                order.name_supplier = order.supplier.name
+
             order.save()
 
             new_products = []
@@ -474,6 +547,48 @@ def order_edit(request, pk):
                         Product.objects.filter(order=order).delete()
                         Product.objects.bulk_create(new_products)
 
+                        doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx'))
+                        doc.get_sheet_names()
+                        sheet = doc.get_sheet_by_name('Order Form')
+                        sheet['C6'] = order.applicant
+                        sheet['C7'] = order.budget.name
+                        sheet['C10'] = order.type_of_purchase.name
+                        sheet['C12'] = order.payment_conditions.name
+                        sheet['C17'] = order.supplier.name
+
+                        if order.supplier.name == "SUPPLIER NOT REGISTERED":
+                            sheet['C19'] = supplier.name
+                            sheet['C20'] = supplier.attention
+                            sheet['C21'] = supplier.address
+                            sheet['C22'] = supplier.city_postCode
+                            sheet['C23'] = supplier.phone
+                            sheet['C24'] = supplier.fax
+                            sheet['C25'] = supplier.email
+
+                        num = 37
+                        # nameFile = "OF_" + order.name
+
+                        for product_form in product_formset:
+                            description = product_form.cleaned_data.get('description')
+                            quantity = product_form.cleaned_data.get('quantity')
+                            unit_price = product_form.cleaned_data.get('unit_price')
+
+                            if description and quantity and unit_price:
+                                for new_products_data in new_products:
+                                    if new_products_data.description == description:
+                                        duplicates = True
+
+                                numString = str(num)
+                                sheet['A' + numString] = description
+                                sheet['H' + numString] = quantity
+                                sheet['I' + numString] = unit_price
+                                num = num + 1
+
+                        sheet = setBordersCell(sheet)
+
+                        doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/OF_' +
+                                 order.name + '.xlsx'))
+
                         messages.success(request, 'You have updated your order.')
                         return redirect('blog:order_detail', pk=order.pk)
                     else:
@@ -485,6 +600,10 @@ def order_edit(request, pk):
                 return redirect('blog:order_detail', pk=order.pk)
     else:
         order_form = OrderForm(instance=order_data, prefix="orderForm")
+
+        if order_data.supplier.name == "SUPPLIER NOT REGISTERED":
+            supplier_form = SupplierForm(instance=supplier_data, prefix="supplierForm")
+
         # products = Product.objects.filter(order=order_data.pk)
         noItem = False
 
@@ -497,15 +616,27 @@ def order_edit(request, pk):
         backList = False
         backDetail = True
 
-    context = {
-        'order': order_data,
-        'order_form': order_form,
-        'products_formset': products_formset,
-        'noItem': noItem,
-        'count': count,
-        'backList': backList,
-        'backDetail': backDetail
-    }
+    if order_data.supplier.name == "SUPPLIER NOT REGISTERED":
+        context = {
+            'order': order_data,
+            'order_form': order_form,
+            'products_formset': products_formset,
+            'supplier_form': supplier_form,
+            'noItem': noItem,
+            'count': count,
+            'backList': backList,
+            'backDetail': backDetail
+        }
+    else:
+        context = {
+            'order': order_data,
+            'order_form': order_form,
+            'products_formset': products_formset,
+            'noItem': noItem,
+            'count': count,
+            'backList': backList,
+            'backDetail': backDetail
+        }
 
     return render(request, 'blog/order_edit.html', context)
 
@@ -557,7 +688,7 @@ def order_send_email(request, pk):
 
             # ADJUNTO
             # orderForm = 'blog/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx'
-            orderForm = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderForm/' + order.author.username + '/OF_' + order.name + 'xlsx')
+            orderForm = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx')
             if (os.path.isfile(orderForm)):
                 adjunto = MIMEBase('application', 'octet-stream')
                 adjunto.set_payload(open(orderForm, "rb").read())
@@ -568,7 +699,7 @@ def order_send_email(request, pk):
 
             # uploadFile = 'blog/orderForm/' + order.author.username + '/' + order.name_file_attach
             if order.file_exists:
-                uploadFile = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'orderForm/' + order.author.username + '/' + order.name_file_attach)
+                uploadFile = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/' + order.name_file_attach)
                 if (os.path.isfile(uploadFile)):
                     adjunto = MIMEBase('application', 'octet-stream')
                     adjunto.set_payload(open(uploadFile, "rb").read())

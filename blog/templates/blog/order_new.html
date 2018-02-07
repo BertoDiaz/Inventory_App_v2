@@ -3,13 +3,6 @@
 
 {% block content %}
     <h1>New Order</h1>
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
     <form id="myForm" method="POST" action="">
         {% csrf_token %}
 
@@ -43,6 +36,47 @@
             {{ order_form.supplier }}
             <small class="form-text text-muted">{{ order_form.supplier.help_text|safe }}</small>
         </div>
+
+        {% if addSupplier %}
+            <div style="padding-top: 10px;">
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="row" style="padding-top: 10px;">
+                <span class="col-md-3"><strong>Name Supplier:</strong></span>
+                {{ supplier_form.name }}
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <span class="col-md-3">{{ supplier_form.attention.label_tag}}</span>
+                {{ supplier_form.attention }}
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <span class="col-md-3">{{ supplier_form.address.label_tag}}</span>
+                {{ supplier_form.address }}
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <span class="col-md-3">{{ supplier_form.city_postCode.label_tag}}</span>
+                {{ supplier_form.city_postCode }}
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <span class="col-md-3">{{ supplier_form.phone.label_tag}}</span>
+                {{ supplier_form.phone }}
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <span class="col-md-3">{{ supplier_form.fax.label_tag}}</span>
+                {{ supplier_form.fax }}
+            </div>
+            <div class="row" style="padding-top: 10px; padding-bottom: 30px;">
+                <span class="col-md-3">{{ supplier_form.email.label_tag}}</span>
+                {{ supplier_form.email }}
+            </div>
+        {% endif %}
 
         <table class="table" border="0" cellpadding="0" cellspacing="0">
             <thead>

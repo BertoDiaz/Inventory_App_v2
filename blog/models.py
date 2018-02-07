@@ -74,6 +74,7 @@ class Computing(models.Model):
     This model stores the computers.
     """
 
+    author = models.ForeignKey('auth.User', null=True)
     name = models.CharField(max_length=200, blank=True, help_text="Name of the computer.")
     type_object = models.ForeignKey('Type_Object', help_text="Type of the computing.")
     location = models.ForeignKey('Location', help_text="Where it is the computer.")
@@ -121,6 +122,7 @@ class Electronic(models.Model):
     This model stores the electronic components.
     """
 
+    author = models.ForeignKey('auth.User', null=True)
     type_component = models.ForeignKey('Type_Component',
                                        help_text="Type of the electronic component.")
     name_component = models.CharField(max_length=200, blank=True)
@@ -157,6 +159,7 @@ class Optic(models.Model):
     This model stores the optic components.
     """
 
+    author = models.ForeignKey('auth.User', null=True)
     type_optic = models.ForeignKey('Type_Optic', help_text="Type of the optic component.")
     name_optic = models.CharField(max_length=100, blank=True)
     description = models.CharField(max_length=300, help_text="Description of the optic component.")
@@ -193,6 +196,7 @@ class Chemical(models.Model):
     This model stores the chemicals.
     """
 
+    author = models.ForeignKey('auth.User', null=True)
     type_chemical = models.ForeignKey('Type_Chemical', help_text="Type of the chemical.")
     name = models.CharField(max_length=200, blank=True, help_text="Name of the chemical.")
     reference = models.CharField(max_length=200, blank=True, help_text="Reference of the chemical.")
@@ -235,6 +239,7 @@ class Biological(models.Model):
     This model stores the biological components.
     """
 
+    author = models.ForeignKey('auth.User', null=True)
     type_biological = models.ForeignKey('Type_Biological_2',
                                         help_text="Type of the biological component.")
     name = models.CharField(max_length=200, blank=True,
@@ -278,6 +283,7 @@ class Instrumentation(models.Model):
     This model stores the instruments.
     """
 
+    author = models.ForeignKey('auth.User', null=True)
     type_instrumentation = models.ForeignKey('Type_Instrumentation',
                                              help_text="Type of instrument to be stored.")
     characteristics = models.CharField(max_length=200, blank=True,
@@ -315,6 +321,7 @@ class Consumable(models.Model):
     This model stores the consumables.
     """
 
+    author = models.ForeignKey('auth.User', null=True)
     name = models.CharField(max_length=200, blank=True, help_text="Name of the consumable.")
     characteristics = models.CharField(max_length=200, blank=True,
                                        help_text="Important features of the consumable.")
@@ -886,6 +893,7 @@ class Order(models.Model):
     payment_conditions = models.ForeignKey('Payment',
                                            help_text="Conditions of payment of the order.")
     supplier = models.ForeignKey('Supplier', help_text="Who provide of components of the order.")
+    name_supplier = models.CharField(max_length=200, null=True)
     file_exists = models.BooleanField(default=False,
                                       help_text="To know if this order has a file assigned.")
     name_file_attach = models.CharField(max_length=200, help_text="Name of the file upload.",
@@ -1013,7 +1021,13 @@ class Supplier(models.Model):
     This model stores the different suppliers.
     """
 
-    name = models.CharField(max_length=200, help_text="Name of the supplier.")
+    name = models.CharField(max_length=200)
+    attention = models.CharField(max_length=200, null=True)
+    address = models.CharField(max_length=200, null=True)
+    city_postCode = models.CharField(max_length=200, null=True)
+    phone = models.CharField(max_length=200, null=True)
+    fax = models.CharField(max_length=200, null=True)
+    email = models.CharField(max_length=200, null=True)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
