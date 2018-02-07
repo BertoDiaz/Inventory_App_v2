@@ -189,12 +189,18 @@ def biological_new(request):
         if form.is_valid():
             biological = form.save(commit=False)
             biological.author = request.user
+            if biological.reference == "":
+                biological.reference = "-"
             biological_all = Biological.objects.all()
 
             duplicates = False
 
             for data in biological_all:
-                if data.reference == biological.reference:
+                if (data.reference == biological.reference) and (biological.reference != "-"):
+                    duplicates = True
+                    biological_ex = data
+
+                elif (data.name == biological.name) and (data.concentration == biological.concentration):
                     duplicates = True
                     biological_ex = data
 
