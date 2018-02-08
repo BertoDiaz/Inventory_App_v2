@@ -49,7 +49,7 @@ def chemical_list_type_chemical(request):
     @return: list of type of chemicals.
     """
     # states = State.objects.all()
-    chemicals = Type_Chemical.objects.all()
+    chemicals = Type_Chemical.objects.all().order_by('name')
 
     return render(request, 'blog/chemical_list_type_chemical.html', {'chemicals': chemicals})
 
@@ -183,14 +183,40 @@ def chemical_new(request):
         if form.is_valid():
             chemical = form.save(commit=False)
             chemical.author = request.user
+
+            if chemical.reference == "" or chemical.reference == "-":
+                chemical.reference = "-"
+
+            if chemical.quantity == "" or chemical.quantity == "-":
+                chemical.quantity = "-"
+
+            if chemical.molecular_weight == "" or chemical.molecular_weight == "-":
+                chemical.molecular_weight = "-"
+
             chemical_all = Chemical.objects.all()
 
             duplicates = False
 
             for data in chemical_all:
-                if data.reference == chemical.reference:
-                    duplicates = True
-                    chemical_ex = data
+                if (data.reference == chemical.reference) and (chemical.reference != "-"):
+
+                    if (data.pk != chemical.pk):
+
+                        if (data.molecular_weight == chemical.molecular_weight):
+
+                            if (data.quantity == chemical.quantity):
+                                duplicates = True
+                                biological_ex = data
+
+                elif (data.name == chemical.name):
+
+                    if (data.pk != chemical.pk):
+
+                        if (data.molecular_weight == chemical.molecular_weight):
+
+                            if (data.quantity == chemical.quantity):
+                                duplicates = True
+                                biological_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have added your chemical successfully.')
@@ -228,13 +254,40 @@ def chemical_edit(request, pk):
         if form.is_valid():
             chemical = form.save(commit=False)
             chemical.author = request.user
+
+            if chemical.reference == "" or chemical.reference == "-":
+                chemical.reference = "-"
+
+            if chemical.quantity == "" or chemical.quantity == "-":
+                chemical.quantity = "-"
+
+            if chemical.molecular_weight == "" or chemical.molecular_weight == "-":
+                chemical.molecular_weight = "-"
+
             chemical_all = Chemical.objects.all()
 
             duplicates = False
 
             for data in chemical_all:
-                if data.name == chemical.name and data.pk != chemical.pk:
-                    duplicates = True
+                if (data.reference == chemical.reference) and (chemical.reference != "-"):
+
+                    if (data.pk != chemical.pk):
+
+                        if (data.molecular_weight == chemical.molecular_weight):
+
+                            if (data.quantity == chemical.quantity):
+                                duplicates = True
+                                biological_ex = data
+
+                elif (data.name == chemical.name):
+
+                    if (data.pk != chemical.pk):
+
+                        if (data.molecular_weight == chemical.molecular_weight):
+
+                            if (data.quantity == chemical.quantity):
+                                duplicates = True
+                                biological_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have updated your chemical.')

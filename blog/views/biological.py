@@ -34,6 +34,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from blog.views.search import get_query
 from blog.models import Biological, Type_Biological_1, Type_Biological_2, Supplier, Location
+from blog.models import Unit_Chemical
 from blog.forms import BiologicalForm
 
 
@@ -189,20 +190,42 @@ def biological_new(request):
         if form.is_valid():
             biological = form.save(commit=False)
             biological.author = request.user
-            if biological.reference == "":
+
+            if biological.reference == "" or biological.reference == "-":
                 biological.reference = "-"
+
+            if biological.quantity == "" or biological.quantity == "-":
+                biological.quantity = "-"
+
+            if biological.concentration == "" or biological.concentration == "-":
+                biological.concentration = "-"
+                unit_biological = Unit_Chemical.objects.get(name="None")
+                biological.unit_biological = unit_biological
+
             biological_all = Biological.objects.all()
 
             duplicates = False
 
             for data in biological_all:
                 if (data.reference == biological.reference) and (biological.reference != "-"):
-                    duplicates = True
-                    biological_ex = data
 
-                elif (data.name == biological.name) and (data.concentration == biological.concentration):
-                    duplicates = True
-                    biological_ex = data
+                    if (data.pk != biological.pk):
+
+                        if (data.concentration == biological.concentration):
+
+                            if (data.quantity == biological.quantity):
+                                duplicates = True
+                                biological_ex = data
+
+                elif (data.name == biological.name):
+
+                    if (data.pk != biological.pk):
+
+                        if (data.concentration == biological.concentration):
+
+                            if (data.quantity == biological.quantity):
+                                duplicates = True
+                                biological_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have added your biological successfully.')
@@ -240,13 +263,42 @@ def biological_edit(request, pk):
         if form.is_valid():
             biological = form.save(commit=False)
             biological.author = request.user
+
+            if biological.reference == "" or biological.reference == "-":
+                biological.reference = "-"
+
+            if biological.quantity == "" or biological.quantity == "-":
+                biological.quantity = "-"
+
+            if biological.concentration == "" or biological.concentration == "-":
+                biological.concentration = "-"
+                unit_biological = Unit_Chemical.objects.get(name="None")
+                biological.unit_biological = unit_biological
+
             biological_all = Biological.objects.all()
 
             duplicates = False
 
             for data in biological_all:
-                if data.name == biological.name and data.pk != biological.pk:
-                    duplicates = True
+                if (data.reference == biological.reference) and (biological.reference != "-"):
+
+                    if (data.pk != biological.pk):
+
+                        if (data.concentration == biological.concentration) and (data.unit_chemical == biological.unit_chemical):
+
+                            if (data.quantity == biological.quantity):
+                                duplicates = True
+                                biological_ex = data
+
+                elif (data.name == biological.name):
+
+                    if (data.pk != biological.pk):
+
+                        if (data.concentration == biological.concentration):
+
+                            if (data.quantity == biological.quantity):
+                                duplicates = True
+                                biological_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have updated your biological.')

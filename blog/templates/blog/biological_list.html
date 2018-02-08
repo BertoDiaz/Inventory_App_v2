@@ -1,16 +1,85 @@
 {% extends 'blog/base_biological.html' %}
+{% load staticfiles %}
 
 {% block content %}
     <div class="row">
-        <div class="col-md-6">
-            <div class="inventory">
-                {% for biological in biologicals %}
-                    <div class="date">
-                        {{ biological.created_date }}
-                    </div>
-                    <h1><a href="{% url 'blog:biological_detail' pk=biological.pk %}">{{ biological.name }}</a></h1>
-                    <p>{{ biological.type_biological|linebreaksbr }}</p>
-                {% endfor %}
+        <div class="col-md-8">
+            <div class="inventory" style="margin-top: 15px;">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>NAME</th>
+                            <th>BOTTLES</th>
+                            <th>QUANTITY</th>
+                            <th>CONCENTRATION</th>
+                            <th>LOCATION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for biological in biologicals %}
+                            <!-- <div class="date">
+                                {{ biological.created_date }}
+                            </div> -->
+                            <!-- <a href="{% url 'blog:biological_detail' pk=biological.pk %}"> -->
+                            <tr onclick="window.location='{% url 'blog:biological_detail' pk=biological.pk %}';">
+                                <td><h5><strong>{{ biological.name }}</strong></h5></td>
+                                <td style="vertical-align: middle; width:5%;">{{ biological.number_bottle }}</td>
+                                <td style="vertical-align: middle; width:5%;">{{ biological.quantity }}</td>
+                                <td style="vertical-align: middle; width:5%;">{{ biological.concentration }} {{ biological.unit_biological }}</td>
+                                <td style="vertical-align: middle; width:5%;">{{ biological.location }}</td>
+                            </tr>
+                            <!-- </a> -->
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+            <h3>Locations</h3>
+            <div class="col-md-2">
+                <div class="row" style="margin-right: 20px; margin-bottom: 20px;">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Lab2027', 'Lab2031', 'Lab2035', 'Office2099', 'Office2101');">Lab 2027</button>
+                </div>
+
+                <div class="row" style="margin-right: 20px; margin-bottom: 20px;">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Lab2031', 'Lab2027', 'Lab2035', 'Office2099', 'Office2101');">Lab 2031</button>
+                </div>
+
+                <div class="row" style="margin-right: 20px; margin-bottom: 20px;">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Lab2035', 'Lab2027', 'Lab2031', 'Office2099', 'Office2101');">Lab 2035</button>
+                </div>
+
+                <div class="row" style="margin-right: 20px; margin-bottom: 20px;">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Office2099', 'Lab2027', 'Lab2031', 'Lab2035', 'Office2101');">Office 2099</button>
+                </div>
+
+                <div class="row">
+                    <button type="submit" class="btn btn-default" onclick="toggle_visibility('Office2101', 'Lab2027', 'Lab2031', 'Lab2035', 'Office2099');">Office 2101</button>
+                </div>
+            </div>
+
+            <div class="col-md-1"></div>
+
+            <div class="col-md-2 col-md-offset-1">
+                <div id="Lab2027" style="display:none;">
+                    <img src="{% static 'images/planos/Lab_2027_1.jpg' %}" alt="Lab 2027" height="700">
+                </div>
+
+                <div id="Lab2031" style="display:none;">
+                    <img src="{% static 'images/planos/Lab_2031.png' %}" alt="Lab 2031" height="700">
+                </div>
+
+                <div id="Lab2035" style="display:none;">
+                    <img src="{% static 'images/planos/Lab_2035.jpg' %}" alt="Lab 2035" height="700">
+                </div>
+
+                <div id="Office2099" style="display:none;">
+                    <img src="{% static 'images/planos/Office_2099.jpg' %}" alt="Office 2099" height="500">
+                </div>
+
+                <div id="Office2101" style="display:none;">
+                    <img src="{% static 'images/planos/Office_2101.jpg' %}" alt="Office 2101" height="500">
+                </div>
             </div>
         </div>
     </div>

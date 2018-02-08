@@ -309,12 +309,12 @@ class BiologicalForm(forms.ModelForm):
         Meta docstring.
 
         This function use the Biological model and the fields: type_biological, name, reference,
-        number_bottle, quantity, supplier, concentration, unit_biological and location.
+        number_bottle, quantity, supplier, concentration, unit_biological, location and aliquots.
         """
 
         model = Biological
         fields = ('type_biological', 'name', 'reference', 'number_bottle', 'quantity', 'supplier',
-                  'concentration', 'unit_biological', 'location',)
+                  'concentration', 'unit_biological', 'location', 'aliquots',)
 
 
 class InstrumentationForm(forms.ModelForm):

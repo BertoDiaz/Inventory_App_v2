@@ -207,8 +207,10 @@ class Chemical(models.Model):
     supplier = models.ForeignKey('Supplier', help_text="Supplier of the chemical.")
     molecular_weight = models.CharField(max_length=200, blank=True,
                                         help_text="Molecular weight of the chemical.")
-    unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
-                                      "molecular weight of the chemical.")
+    # unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
+    #                                   "molecular weight of the chemical.")
+    unit_chemical = models.CharField(max_length=20, default="g/mol", help_text="Unit to the "
+                                     "molecular weight of the chemical.")
     location = models.ForeignKey('Location', help_text="Where it is the chemical.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
@@ -246,14 +248,15 @@ class Biological(models.Model):
                             help_text="Name of the biological component.")
     reference = models.CharField(max_length=200, blank=True,
                                  help_text="Reference of the biological component.")
-    number_bottle = models.CharField(max_length=20, default="", help_text="Number of bottles of the biological component.")
-    quantity = models.CharField(max_length=20, help_text="Quantity of the biological component.")
+    number_bottle = models.CharField(max_length=20, null=True, blank=True, help_text="Number of bottles of the biological component.")
+    quantity = models.CharField(max_length=20, blank=True, help_text="Quantity of the biological component.")
     supplier = models.ForeignKey('Supplier', help_text="Supplier of the biological component.")
     concentration = models.CharField(max_length=200, blank=True,
                                      help_text="Concentration of the biological component.")
-    unit_biological = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
+    unit_biological = models.ForeignKey('Unit_Chemical', blank=True, help_text="Unit to the "
                                         "concentration of the biological.")
     location = models.ForeignKey('Location', help_text="Where it is the biological component.")
+    aliquots = models.BooleanField(default=False)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
