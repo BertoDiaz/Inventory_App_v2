@@ -294,7 +294,7 @@ class ChemicalForm(forms.ModelForm):
 
         model = Chemical
         fields = ('type_chemical', 'name', 'reference', 'cas_number', 'number_bottle', 'quantity',
-                  'state', 'supplier', 'molecular_weight', 'unit_chemical', 'location',)
+                  'state', 'supplier', 'molecular_weight', 'location',)
 
 
 class BiologicalForm(forms.ModelForm):

@@ -180,6 +180,7 @@ def chemical_new(request):
     """
     if request.method == "POST":
         form = ChemicalForm(request.POST)
+
         if form.is_valid():
             chemical = form.save(commit=False)
             chemical.author = request.user
