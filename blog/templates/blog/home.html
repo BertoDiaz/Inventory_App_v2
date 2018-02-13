@@ -15,6 +15,7 @@
             <h1><a href="{% url 'blog:run_list' %}">RUN</a></h1>
             {% if user.is_staff %}
                 <h1><a href="{% url 'blog:messages_list' %}" class="navbar-link">Messages</a></h1>
+                <h1><a href="{% url 'blog:supplier_list' %}" class="navbar-link">Suppliers</a></h1>
             {% endif %}
         </div>
     </div>

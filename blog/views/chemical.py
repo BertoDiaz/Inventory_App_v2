@@ -34,7 +34,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from blog.views.search import get_query
 from blog.models import Chemical, Type_Chemical, State, Supplier, Location
-from blog.forms import ChemicalForm
+from blog.forms import ChemicalForm, SupplierNameForm
 
 
 def chemical_list_type_chemical(request):
@@ -179,57 +179,101 @@ def chemical_new(request):
     the details of this new chemical.
     """
     if request.method == "POST":
-        form = ChemicalForm(request.POST)
+        form = ChemicalForm(request.POST, prefix="chemical")
 
         if form.is_valid():
             chemical = form.save(commit=False)
             chemical.author = request.user
 
-            if chemical.reference == "" or chemical.reference == "-":
-                chemical.reference = "-"
+            supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
 
-            if chemical.quantity == "" or chemical.quantity == "-":
-                chemical.quantity = "-"
+            if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
 
-            if chemical.molecular_weight == "" or chemical.molecular_weight == "-":
-                chemical.molecular_weight = "-"
+                supplier_form = SupplierNameForm(prefix="supplierNameForm")
+                addSupplier = True
 
-            chemical_all = Chemical.objects.all()
+                messages.warning(request, 'You have to write the next information about the supplier.')
 
-            duplicates = False
+                return render(request, 'blog/chemical_new.html', {'form': form,
+                                                                  'supplier_form': supplier_form,
+                                                                  'addSupplier': addSupplier})
 
-            for data in chemical_all:
-                if (data.reference == chemical.reference) and (chemical.reference != "-"):
-
-                    if (data.pk != chemical.pk):
-
-                        if (data.molecular_weight == chemical.molecular_weight):
-
-                            if (data.quantity == chemical.quantity):
-                                duplicates = True
-                                biological_ex = data
-
-                elif (data.name == chemical.name):
-
-                    if (data.pk != chemical.pk):
-
-                        if (data.molecular_weight == chemical.molecular_weight):
-
-                            if (data.quantity == chemical.quantity):
-                                duplicates = True
-                                biological_ex = data
-
-            if not duplicates:
-                messages.success(request, 'You have added your chemical successfully.')
-                chemical.save()
             else:
-                messages.warning(request, 'Ups!! A chemical with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
-                chemical = chemical_ex
 
-            return redirect('blog:chemical_detail', pk=chemical.pk)
+                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+
+                if supplier_form.is_valid():
+                    supplier = supplier_form.save(commit=False)
+                    supplier_all = Supplier.objects.all()
+
+                    duplicates = False
+
+                    for data in supplier_all:
+                        if data.name == supplier.name:
+                            duplicates = True
+                            supplier_ex = data
+
+                    if not duplicates:
+                        supplier.save()
+                    else:
+                        messages.warning(request, 'It is not necessary to add this supplier because already exists.')
+                        addSupplier = False
+
+                        chemical.supplier = supplier_ex
+
+                        form = ChemicalForm(instance=chemical, prefix="chemical")
+
+                        return render(request, 'blog/chemical_new.html', {'form': form,
+                                                                          'supplier_form': supplier_form,
+                                                                          'addSupplier': addSupplier})
+
+                    chemical.supplier = supplier
+
+                if chemical.reference == "" or chemical.reference == "-":
+                    chemical.reference = "-"
+
+                if chemical.quantity == "" or chemical.quantity == "-":
+                    chemical.quantity = "-"
+
+                if chemical.molecular_weight == "" or chemical.molecular_weight == "-":
+                    chemical.molecular_weight = "-"
+
+                chemical_all = Chemical.objects.all()
+
+                duplicates = False
+
+                for data in chemical_all:
+                    if (data.reference == chemical.reference) and (chemical.reference != "-"):
+
+                        if (data.pk != chemical.pk):
+
+                            if (data.molecular_weight == chemical.molecular_weight):
+
+                                if (data.quantity == chemical.quantity):
+                                    duplicates = True
+                                    chemical_ex = data
+
+                    elif (data.name == chemical.name):
+
+                        if (data.pk != chemical.pk):
+
+                            if (data.molecular_weight == chemical.molecular_weight):
+
+                                if (data.quantity == chemical.quantity):
+                                    duplicates = True
+                                    chemical_ex = data
+
+                if not duplicates:
+                    messages.success(request, 'You have added your chemical successfully.')
+                    chemical.save()
+                else:
+                    messages.warning(request, 'Ups!! A chemical with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
+                    chemical = chemical_ex
+
+                return redirect('blog:chemical_detail', pk=chemical.pk)
 
     else:
-        form = ChemicalForm()
+        form = ChemicalForm(prefix="chemical")
     return render(request, 'blog/chemical_new.html', {'form': form})
 
 

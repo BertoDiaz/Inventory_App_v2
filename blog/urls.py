@@ -135,6 +135,14 @@ urlpatterns = [
     url(r'^order/(?P<pk>\d+)/notify/$', views.order_notify, name='order_notify'),
     url(r'^order/(?P<pk>\d+)/upload/$', views.order_add_file, name='order_add_file'),
 
+    # #################### SUPPLIER #################### #
+    url(r'^supplier/$', views.supplier_list, name='supplier_list'),
+    url(r'^supplier/search/$', views.supplier_search, name='supplier_search'),
+    url(r'^supplier/(?P<pk>[0-9]+)/$', views.supplier_detail, name='supplier_detail'),
+    url(r'^supplier/new/$', views.supplier_new, name='supplier_new'),
+    url(r'^supplier/(?P<pk>[0-9]+)/edit/$', views.supplier_edit, name='supplier_edit'),
+    url(r'^supplier/(?P<pk>\d+)/remove/$', views.supplier_remove, name='supplier_remove'),
+
     # #################### RUN #################### #
     url(r'^run/$', views.run_list, name='run_list'),
     # url(r'^run/(?P<pk>[0-9]+)/$', views.run_chip_list, name='run_chip_list'),

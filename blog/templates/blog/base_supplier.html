@@ -2,20 +2,16 @@
 {% load staticfiles %}
 
 <!-- ***********************************************************************************************
-    This HTML page is used as a base page to create similar pages of the Chemical category.
+    This HTML page is used as a base page to create similar pages of the Computing category.
 ************************************************************************************************ -->
 
 <html>
-
     <head>
 
-        <title>Chemical</title>
+        <title>Supplier</title>
 
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-
-        <!-- <link rel="stylesheet" href="{% static 'js/jquery-ui-1.12.1/jquery-ui.css' %}">
-        <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"> -->
 
         <!-- <link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css"> -->
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -37,14 +33,12 @@
                 indicate that the username is not logged in.
             ************************************************************************************ -->
             {% if user.is_authenticated %}
-                <a href="{% url 'blog:chemical_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
-                {% if chemicalsBack %}
-                    <a href="{% url 'blog:chemical_list_type_chemical' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
-                {% elif type_chemicalBack %}
-                    <a href="{% url 'blog:chemical_list' pk=chemical.type_chemical.pk %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                <a href="{% url 'blog:supplier_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+                {% if backList %}
+                    <a href="{% url 'blog:supplier_list' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
                 <div class="top-menu col-md-2">
-                    <form id="searchform" action="{% url 'blog:chemical_search' %}" method="get" accept-charset="utf-8">
+                    <form id="searchform" action="{% url 'blog:supplier_search' %}" method="get" accept-charset="utf-8">
                         <div id="custom-search-input">
                             <div class="input-group col-md-12">
                                 <input type="text" class=" search-query form-control" name="searchfield" placeholder="Search" />
@@ -60,7 +54,7 @@
             {% else %}
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
-            <h1><a href="{% url 'blog:chemical_list_type_chemical' %}">Chemical</a></h1>
+            <h1><a href="{% url 'blog:supplier_list' %}">Supplier</a></h1>
         </div>
         <div class="content container">
             <div class="row">
@@ -76,10 +70,7 @@
         </div>
         <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <!-- <scrip src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></scrip>
-        <script type="text/javascript" src="{% static 'js/jquery-ui-1.12.1/jquery-ui.js' %}"></script> -->
         <script src="{% static 'js/navbarAction.js' %}"></script>
         <script src="{% static 'js/showHide_v2.js' %}"></script>
-        <!-- <script src="{% static 'js/modelWindow.js' %}"></script> -->
     </body>
 </html>

@@ -1,0 +1,50 @@
+{% extends 'blog/base_supplier.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-7">
+            <h1>New Supplier</h1>
+            <form method="POST" class="inventory-form">
+                {% csrf_token %}
+
+                <div class="row">
+                    <span class="col-md-3">{{ form.name.label_tag}}</span>
+                    {{ form.name }}
+                    <small class="form-text text-muted">{{ form.name.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.attention.label_tag}}</span>
+                    {{ form.attention }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.address.label_tag}}</span>
+                    {{ form.address }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3"><strong>City/Post Code:</strong></span>
+                    {{ form.city_postCode }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.phone.label_tag}}</span>
+                    {{ form.phone }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.fax.label_tag}}</span>
+                    {{ form.fax }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.email.label_tag}}</span>
+                    {{ form.email }}
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3"><strong>Show in order:</strong></span>
+                    {{ form.order_show }}
+                </div>
+
+                <button type="submit" class="save btn btn-default">Save</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

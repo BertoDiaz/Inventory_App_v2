@@ -70,8 +70,8 @@ def messages_list(request):
             messagesInfo = paginator.page(paginator.num_pages)
 
         return render(request, 'blog/messages_list.html', {'messagesInfo': messagesInfo,
-                                                            'findSomething': findSomething,
-                                                            'is_search': is_search})
+                                                           'findSomething': findSomething,
+                                                           'is_search': is_search})
     else:
         messages.warning(request, 'Ups!! You do not have privileges.')
 

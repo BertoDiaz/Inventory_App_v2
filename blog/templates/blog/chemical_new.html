@@ -9,13 +9,18 @@
                 {% csrf_token %}
 
                 <div class="row">
-                    <span class="col-md-3">{{ form.type_chemical.label_tag}}</span>
+                    <span class="col-md-3"><strong>Chemical type:</strong></span>
                     {{ form.type_chemical }}
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.name.label_tag}}</span>
                     {{ form.name }}
                     <small class="form-text text-muted">{{ form.name.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.molecular_formula.label_tag}}</span>
+                    {{ form.molecular_formula }}
+                    <small class="form-text text-muted">{{ form.molecular_formula.help_text|safe }}</small>
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.reference.label_tag}}</span>
@@ -42,6 +47,26 @@
                     <span class="col-md-3">{{ form.supplier.label_tag}}</span>
                     {{ form.supplier }}
                 </div>
+
+                <div style="padding-top: 10px;">
+                    {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if addSupplier %}
+
+                    <div class="row" style="padding-top: 10px;">
+                        <span class="col-md-3"><strong>Name Supplier:</strong></span>
+                        {{ supplier_form.name }}
+                    </div>
+
+                {% endif %}
+
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.molecular_weight.label_tag}}</span>
                     {{ form.molecular_weight }} g/mol
@@ -103,4 +128,5 @@
             </div>
         </div>
     </div>
+    <div id="popup"></div>
 {% endblock %}

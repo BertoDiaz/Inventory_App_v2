@@ -16,7 +16,7 @@
                 {% csrf_token %}
 
                 <div class="row">
-                    <span class="col-md-3">{{ form.type_biological.label_tag}}</span>
+                    <span class="col-md-3"><strong>Biological type:</strong></span>
                     {{ form.type_biological }}
                     <small class="form-text text-muted">{{ form.type_biological.help_text|safe }}</small>
                 </div>
@@ -24,6 +24,11 @@
                     <span class="col-md-3">{{ form.name.label_tag}}</span>
                     {{ form.name }}
                     <small class="form-text text-muted">{{ form.name.help_text|safe }}</small>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <span class="col-md-3">{{ form.molecular_formula.label_tag}}</span>
+                    {{ form.molecular_formula }}
+                    <small class="form-text text-muted">{{ form.molecular_formula.help_text|safe }}</small>
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.reference.label_tag}}</span>

@@ -15,5 +15,6 @@ from .others import *
 from .register import *
 from .run import *
 from .search import *
+from .supplier import *
 from .wafer import *
 from .waveguide import *

@@ -199,6 +199,8 @@ class Chemical(models.Model):
     author = models.ForeignKey('auth.User', null=True)
     type_chemical = models.ForeignKey('Type_Chemical', help_text="Type of the chemical.")
     name = models.CharField(max_length=200, blank=True, help_text="Name of the chemical.")
+    molecular_formula = models.CharField(max_length=200, blank=True,
+                                         help_text="Molecular formula of the chemical.")
     reference = models.CharField(max_length=200, blank=True, help_text="Reference of the chemical.")
     cas_number = models.CharField(max_length=200, blank=True, help_text="CAS number of the chemical.")
     number_bottle = models.CharField(max_length=200, blank=True, help_text="Number of bottles of the chemical.")
@@ -246,6 +248,8 @@ class Biological(models.Model):
                                         help_text="Type of the biological component.")
     name = models.CharField(max_length=200, blank=True,
                             help_text="Name of the biological component.")
+    molecular_formula = models.CharField(max_length=200, blank=True,
+                               help_text="Molecular formula of the biological component.")
     reference = models.CharField(max_length=200, blank=True,
                                  help_text="Reference of the biological component.")
     number_bottle = models.CharField(max_length=20, null=True, blank=True, help_text="Number of bottles of the biological component.")
@@ -1025,12 +1029,14 @@ class Supplier(models.Model):
     """
 
     name = models.CharField(max_length=200)
-    attention = models.CharField(max_length=200, null=True)
-    address = models.CharField(max_length=200, null=True)
-    city_postCode = models.CharField(max_length=200, null=True)
-    phone = models.CharField(max_length=200, null=True)
-    fax = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length=200, null=True)
+    attention = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    city_postCode = models.CharField(max_length=200, null=True, blank=True)
+    phone = models.CharField(max_length=200, null=True, blank=True)
+    fax = models.CharField(max_length=200, null=True, blank=True)
+    email = models.CharField(max_length=200, null=True, blank=True)
+    order_show = models.BooleanField(default=False)
+    show = models.BooleanField(default=True)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):

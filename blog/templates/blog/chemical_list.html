@@ -8,6 +8,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th style="text-align: center;">MOLECULAR FORMULA</th>
                             <th>NAME</th>
                             <th>BOTTLES</th>
                             <th>QUANTITY</th>
@@ -18,6 +19,7 @@
                     <tbody>
                         {% for chemical in chemicals %}
                         <tr onclick="window.location='{% url 'blog:chemical_detail' pk=chemical.pk %}';">
+                            <td style="vertical-align: middle; width:5%;"><strong>{{ chemical.molecular_formula }}</strong></td>
                             <td><h5><strong>{{ chemical.name }}</strong></h5></td>
                             <td style="vertical-align: middle; width:5%;">{{ chemical.number_bottle }}</td>
                             <td style="vertical-align: middle; width:5%;">{{ chemical.quantity }}</td>

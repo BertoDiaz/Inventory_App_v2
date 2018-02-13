@@ -119,6 +119,15 @@ class OrderForm(forms.ModelForm):
         fields = ('name', 'applicant', 'budget', 'type_of_purchase', 'payment_conditions',
                   'supplier', 'file_exists',)
 
+    def __init__(self, *args, **kwargs):
+        """
+        Init docstring.
+
+        This function is used to return the form filtered by show.
+        """
+        super(OrderForm, self).__init__(*args, **kwargs)
+        self.fields['supplier'].queryset = Supplier.objects.filter(order_show=True)
+
 
 class SendEmailForm(forms.Form):
     """
@@ -215,6 +224,37 @@ class SupplierForm(forms.ModelForm):
         model = Supplier
         fields = ('name', 'attention', 'address', 'city_postCode', 'phone', 'fax', 'email',)
 
+    # def __init__(self, *args, **kwargs):
+    #     """
+    #     Init docstring.
+    #
+    #     This function is used to create a Modal Window.
+    #     """
+    #     super(SupplierForm, self).__init__(*args, **kwargs)
+    #     for field in iter(self.fields):
+    #         # if field <> 'estado':
+    #         self.fields[field].widget.attrs.update({
+    #             'class': 'form-control'
+    #         })
+
+
+class SupplierNameForm(forms.ModelForm):
+    """
+    Supplier name form docstring.
+
+    This form is useds to create a new Supplier only with the name.
+    """
+
+    class Meta:
+        """
+        Meta docstring.
+
+        This function use the Supplier model and the fields: name.
+        """
+
+        model = Supplier
+        fields = ('name',)
+
 
 class ComputingForm(forms.ModelForm):
     """
@@ -287,14 +327,23 @@ class ChemicalForm(forms.ModelForm):
         """
         Meta docstring.
 
-        This function use the Chemical model and the fields: type_chemical, name, reference,
-        cas_number, number_bottle, quantity, state, supplier, molecular_weight, unit_chemical
-        and location.
+        This function use the Chemical model and the fields: type_chemical, name, molecular_formula,
+        reference, cas_number, number_bottle, quantity, state, supplier, molecular_weight,
+        unit_chemical and location.
         """
 
         model = Chemical
-        fields = ('type_chemical', 'name', 'reference', 'cas_number', 'number_bottle', 'quantity',
-                  'state', 'supplier', 'molecular_weight', 'location',)
+        fields = ('type_chemical', 'name', 'molecular_formula', 'reference', 'cas_number',
+                  'number_bottle', 'quantity', 'state', 'supplier', 'molecular_weight', 'location',)
+
+    def __init__(self, *args, **kwargs):
+        """
+        Init docstring.
+
+        This function is used to return the form filtered by show.
+        """
+        super(ChemicalForm, self).__init__(*args, **kwargs)
+        self.fields['supplier'].queryset = Supplier.objects.filter(show=True)
 
 
 class BiologicalForm(forms.ModelForm):
@@ -308,13 +357,24 @@ class BiologicalForm(forms.ModelForm):
         """
         Meta docstring.
 
-        This function use the Biological model and the fields: type_biological, name, reference,
-        number_bottle, quantity, supplier, concentration, unit_biological, location and aliquots.
+        This function use the Biological model and the fields: type_biological, name,
+        molecular_formula, reference, number_bottle, quantity, supplier, concentration,
+        unit_biological, location and aliquots.
         """
 
         model = Biological
-        fields = ('type_biological', 'name', 'reference', 'number_bottle', 'quantity', 'supplier',
-                  'concentration', 'unit_biological', 'location', 'aliquots',)
+        fields = ('type_biological', 'name', 'molecular_formula', 'reference', 'number_bottle',
+                  'quantity', 'supplier', 'concentration', 'unit_biological', 'location',
+                  'aliquots',)
+
+    def __init__(self, *args, **kwargs):
+        """
+        Init docstring.
+
+        This function is used to return the form filtered by show.
+        """
+        super(BiologicalForm, self).__init__(*args, **kwargs)
+        self.fields['supplier'].queryset = Supplier.objects.filter(show=True)
 
 
 class InstrumentationForm(forms.ModelForm):
@@ -339,6 +399,15 @@ class InstrumentationForm(forms.ModelForm):
             'characteristics': forms.Textarea,
         }
 
+    def __init__(self, *args, **kwargs):
+        """
+        Init docstring.
+
+        This function is used to return the form filtered by show.
+        """
+        super(InstrumentationForm, self).__init__(*args, **kwargs)
+        self.fields['supplier'].queryset = Supplier.objects.filter(show=True)
+
 
 class ConsumableForm(forms.ModelForm):
     """
@@ -360,6 +429,15 @@ class ConsumableForm(forms.ModelForm):
         widgets = {
             'characteristics': forms.Textarea,
         }
+
+    def __init__(self, *args, **kwargs):
+        """
+        Init docstring.
+
+        This function is used to return the form filtered by show.
+        """
+        super(ConsumableForm, self).__init__(*args, **kwargs)
+        self.fields['supplier'].queryset = Supplier.objects.filter(show=True)
 
 
 class OthersForm(forms.ModelForm):

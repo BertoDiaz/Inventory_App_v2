@@ -1,0 +1,52 @@
+{% extends 'blog/base_supplier.html' %}
+
+{% block content %}
+    <div class="col-md-6">
+        <div class="orderDetail">
+            <div class="button">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-default" href="{% url 'blog:supplier_edit' pk=supplier.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a class="btn btn-default" href="{% url 'blog:supplier_remove' pk=supplier.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                {% endif %}
+            </div>
+            <h1>{{ supplier.name }}</h1>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="date">
+                {% if supplier.created_date %}
+                    {{ supplier.created_date }}
+                {% endif %}
+            </div>
+            <div class="orderDetail">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">NAME: </span>{{ supplier.name }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">ATTENTION: </span>{{ supplier.attention }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">ADDRESS: </span>{{ supplier.address }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">CITY/POST CODE: </span>{{ supplier.city_postCode }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">PHONE: </span>{{ supplier.phone }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">FAX: </span>{{ supplier.fax }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p><span style="font-weight: bold;">EMAIL: </span>{{ supplier.email }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

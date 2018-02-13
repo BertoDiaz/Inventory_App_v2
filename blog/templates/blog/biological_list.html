@@ -8,6 +8,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th style="text-align: center;">MOLECULAR FORMULA</th>
                             <th>NAME</th>
                             <th>BOTTLES</th>
                             <th>QUANTITY</th>
@@ -22,6 +23,7 @@
                             </div> -->
                             <!-- <a href="{% url 'blog:biological_detail' pk=biological.pk %}"> -->
                             <tr onclick="window.location='{% url 'blog:biological_detail' pk=biological.pk %}';">
+                                <td style="vertical-align: middle; width:5%;"><strong>{{ biological.molecular_formula }}</strong></td>
                                 <td><h5><strong>{{ biological.name }}</strong></h5></td>
                                 <td style="vertical-align: middle; width:5%;">{{ biological.number_bottle }}</td>
                                 <td style="vertical-align: middle; width:5%;">{{ biological.quantity }}</td>
