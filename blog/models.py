@@ -75,6 +75,7 @@ class Computing(models.Model):
     """
 
     author = models.ForeignKey('auth.User', null=True)
+    edited_by = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=200, blank=True, help_text="Name of the computer.")
     type_object = models.ForeignKey('Type_Object', help_text="Type of the computing.")
     location = models.ForeignKey('Location', help_text="Where it is the computer.")
@@ -123,6 +124,7 @@ class Electronic(models.Model):
     """
 
     author = models.ForeignKey('auth.User', null=True)
+    edited_by = models.CharField(max_length=200, null=True)
     type_component = models.ForeignKey('Type_Component',
                                        help_text="Type of the electronic component.")
     name_component = models.CharField(max_length=200, blank=True)
@@ -160,6 +162,7 @@ class Optic(models.Model):
     """
 
     author = models.ForeignKey('auth.User', null=True)
+    edited_by = models.CharField(max_length=200, null=True)
     type_optic = models.ForeignKey('Type_Optic', help_text="Type of the optic component.")
     name_optic = models.CharField(max_length=100, blank=True)
     description = models.CharField(max_length=300, help_text="Description of the optic component.")
@@ -197,6 +200,7 @@ class Chemical(models.Model):
     """
 
     author = models.ForeignKey('auth.User', null=True)
+    edited_by = models.CharField(max_length=200, null=True)
     type_chemical = models.ForeignKey('Type_Chemical', help_text="Type of the chemical.")
     name = models.CharField(max_length=200, blank=True, help_text="Name of the chemical.")
     molecular_formula = models.CharField(max_length=200, blank=True,
@@ -244,6 +248,7 @@ class Biological(models.Model):
     """
 
     author = models.ForeignKey('auth.User', null=True)
+    edited_by = models.CharField(max_length=200, null=True)
     type_biological = models.ForeignKey('Type_Biological_2',
                                         help_text="Type of the biological component.")
     name = models.CharField(max_length=200, blank=True,
@@ -291,6 +296,7 @@ class Instrumentation(models.Model):
     """
 
     author = models.ForeignKey('auth.User', null=True)
+    edited_by = models.CharField(max_length=200, null=True)
     type_instrumentation = models.ForeignKey('Type_Instrumentation',
                                              help_text="Type of instrument to be stored.")
     characteristics = models.CharField(max_length=200, blank=True,
@@ -329,6 +335,7 @@ class Consumable(models.Model):
     """
 
     author = models.ForeignKey('auth.User', null=True)
+    edited_by = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=200, blank=True, help_text="Name of the consumable.")
     characteristics = models.CharField(max_length=200, blank=True,
                                        help_text="Important features of the consumable.")
@@ -891,6 +898,7 @@ class Order(models.Model):
     """
 
     author = models.ForeignKey('auth.User', help_text="Username of who create the order.")
+    edited_by = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=200, help_text="Name of the order to save it.")
     # name = models.ForeignKey('auth.User')
     applicant = models.CharField(max_length=200, help_text="Name of who do the order.")
@@ -1065,7 +1073,9 @@ class Product(models.Model):
 
     This model stores the different products.
     """
-
+    
+    author = models.ForeignKey('auth.User', null=True)
+    edited_by = models.CharField(max_length=200, null=True)
     description = models.CharField(max_length=300, help_text="Description of the product.")
     quantity = models.CharField(max_length=20,
                                 help_text="Quantity of the product that are ordered.")

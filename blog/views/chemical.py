@@ -68,7 +68,7 @@ def chemical_list(request, pk):
     @return: list of chemicals.
     """
     type_chemical = Type_Chemical.objects.get(pk=pk)
-    chemical_list = Chemical.objects.filter(type_chemical=type_chemical).order_by('name')
+    chemical_list = Chemical.objects.filter(type_chemical=type_chemical).order_by('name', 'quantity')
 
     # Show 25 contacts per page
     paginator = Paginator(chemical_list, 10)
@@ -123,7 +123,7 @@ def chemical_search(request):
                         query_string = Location.objects.get(name=query_string)
                         chemical_list = Chemical.objects.filter(location=query_string.pk).order_by('name')
                     except ObjectDoesNotExist:
-                        entry_query = get_query(query_string, ['name', 'reference', 'cas_number', 'quantity'])
+                        entry_query = get_query(query_string, ['name', 'molecular_formula', 'reference', 'cas_number', 'quantity'])
                         chemical_list = Chemical.objects.filter(entry_query).order_by('name')
 
     # Show 25 contacts per page
@@ -294,11 +294,52 @@ def chemical_edit(request, pk):
     @raise 404: chemical does not exists.
     """
     chemical = get_object_or_404(Chemical, pk=pk)
+
     if request.method == "POST":
         form = ChemicalForm(data=request.POST, instance=chemical)
+
         if form.is_valid():
             chemical = form.save(commit=False)
-            chemical.author = request.user
+            chemical.edited_by = request.user.username
+
+            supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+
+            if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+
+                supplier_form = SupplierNameForm(prefix="supplierNameForm")
+                addSupplier = True
+
+                messages.warning(request, 'You have to write the next information about the supplier.')
+
+                return render(request, 'blog/chemical_edit.html', {'pk': chemical.pk,
+                                                                   'form': form,
+                                                                   'supplier_form': supplier_form,
+                                                                   'addSupplier': addSupplier})
+
+            else:
+
+                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+
+                if supplier_form.is_valid():
+                    supplier = supplier_form.save(commit=False)
+                    supplier_all = Supplier.objects.all()
+
+                    duplicates = False
+
+                    for data in supplier_all:
+                        if data.name == supplier.name:
+                            duplicates = True
+                            supplier_ex = data
+
+                    if not duplicates:
+                        supplier.save()
+
+                        chemical.supplier = supplier
+
+                    else:
+                        addSupplier = False
+
+                        chemical.supplier = supplier_ex
 
             if chemical.reference == "" or chemical.reference == "-":
                 chemical.reference = "-"
@@ -344,6 +385,7 @@ def chemical_edit(request, pk):
 
     else:
         form = ChemicalForm(instance=chemical)
+
     return render(request, 'blog/chemical_edit.html', {'form': form})
 
 

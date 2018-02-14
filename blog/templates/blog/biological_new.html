@@ -39,6 +39,26 @@
                     <span class="col-md-3">{{ form.supplier.label_tag}}</span>
                     {{ form.supplier }}
                 </div>
+
+                <div style="padding-top: 10px;">
+                    {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <p{% if message.tags %} class="messages{{ message.tags }}"{% endif %}>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if addSupplier %}
+
+                    <div class="row" style="padding-top: 10px;">
+                        <span class="col-md-3"><strong>Name Supplier:</strong></span>
+                        {{ supplier_form.name }}
+                    </div>
+
+                {% endif %}
+                
                 <div class="row" style="padding-top: 10px;">
                     <span class="col-md-3">{{ form.concentration.label_tag}}</span>
                     {{ form.concentration }} {{ form.unit_biological }}

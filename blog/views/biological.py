@@ -35,7 +35,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from blog.views.search import get_query
 from blog.models import Biological, Type_Biological_1, Type_Biological_2, Supplier, Location
 from blog.models import Unit_Chemical
-from blog.forms import BiologicalForm
+from blog.forms import BiologicalForm, SupplierNameForm
 
 
 def biological_list_type_biological(request):
@@ -79,7 +79,7 @@ def biological_list(request, pk):
     @return: list of biological types.
     """
     type_biological_2 = Type_Biological_2.objects.get(pk=pk)
-    biological_list = Biological.objects.filter(type_biological=type_biological_2).order_by('name')
+    biological_list = Biological.objects.filter(type_biological=type_biological_2).order_by('name', 'quantity')
 
     # Show 25 contacts per page
     paginator = Paginator(biological_list, 10)
@@ -130,7 +130,7 @@ def biological_search(request):
                     query_string = Location.objects.get(name=query_string)
                     biological_list = Biological.objects.filter(location=query_string.pk).order_by('name')
                 except ObjectDoesNotExist:
-                    entry_query = get_query(query_string, ['name', 'reference', 'quantity'])
+                    entry_query = get_query(query_string, ['name', 'molecular_formula', 'reference', 'quantity'])
                     biological_list = Biological.objects.filter(entry_query).order_by('name')
 
     # Show 25 contacts per page
@@ -186,58 +186,123 @@ def biological_new(request):
     the details of this new biological.
     """
     if request.method == "POST":
-        form = BiologicalForm(request.POST)
+        form = BiologicalForm(request.POST, prefix="biological")
+
         if form.is_valid():
             biological = form.save(commit=False)
             biological.author = request.user
 
-            if biological.reference == "" or biological.reference == "-":
-                biological.reference = "-"
+            supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
 
-            if biological.quantity == "" or biological.quantity == "-":
-                biological.quantity = "-"
+            if biological.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
 
-            if biological.concentration == "" or biological.concentration == "-":
-                biological.concentration = "-"
-                unit_biological = Unit_Chemical.objects.get(name="None")
-                biological.unit_biological = unit_biological
+                supplier_form = SupplierNameForm(prefix="supplierNameForm")
+                addSupplier = True
 
-            biological_all = Biological.objects.all()
+                messages.warning(request, 'You have to write the next information about the supplier.')
 
-            duplicates = False
+                return render(request, 'blog/biological_new.html', {'form': form,
+                                                                    'supplier_form': supplier_form,
+                                                                    'addSupplier': addSupplier})
 
-            for data in biological_all:
-                if (data.reference == biological.reference) and (biological.reference != "-"):
-
-                    if (data.pk != biological.pk):
-
-                        if (data.concentration == biological.concentration):
-
-                            if (data.quantity == biological.quantity):
-                                duplicates = True
-                                biological_ex = data
-
-                elif (data.name == biological.name):
-
-                    if (data.pk != biological.pk):
-
-                        if (data.concentration == biological.concentration):
-
-                            if (data.quantity == biological.quantity):
-                                duplicates = True
-                                biological_ex = data
-
-            if not duplicates:
-                messages.success(request, 'You have added your biological successfully.')
-                biological.save()
             else:
-                messages.warning(request, 'Ups!! A biological with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
-                biological = biological_ex
 
-            return redirect('blog:biological_detail', pk=biological.pk)
+                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+
+                if supplier_form.is_valid():
+                    supplier = supplier_form.save(commit=False)
+                    supplier_all = Supplier.objects.all()
+
+                    duplicates = False
+
+                    for data in supplier_all:
+                        if data.name == supplier.name:
+                            duplicates = True
+                            supplier_ex = data
+
+                    if not duplicates:
+                        supplier.save()
+                    else:
+                        messages.warning(request, 'It is not necessary to add this supplier because already exists.')
+                        addSupplier = False
+
+                        biological.supplier = supplier_ex
+
+                        form = BiologicalForm(instance=biological, prefix="biological")
+
+                        return render(request, 'blog/biological_new.html', {'form': form,
+                                                                            'supplier_form': supplier_form,
+                                                                            'addSupplier': addSupplier})
+
+                    biological.supplier = supplier
+
+                error = False
+
+                if biological.reference == "" or biological.reference == "-":
+                    biological.reference = "-"
+
+                if biological.quantity == "" or biological.quantity == "-":
+                    biological.quantity = "-"
+
+                if biological.concentration == "" or biological.concentration == "-":
+                    biological.concentration = "-"
+                    unit_biological = Unit_Chemical.objects.get(name="None")
+                    biological.unit_biological = unit_biological
+
+                else:
+                    unit_biological = form.cleaned_data.get("unit_biological")
+
+                    try:
+                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == ""):
+                            messages.warning(request, 'Ups!! The unit cannot be None.')
+                            error = True
+                    except:
+                        if (unit_biological is None):
+                            messages.warning(request, 'Ups!! It is necessary the unit of the concentration.')
+                            error = True
+
+                biological_all = Biological.objects.all()
+
+                duplicates = False
+
+                for data in biological_all:
+                    if (data.reference == biological.reference) and (biological.reference != "-"):
+
+                        if (data.pk != biological.pk):
+
+                            if (data.concentration == biological.concentration):
+
+                                if (data.quantity == biological.quantity):
+                                    duplicates = True
+                                    biological_ex = data
+
+                    elif (data.name == biological.name):
+
+                        if (data.pk != biological.pk):
+
+                            if (data.concentration == biological.concentration):
+
+                                if (data.quantity == biological.quantity):
+                                    duplicates = True
+                                    biological_ex = data
+
+                if not duplicates:
+
+                    if error:
+                        return render(request, 'blog/biological_new.html', {'form': form,
+                                                                            'supplier_form': supplier_form})
+                    else:
+                        messages.success(request, 'You have added your biological successfully.')
+                        biological.save()
+
+                else:
+                    messages.warning(request, 'Ups!! A biological with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
+                    biological = biological_ex
+
+                return redirect('blog:biological_detail', pk=biological.pk)
 
     else:
-        form = BiologicalForm()
+        form = BiologicalForm(prefix="biological")
     return render(request, 'blog/biological_new.html', {'form': form})
 
 
@@ -258,58 +323,120 @@ def biological_edit(request, pk):
     @raise 404: biological does not exists.
     """
     biological = get_object_or_404(Biological, pk=pk)
+
     if request.method == "POST":
         form = BiologicalForm(data=request.POST, instance=biological)
+
         if form.is_valid():
             biological = form.save(commit=False)
-            biological.author = request.user
+            biological.edited_by = request.user.username
 
-            if biological.reference == "" or biological.reference == "-":
-                biological.reference = "-"
+            supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
 
-            if biological.quantity == "" or biological.quantity == "-":
-                biological.quantity = "-"
+            if biological.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
 
-            if biological.concentration == "" or biological.concentration == "-":
-                biological.concentration = "-"
-                unit_biological = Unit_Chemical.objects.get(name="None")
-                biological.unit_biological = unit_biological
+                supplier_form = SupplierNameForm(prefix="supplierNameForm")
+                addSupplier = True
 
-            biological_all = Biological.objects.all()
+                messages.warning(request, 'You have to write the next information about the supplier.')
 
-            duplicates = False
+                return render(request, 'blog/biological_edit.html', {'pk': biological.pk,
+                                                                     'form': form,
+                                                                     'supplier_form': supplier_form,
+                                                                     'addSupplier': addSupplier})
 
-            for data in biological_all:
-                if (data.reference == biological.reference) and (biological.reference != "-"):
-
-                    if (data.pk != biological.pk):
-
-                        if (data.concentration == biological.concentration) and (data.unit_chemical == biological.unit_chemical):
-
-                            if (data.quantity == biological.quantity):
-                                duplicates = True
-                                biological_ex = data
-
-                elif (data.name == biological.name):
-
-                    if (data.pk != biological.pk):
-
-                        if (data.concentration == biological.concentration):
-
-                            if (data.quantity == biological.quantity):
-                                duplicates = True
-                                biological_ex = data
-
-            if not duplicates:
-                messages.success(request, 'You have updated your biological.')
-                biological.save()
-                return redirect('blog:biological_detail', pk=biological.pk)
             else:
-                messages.warning(request, 'Already exists an biological with this name.')
-                return redirect('blog:biological_edit', pk=biological.pk)
+
+                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+
+                if supplier_form.is_valid():
+                    supplier = supplier_form.save(commit=False)
+                    supplier_all = Supplier.objects.all()
+
+                    duplicates = False
+
+                    for data in supplier_all:
+                        if data.name == supplier.name:
+                            duplicates = True
+                            supplier_ex = data
+
+                    if not duplicates:
+                        supplier.save()
+
+                        biological.supplier = supplier
+
+                    else:
+                        addSupplier = False
+
+                        biological.supplier = supplier_ex
+
+                error = False
+
+                if biological.reference == "" or biological.reference == "-":
+                    biological.reference = "-"
+
+                if biological.quantity == "" or biological.quantity == "-":
+                    biological.quantity = "-"
+
+                if biological.concentration == "" or biological.concentration == "-":
+                    biological.concentration = "-"
+                    unit_biological = Unit_Chemical.objects.get(name="None")
+                    biological.unit_biological = unit_biological
+
+                else:
+                    unit_biological = form.cleaned_data.get("unit_biological")
+
+                    try:
+                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == ""):
+                            messages.warning(request, 'Ups!! The unit cannot be None.')
+                            error = True
+                    except:
+                        if (unit_biological is None):
+                            messages.warning(request, 'Ups!! It is necessary the unit of the concentration.')
+                            error = True
+
+                biological_all = Biological.objects.all()
+
+                duplicates = False
+
+                for data in biological_all:
+                    if (data.reference == biological.reference) and (biological.reference != "-"):
+
+                        if (data.pk != biological.pk):
+
+                            if (data.concentration == biological.concentration) and (data.unit_biological == biological.unit_biological):
+
+                                if (data.quantity == biological.quantity):
+                                    duplicates = True
+                                    biological_ex = data
+
+                    elif (data.name == biological.name):
+
+                        if (data.pk != biological.pk):
+
+                            if (data.concentration == biological.concentration):
+
+                                if (data.quantity == biological.quantity):
+                                    duplicates = True
+                                    biological_ex = data
+
+                if not duplicates:
+
+                    if error:
+                        return render(request, 'blog/biological_edit.html', {'form': form,
+                                                                            'supplier_form': supplier_form})
+                    else:
+                        messages.success(request, 'You have updated your biological.')
+                        biological.save()
+                        return redirect('blog:biological_detail', pk=biological.pk)
+
+                else:
+                    messages.warning(request, 'Already exists an biological with this name.')
+                    return redirect('blog:biological_edit', pk=biological.pk)
 
     else:
         form = BiologicalForm(instance=biological)
+
     return render(request, 'blog/biological_edit.html', {'form': form})
 
 
