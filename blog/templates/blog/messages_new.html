@@ -12,6 +12,24 @@
                     <span class="col-md-2"><strong>Message:</strong></span>
                     {{ form.messageText }}
                 </div>
+
+                <div class="row" style="padding-left: 15px;">
+                    <div class="row">
+                        <span class="col-md-2"><strong>Notify to:</strong></span>
+                    </div>
+
+                    <div class="row">
+                        <span class="col-md-2 col-md-offset-1"><strong>Staff:</strong></span>
+                        {{ notify.notifyStaff }}
+                    </div>
+
+                    <div class="row">
+                        <span class="col-md-2 col-md-offset-1"><strong>All group:</strong></span>
+                        {{ notify.notifyGroup }}
+                    </div>
+
+                </div>
+
                 {% if user.is_staff %}
                     <div class="row" style="padding-top: 10px;">
                         <span class="col-md-2">{{ form.show.label_tag}}</span>

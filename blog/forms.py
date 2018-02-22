@@ -56,7 +56,25 @@ class SignUpForm(UserCreationForm):
         """
 
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
+
+
+# class FullNameForm(forms.ModelForm):
+#     """
+#     Full name form docstring.
+#
+#     This form is useds to create a new username with full name and gmail email.
+#     """
+#
+#     class Meta:
+#         """
+#         Meta docstring.
+#
+#         This function use the Full Name User model and the fields: name, and email_gmail.
+#         """
+#
+#         model = Full_Name_Users
+#         fields = ('email_gmail',)
 
 
 class InventoryForm(forms.ModelForm):
@@ -77,22 +95,22 @@ class InventoryForm(forms.ModelForm):
         fields = ('name', 'maker', 'type_item',)
 
 
-class UserFullNameForm(forms.ModelForm):
-    """
-    User full name form docstring.
-
-    This form is useds to create a new full name of an username.
-    """
-
-    class Meta:
-        """
-        Meta docstring.
-
-        This function use the Full_Name_Users model and the field: name.
-        """
-
-        model = Full_Name_Users
-        fields = ('name',)
+# class UserFullNameForm(forms.ModelForm):
+#     """
+#     User full name form docstring.
+#
+#     This form is useds to create a new full name of an username.
+#     """
+#
+#     class Meta:
+#         """
+#         Meta docstring.
+#
+#         This function use the Full_Name_Users model and the field: name.
+#         """
+#
+#         model = Full_Name_Users
+#         fields = ('name',)
 
 
 class OrderForm(forms.ModelForm):
@@ -549,3 +567,14 @@ class MessagesForm(forms.ModelForm):
 
         model = Messages
         fields = ('messageText', 'show',)
+
+
+class NotifyToForm(forms.Form):
+    """
+    Notify to form docstring.
+
+    This form is useds to know to how notify.
+    """
+
+    notifyStaff = forms.BooleanField(initial=True, required=False)
+    notifyGroup = forms.BooleanField(required=False)

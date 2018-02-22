@@ -74,7 +74,8 @@ def signup(request):
     page with your username.
     """
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = SignUpForm(request.POST, prefix="register")
+        fullName_form = FullNameForm(request.POST, prefix="fullName")
         if form.is_valid():
             form.save()
             firstname = form.cleaned_data.get('first_name')
@@ -82,6 +83,7 @@ def signup(request):
             nameFull = firstname + ' ' + lastname
             fullName = Full_Name_Users()
             fullName.name = nameFull
+            # fullName.email_gmail = fullName_form.cleaned_data.get('email_gmail')
             fullName.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
@@ -89,5 +91,5 @@ def signup(request):
             login(request, user)
             return redirect('blog:home')
     else:
-        form = SignUpForm()
+        form = SignUpForm(prefix="register")
     return render(request, 'registration/signup.html', {'form': form})

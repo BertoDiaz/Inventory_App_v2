@@ -832,6 +832,7 @@ class Full_Name_Users(models.Model):
     """
 
     name = models.CharField(max_length=200, help_text="Full name of the users.")
+    email_gmail = models.EmailField(max_length=100, null=True)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -1073,7 +1074,7 @@ class Product(models.Model):
 
     This model stores the different products.
     """
-    
+
     author = models.ForeignKey('auth.User', null=True)
     edited_by = models.CharField(max_length=200, null=True)
     description = models.CharField(max_length=300, help_text="Description of the product.")

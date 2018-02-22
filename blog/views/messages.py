@@ -33,9 +33,14 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.encoders import encode_base64
+import smtplib
 from blog.views.search import get_query
-from blog.models import Messages
-from blog.forms import MessagesForm
+from blog.models import Messages, Full_Name_Users
+from blog.forms import MessagesForm, NotifyToForm
 
 
 @login_required
@@ -164,8 +169,11 @@ def messages_new(request):
     details of this new message.
     """
     if request.method == "POST":
-        form = MessagesForm(request.POST)
-        if form.is_valid():
+        form = MessagesForm(request.POST, prefix="messages")
+        notify_form = NotifyToForm(request.POST, prefix="notify")
+        # print(notify_form)
+        # print(request.POST.get("notifyStaff"))
+        if form.is_valid() and notify_form.is_valid():
             messageInfo = form.save(commit=False)
             messageInfo.author = request.user
             messageInfo.show = True
@@ -181,6 +189,51 @@ def messages_new(request):
 
             if not duplicates:
                 messages.success(request, 'You have added your message successfully.')
+
+                username_author = User.objects.get(username=messageInfo.author)
+
+                if notify_form.cleaned_data['notifyStaff']:
+                    fromaddr = "heriberto.diazluis@gmail.com"
+                    toaddrs = "heriberto.diaz@icn2.cat"
+                    subject = 'New Comment'
+
+                elif notify_form.cleaned_data['notifyGroup']:
+                    fromaddr = "heriberto.diazluis@gmail.com"
+                    toaddrs = "grupotestdjango@googlegroups.com"
+                    subject = 'New Comment'
+
+                message_1 = "<p>Hello everybody,</p><p>There is a new comment in the Web app of " + username_author.first_name + ":</p>"
+                message_2 = "<p style='padding-left: 20px;'><i>'" + messageInfo.messageText + "'</i></p><p>Best regards,</p><p>" + username_author.first_name + "</p>"
+                message = message_1 + message_2
+
+                msg = MIMEMultipart('related')
+                msg['From'] = fromaddr
+                msg['To'] = toaddrs
+                msg['Subject'] = subject
+
+                # Content-type:text/html
+                message = MIMEText(message, 'html')
+                msg.attach(message)
+
+                try:
+                    # ENVIAR
+                    server = smtplib.SMTP('smtp.gmail.com', 587)
+                    # protocolo de cifrado de datos utilizado por gmail
+                    server.starttls()
+                    # Credenciales
+                    # Añadir nombre de usuario y contraseña con el siguiente comando
+                    # server.login(username, password)
+                    server.set_debuglevel(1)
+                    server.sendmail(fromaddr, toaddrs, msg.as_string())
+                    server.quit()
+
+                    # messages.success(request, 'The group has been notified successfully.')
+
+                except:
+                    messages.error(request, 'There was a error with username or password. You have to notify this error to the admin.')
+
+                # return redirect('blog:order_detail', pk=pk)
+
                 messageInfo.save()
             else:
                 messages.warning(request, 'Ups!! A message with this text already exists. If you want to do any change, please edit it.')
@@ -188,8 +241,9 @@ def messages_new(request):
 
             return redirect('blog:messages_detail', pk=messageInfo.pk)
     else:
-        form = MessagesForm()
-    return render(request, 'blog/messages_new.html', {'form': form})
+        form = MessagesForm(prefix="messages")
+        notify_form = NotifyToForm(prefix="notify")
+    return render(request, 'blog/messages_new.html', {'form': form, 'notify': notify_form})
 
 
 @login_required
