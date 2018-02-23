@@ -1037,7 +1037,7 @@ class Supplier(models.Model):
     This model stores the different suppliers.
     """
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=True)
     attention = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     city_postCode = models.CharField(max_length=200, null=True, blank=True)

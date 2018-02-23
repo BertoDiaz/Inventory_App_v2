@@ -135,7 +135,7 @@ class OrderForm(forms.ModelForm):
         # fields = ('name', 'applicant', 'budget', 'type_of_purchase', 'payment_conditions',
         #           'supplier', 'number_product',)
         fields = ('name', 'applicant', 'budget', 'type_of_purchase', 'payment_conditions',
-                  'supplier', 'file_exists',)
+                  'supplier',)
 
     def __init__(self, *args, **kwargs):
         """

@@ -4,7 +4,7 @@
     <div class="orderDetail">
         <div class="button">
             {% if user.is_authenticated %}
-                <!-- <a class="btn btn-default" href="{% url 'blog:order_edit' pk=order.pk %}"><span class="glyphicon glyphicon-pencil" title="Edit Order"></span></a> -->
+                <a class="btn btn-default" href="{% url 'blog:order_edit' pk=order.pk %}"><span class="glyphicon glyphicon-pencil" title="Edit Order"></span></a>
                 <a class="btn btn-default" href="{% url 'blog:order_remove' pk=order.pk %}"><span class="glyphicon glyphicon-remove" title="Remove Order"></span></a>
                 <!-- <a class="btn btn-default" href="{% url 'blog:order_send_email' pk=order.pk %}"><span class="glyphicon glyphicon-share-alt"></span></a> -->
                 <a class="btn btn-default" href="{% url 'blog:order_send_email' pk=order.pk %}"><span class="glyphicon glyphicon-envelope" title="Send Order"></span></a>
