@@ -4,3 +4,4 @@ myvenv
 .DS_Store
 orderForm
 migrations
+mysite/settings.py

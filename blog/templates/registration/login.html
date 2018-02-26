@@ -22,6 +22,7 @@
             <input type="submit" value="login" />
             <input type="hidden" name="next" value="{{ next }}" />
             <span>or <a href="{% url 'blog:signup' %}">Sign up</a></span>
+            <span>or <a href="{% url 'password_reset' %}">Forget password</a></span>
         </form>
     </div>
 {% endblock %}
