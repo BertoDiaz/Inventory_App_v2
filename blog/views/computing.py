@@ -50,6 +50,8 @@ def computing_list(request):
     @return: list of computers.
     """
     computing_list = Computing.objects.all().order_by('name')
+    if not computing_list.exists():
+        messages.info(request, 'Ups!! There are not any computing in the inventory.')
 
     # Show 25 contacts per page
     paginator = Paginator(computing_list, 25)
