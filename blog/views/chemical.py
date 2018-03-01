@@ -232,11 +232,24 @@ def chemical_new(request):
                 if chemical.reference == "" or chemical.reference == "-":
                     chemical.reference = "-"
 
+                if chemical.cas_number == "" or chemical.cas_number == "-":
+                    chemical.cas_number = "-"
+
+                if chemical.number_bottle == "" or chemical.number_bottle == "-":
+                    chemical.number_bottle = "-"
+
                 if chemical.quantity == "" or chemical.quantity == "-":
                     chemical.quantity = "-"
 
                 if chemical.molecular_weight == "" or chemical.molecular_weight == "-":
                     chemical.molecular_weight = "-"
+                    chemical.unit_chemical = "-"
+
+                else:
+                    chemical.unit_chemical = "g/mol"
+
+                if chemical.molecular_formula == "" or chemical.molecular_formula == "-":
+                    chemical.molecular_formula = "-"
 
                 chemical_all = Chemical.objects.all()
 
@@ -344,11 +357,24 @@ def chemical_edit(request, pk):
             if chemical.reference == "" or chemical.reference == "-":
                 chemical.reference = "-"
 
+            if chemical.cas_number == "" or chemical.cas_number == "-":
+                chemical.cas_number = "-"
+
+            if chemical.number_bottle == "" or chemical.number_bottle == "-":
+                chemical.number_bottle = "-"
+
             if chemical.quantity == "" or chemical.quantity == "-":
                 chemical.quantity = "-"
 
             if chemical.molecular_weight == "" or chemical.molecular_weight == "-":
                 chemical.molecular_weight = "-"
+                chemical.unit_chemical = "-"
+
+            else:
+                chemical.unit_chemical = "g/mol"
+
+            if chemical.molecular_formula == "" or chemical.molecular_formula == "-":
+                chemical.molecular_formula = "-"
 
             chemical_all = Chemical.objects.all()
 

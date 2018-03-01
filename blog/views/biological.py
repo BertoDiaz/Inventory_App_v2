@@ -241,20 +241,23 @@ def biological_new(request):
                 if biological.reference == "" or biological.reference == "-":
                     biological.reference = "-"
 
+                if biological.number_bottle == "" or biological.number_bottle == "-":
+                    biological.number_bottle = "-"
+
                 if biological.quantity == "" or biological.quantity == "-":
                     biological.quantity = "-"
 
                 if biological.concentration == "" or biological.concentration == "-":
                     biological.concentration = "-"
-                    unit_biological = Unit_Chemical.objects.get(name="None")
+                    unit_biological = Unit_Chemical.objects.get(name="-")
                     biological.unit_biological = unit_biological
 
                 else:
                     unit_biological = form.cleaned_data.get("unit_biological")
 
                     try:
-                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == ""):
-                            messages.warning(request, 'Ups!! The unit cannot be None.')
+                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or (biological.unit_biological.name == "-"):
+                            messages.warning(request, 'Ups!! The unit cannot be None/-.')
                             error = True
                     except:
                         if (unit_biological is None):
@@ -375,20 +378,23 @@ def biological_edit(request, pk):
                 if biological.reference == "" or biological.reference == "-":
                     biological.reference = "-"
 
+                if biological.number_bottle == "" or biological.number_bottle == "-":
+                    biological.number_bottle = "-"
+
                 if biological.quantity == "" or biological.quantity == "-":
                     biological.quantity = "-"
 
                 if biological.concentration == "" or biological.concentration == "-":
                     biological.concentration = "-"
-                    unit_biological = Unit_Chemical.objects.get(name="None")
+                    unit_biological = Unit_Chemical.objects.get(name="-")
                     biological.unit_biological = unit_biological
 
                 else:
                     unit_biological = form.cleaned_data.get("unit_biological")
 
                     try:
-                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == ""):
-                            messages.warning(request, 'Ups!! The unit cannot be None.')
+                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or (biological.unit_biological.name == "-"):
+                            messages.warning(request, 'Ups!! The unit cannot be None/-.')
                             error = True
                     except:
                         if (unit_biological is None):
