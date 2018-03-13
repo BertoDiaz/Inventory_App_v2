@@ -68,6 +68,8 @@ def computing_list(request):
 
     return render(request, 'blog/computing_list.html', {'computings': computings})
 
+word_to_search = None
+
 
 @login_required
 def computing_search(request):
@@ -81,10 +83,20 @@ def computing_search(request):
 
     @return: list of computers.
     """
+    global word_to_search
     query_string = ''
     found_entries = None
-    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
-        query_string = request.GET['searchfield']
+
+    page = request.GET.get('page')
+
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
+        if page != None:
+            query_string = word_to_search
+
+        else:
+            query_string = request.GET['searchfield']
+            word_to_search = query_string
+
         try:
             query_string = Type_Object.objects.get(name=query_string)
             computing_list = Computing.objects.filter(type_object=query_string.pk).order_by('name')
@@ -109,7 +121,6 @@ def computing_search(request):
     # Show 25 contacts per page
     paginator = Paginator(computing_list, 25)
 
-    page = request.GET.get('page')
     try:
         computings = paginator.page(page)
     except PageNotAnInteger:

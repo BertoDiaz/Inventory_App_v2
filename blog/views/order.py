@@ -79,6 +79,8 @@ def order_list(request):
 
     return render(request, 'blog/order_list.html', {'orders': orders})
 
+word_to_search = None
+
 
 @login_required
 def order_search(request):
@@ -92,10 +94,20 @@ def order_search(request):
 
     @return: list of orders.
     """
+    global word_to_search
     query_string = ''
     found_entries = None
-    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
-        query_string = request.GET['searchfield']
+
+    page = request.GET.get('page')
+
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
+        if page != None:
+            query_string = word_to_search
+
+        else:
+            query_string = request.GET['searchfield']
+            word_to_search = query_string
+
         try:
             query_string = User.objects.get(first_name=query_string)
             order_list = Order.objects.filter(author=query_string.pk).order_by('name')
@@ -118,7 +130,6 @@ def order_search(request):
     # Show 25 contacts per page
     paginator = Paginator(order_list, 25)
 
-    page = request.GET.get('page')
     try:
         orders = paginator.page(page)
     except PageNotAnInteger:

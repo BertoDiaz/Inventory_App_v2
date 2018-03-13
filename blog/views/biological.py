@@ -101,6 +101,8 @@ def biological_list(request, pk):
                                                          'biologicalsBack': biologicalsBack,
                                                          'type_bioBack': type_bioBack})
 
+word_to_search = None
+
 
 @login_required
 def biological_search(request):
@@ -114,10 +116,20 @@ def biological_search(request):
 
     @return: list of biologicals.
     """
+    global word_to_search
     query_string = ''
     found_entries = None
-    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
-        query_string = request.GET['searchfield']
+
+    page = request.GET.get('page')
+
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
+        if page != None:
+            query_string = word_to_search
+
+        else:
+            query_string = request.GET['searchfield']
+            word_to_search = query_string
+            
         try:
             query_string = Type_Biological_2.objects.get(name=query_string)
             biological_list = Biological.objects.filter(type_biological=query_string.pk).order_by('name')
@@ -136,7 +148,6 @@ def biological_search(request):
     # Show 25 contacts per page
     paginator = Paginator(biological_list, 25)
 
-    page = request.GET.get('page')
     try:
         biologicals = paginator.page(page)
     except PageNotAnInteger:

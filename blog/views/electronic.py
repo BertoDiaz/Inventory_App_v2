@@ -94,6 +94,8 @@ def electronic_list(request, pk):
                                                          'componentsBack': componentsBack,
                                                          'type_componBack': type_componBack})
 
+word_to_search = None
+
 
 @login_required
 def electronic_search(request):
@@ -107,10 +109,20 @@ def electronic_search(request):
 
     @return: list of electronic components.
     """
+    global word_to_search
     query_string = ''
     found_entries = None
-    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
-        query_string = request.GET['searchfield']
+
+    page = request.GET.get('page')
+
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
+        if page != None:
+            query_string = word_to_search
+
+        else:
+            query_string = request.GET['searchfield']
+            word_to_search = query_string
+
         try:
             query_string = Type_Component.objects.get(name=query_string)
             electronic_list = Electronic.objects.filter(type_component=query_string.pk).order_by('name_component')
@@ -125,7 +137,6 @@ def electronic_search(request):
     # Show 25 contacts per page
     paginator = Paginator(electronic_list, 25)
 
-    page = request.GET.get('page')
     try:
         electronics = paginator.page(page)
     except PageNotAnInteger:

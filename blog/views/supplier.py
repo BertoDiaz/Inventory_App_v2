@@ -72,6 +72,8 @@ def supplier_list(request):
 
     return render(request, 'blog/supplier_list.html')
 
+word_to_search = None
+
 
 @login_required
 def supplier_search(request):
@@ -85,10 +87,20 @@ def supplier_search(request):
 
     @return: list of suppliers.
     """
+    global word_to_search
     query_string = ''
     found_entries = None
-    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
-        query_string = request.GET['searchfield']
+
+    page = request.GET.get('page')
+
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
+        if page != None:
+            query_string = word_to_search
+
+        else:
+            query_string = request.GET['searchfield']
+            word_to_search = query_string
+
         try:
             entry_query = get_query(query_string, ['name', 'attention', 'address', 'city_postCode',
                                                    'phone', 'fax', 'email'])
@@ -99,7 +111,6 @@ def supplier_search(request):
     # Show 25 contacts per page
     paginator = Paginator(supplier_list, 25)
 
-    page = request.GET.get('page')
     try:
         suppliers = paginator.page(page)
     except PageNotAnInteger:

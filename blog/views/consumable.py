@@ -70,6 +70,8 @@ def consumable_list(request):
     return render(request, 'blog/consumable_list.html', {'consumables': consumables,
                                                          'consumableBack': consumableBack})
 
+word_to_search = None
+
 
 @login_required
 def consumable_search(request):
@@ -83,10 +85,20 @@ def consumable_search(request):
 
     @return: list of consumables.
     """
+    global word_to_search
     query_string = ''
     found_entries = None
-    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
-        query_string = request.GET['searchfield']
+
+    page = request.GET.get('page')
+
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
+        if page != None:
+            query_string = word_to_search
+
+        else:
+            query_string = request.GET['searchfield']
+            word_to_search = query_string
+            
         try:
             query_string = Supplier.objects.get(name=query_string)
             consumable_list = Consumable.objects.filter(supplier=query_string.pk).order_by('name')
@@ -101,7 +113,6 @@ def consumable_search(request):
     # Show 25 contacts per page
     paginator = Paginator(consumable_list, 25)
 
-    page = request.GET.get('page')
     try:
         consumables = paginator.page(page)
     except PageNotAnInteger:

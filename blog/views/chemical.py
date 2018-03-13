@@ -36,8 +36,6 @@ from blog.views.search import get_query
 from blog.models import Chemical, Type_Chemical, State, Supplier, Location
 from blog.forms import ChemicalForm, SupplierNameForm
 
-word_to_search = None
-
 
 def chemical_list_type_chemical(request):
     """
@@ -92,6 +90,8 @@ def chemical_list(request, pk):
                                                        'chemicalsBack': chemicalsBack,
                                                        'type_chemicalBack': type_chemicalBack})
 
+word_to_search = None
+
 
 @login_required
 def chemical_search(request):
@@ -108,10 +108,6 @@ def chemical_search(request):
     global word_to_search
     query_string = ''
     found_entries = None
-    # if request.POST.get('word_to_search'):
-    # print(request.POST.get('word_to_search'))
-    # print(request.GET.get('searchfield'))
-    # print(word_to_search)
 
     page = request.GET.get('page')
 
@@ -122,7 +118,7 @@ def chemical_search(request):
         else:
             query_string = request.GET['searchfield']
             word_to_search = query_string
-        # print(word_to_search)
+
         try:
             query_string = Type_Chemical.objects.get(name=query_string)
             chemical_list = Chemical.objects.filter(type_chemical=query_string.pk).order_by('name')
@@ -143,7 +139,7 @@ def chemical_search(request):
                         chemical_list = Chemical.objects.filter(entry_query).order_by('name')
 
     # Show 25 contacts per page
-    paginator = Paginator(chemical_list, 10)
+    paginator = Paginator(chemical_list, 25)
 
     try:
         chemicals = paginator.page(page)

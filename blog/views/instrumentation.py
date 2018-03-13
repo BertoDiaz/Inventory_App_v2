@@ -91,6 +91,8 @@ def instrumentation_list(request, pk):
                                                               'instrumentBack': instrumentBack,
                                                               'type_instrumBack': type_instrumBack})
 
+word_to_search = None
+
 
 @login_required
 def instrumentation_search(request):
@@ -104,10 +106,20 @@ def instrumentation_search(request):
 
     @return: list of instruments.
     """
+    global word_to_search
     query_string = ''
     found_entries = None
-    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
-        query_string = request.GET['searchfield']
+
+    page = request.GET.get('page')
+
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
+        if page != None:
+            query_string = word_to_search
+
+        else:
+            query_string = request.GET['searchfield']
+            word_to_search = query_string
+            
         try:
             query_string = Type_Instrumentation.objects.get(name=query_string)
             instrumentation_list = Instrumentation.objects.filter(type_instrumentation=query_string.pk).order_by('type_instrumentation')
@@ -126,7 +138,6 @@ def instrumentation_search(request):
     # Show 25 contacts per page
     paginator = Paginator(instrumentation_list, 25)
 
-    page = request.GET.get('page')
     try:
         instrumentations = paginator.page(page)
     except PageNotAnInteger:
