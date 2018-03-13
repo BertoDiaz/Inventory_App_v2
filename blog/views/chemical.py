@@ -36,6 +36,8 @@ from blog.views.search import get_query
 from blog.models import Chemical, Type_Chemical, State, Supplier, Location
 from blog.forms import ChemicalForm, SupplierNameForm
 
+word_to_search = None
+
 
 def chemical_list_type_chemical(request):
     """
@@ -103,10 +105,24 @@ def chemical_search(request):
 
     @return: list of chemicals.
     """
+    global word_to_search
     query_string = ''
     found_entries = None
-    if ('searchfield' in request.GET) and request.GET['searchfield'].strip():
-        query_string = request.GET['searchfield']
+    # if request.POST.get('word_to_search'):
+    # print(request.POST.get('word_to_search'))
+    # print(request.GET.get('searchfield'))
+    # print(word_to_search)
+
+    page = request.GET.get('page')
+
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
+        if page != None:
+            query_string = word_to_search
+
+        else:
+            query_string = request.GET['searchfield']
+            word_to_search = query_string
+        # print(word_to_search)
         try:
             query_string = Type_Chemical.objects.get(name=query_string)
             chemical_list = Chemical.objects.filter(type_chemical=query_string.pk).order_by('name')
@@ -127,9 +143,8 @@ def chemical_search(request):
                         chemical_list = Chemical.objects.filter(entry_query).order_by('name')
 
     # Show 25 contacts per page
-    paginator = Paginator(chemical_list, 25)
+    paginator = Paginator(chemical_list, 10)
 
-    page = request.GET.get('page')
     try:
         chemicals = paginator.page(page)
     except PageNotAnInteger:
@@ -186,13 +201,15 @@ def chemical_new(request):
             chemical.author = request.user
 
             supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+            supplier = supplier_form.save(commit=False)
 
-            if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+            # if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+            if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and (supplier.name != "NONE" and supplier.name == ""):
 
-                supplier_form = SupplierNameForm(prefix="supplierNameForm")
+                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
                 addSupplier = True
 
-                messages.warning(request, 'You have to write the next information about the supplier.')
+                messages.warning(request, 'You have to write the next information about the supplier. If you do not know how is the supplier, you write NONE.')
 
                 return render(request, 'blog/chemical_new.html', {'form': form,
                                                                   'supplier_form': supplier_form,
@@ -200,13 +217,11 @@ def chemical_new(request):
 
             else:
 
-                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
-
-                if supplier_form.is_valid():
-                    supplier = supplier_form.save(commit=False)
-                    supplier_all = Supplier.objects.all()
+                if supplier_form.is_valid() and not supplier.name == "NONE" and chemical.supplier.name == "SUPPLIER NOT REGISTERED":
 
                     duplicates = False
+
+                    supplier_all = Supplier.objects.all()
 
                     for data in supplier_all:
                         if data.name == supplier.name:
@@ -215,6 +230,7 @@ def chemical_new(request):
 
                     if not duplicates:
                         supplier.save()
+
                     else:
                         messages.warning(request, 'It is not necessary to add this supplier because already exists.')
                         addSupplier = False
