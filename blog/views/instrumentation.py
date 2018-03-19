@@ -119,7 +119,7 @@ def instrumentation_search(request):
         else:
             query_string = request.GET['searchfield']
             word_to_search = query_string
-            
+
         try:
             query_string = Type_Instrumentation.objects.get(name=query_string)
             instrumentation_list = Instrumentation.objects.filter(type_instrumentation=query_string.pk).order_by('type_instrumentation')
@@ -132,7 +132,8 @@ def instrumentation_search(request):
                     query_string = Location.objects.get(name=query_string)
                     instrumentation_list = Instrumentation.objects.filter(location=query_string.pk).order_by('type_instrumentation')
                 except ObjectDoesNotExist:
-                    entry_query = get_query(query_string, ['characteristics', 'manufacturer'])
+                    entry_query = get_query(query_string, ['subtype_instrumentation', 'model', 'quantity',
+                                                           'characteristics', 'manufacturer'])
                     instrumentation_list = Instrumentation.objects.filter(entry_query).order_by('type_instrumentation')
 
     # Show 25 contacts per page
@@ -197,9 +198,14 @@ def instrumentation_new(request):
             duplicates = False
 
             for data in instrumentation_all:
-                if data.characteristics == instrumentation.characteristics:
+                if data.pk == instrumentation.pk:
                     duplicates = True
                     instrumentation_ex = data
+
+                elif data.model == instrumentation.model and data.manufacturer == instrumentation.manufacturer:
+                    if data.location == instrumentation.location:
+                        duplicates = True
+                        instrumentation_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have added your instrument successfully.')
@@ -241,9 +247,14 @@ def instrumentation_edit(request, pk):
             duplicates = False
 
             for data in instrumentation_all:
-                if data.characteristics == instrumentation.characteristics:
-                    if data.pk != instrumentation.pk:
+                if data.pk == instrumentation.pk:
+                    duplicates = True
+                    instrumentation_ex = data
+
+                elif data.model == instrumentation.model and data.manufacturer == instrumentation.manufacturer:
+                    if data.location == instrumentation.location:
                         duplicates = True
+                        instrumentation_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have updated your instrumentation.')

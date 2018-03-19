@@ -116,7 +116,7 @@ def optic_search(request):
         else:
             query_string = request.GET['searchfield']
             word_to_search = query_string
-            
+
         try:
             query_string = Type_Optic.objects.get(name=query_string)
             optic_list = Optic.objects.filter(type_optic=query_string.pk).order_by('name_optic')
@@ -125,7 +125,8 @@ def optic_search(request):
                 query_string = Location.objects.get(name=query_string)
                 optic_list = Optic.objects.filter(location=query_string.pk).order_by('name_optic')
             except ObjectDoesNotExist:
-                entry_query = get_query(query_string, ['name_optic', 'description'])
+                entry_query = get_query(query_string, ['name_optic', 'subtype_optic', 'model',
+                                                       'manufacturer', 'description'])
                 optic_list = Optic.objects.filter(entry_query).order_by('name_optic')
 
     # Show 25 contacts per page
@@ -188,9 +189,13 @@ def optic_new(request):
             duplicates = False
 
             for data in optic_all:
-                if data.description == optic.description:
+                if data.pk == optic.pk:
                     duplicates = True
                     optic_ex = data
+                elif data.model == optic.model and data.manufacturer == optic.manufacturer:
+                    if data.location == optic.location:
+                        duplicates = True
+                        optic_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have added your optic component successfully.')
@@ -233,8 +238,13 @@ def optic_edit(request, pk):
             duplicates = False
 
             for data in optic_all:
-                if data.description == optic.description and data.pk != optic.pk:
+                if data.pk == optic.pk:
                     duplicates = True
+                    optic_ex = data
+                elif data.model == optic.model and data.manufacturer == optic.manufacturer:
+                    if data.location == optic.location:
+                        duplicates = True
+                        optic_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have updated your optic component.')

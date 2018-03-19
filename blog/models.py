@@ -164,7 +164,13 @@ class Optic(models.Model):
     author = models.ForeignKey('auth.User', null=True)
     edited_by = models.CharField(max_length=200, null=True)
     type_optic = models.ForeignKey('Type_Optic', help_text="Type of the optic component.")
-    name_optic = models.CharField(max_length=100, blank=True)
+    subtype_optic = models.CharField(max_length=200, blank=True,
+                                     help_text="Sub-type of the optic component.")
+    # name_optic = models.CharField(max_length=100, blank=True)
+    model = models.CharField(max_length=200, blank=True, help_text="Model of the optic component.")
+    manufacturer = models.CharField(max_length=200, blank=True,
+                                    help_text="Manufacturer of the optic component.")
+    quantity = models.CharField(max_length=100, blank=True, help_text="Quantity of the optic component.")
     description = models.CharField(max_length=300, help_text="Description of the optic component.")
     location = models.ForeignKey('Location', help_text="Where it is the optic component.")
     # unit = models.ForeignKey('Unit', help_text="Unit of the value of the optic component.")
@@ -299,6 +305,10 @@ class Instrumentation(models.Model):
     edited_by = models.CharField(max_length=200, null=True)
     type_instrumentation = models.ForeignKey('Type_Instrumentation',
                                              help_text="Type of instrument to be stored.")
+    subtype_instrumentation = models.CharField(max_length=200, blank=True,
+                                               help_text="Sub-type of the instrument.")
+    model = models.CharField(max_length=200, blank=True, help_text="Model of the instrument.")
+    quantity = models.CharField(max_length=100, blank=True, help_text="Quantity of the instrument.")
     characteristics = models.CharField(max_length=200, blank=True,
                                        help_text="Important features of the instrument.")
     manufacturer = models.CharField(max_length=200, blank=True,

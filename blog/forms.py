@@ -328,7 +328,8 @@ class OpticForm(forms.ModelForm):
         """
 
         model = Optic
-        fields = ('type_optic', 'description', 'location',)
+        fields = ('type_optic', 'subtype_optic', 'model', 'manufacturer', 'quantity', 'description',
+                  'location',)
         widgets = {
             'description': forms.Textarea,
         }
@@ -411,8 +412,8 @@ class InstrumentationForm(forms.ModelForm):
         """
 
         model = Instrumentation
-        fields = ('type_instrumentation', 'characteristics', 'manufacturer', 'supplier',
-                  'location',)
+        fields = ('type_instrumentation', 'subtype_instrumentation', 'model', 'quantity',
+                  'characteristics', 'manufacturer', 'supplier', 'location',)
         widgets = {
             'characteristics': forms.Textarea,
         }
