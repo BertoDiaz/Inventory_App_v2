@@ -11,11 +11,13 @@
                 <h2><a class="inventory-secondCol" href="{% url 'blog:biological_list_type_biological' %}">Biological</a></h2>
                 <h2><a class="inventory-secondCol" href="{% url 'blog:instrumentation_list_type' %}">Instrumentation</a></h2>
                 <h2><a class="inventory-secondCol" href="{% url 'blog:consumable_list' %}">Consumable</a></h2>
-            <h1><a href="{% url 'blog:order_list' %}">Order</a></h1>
             <h1><a href="{% url 'blog:run_list' %}">RUN</a></h1>
             {% if user.is_staff %}
+                <h1><a href="{% url 'blog:order_list' %}">Order</a></h1>
                 <h1><a href="{% url 'blog:messages_list' %}" class="navbar-link">Messages</a></h1>
                 <h1><a href="{% url 'blog:supplier_list' %}" class="navbar-link">Suppliers</a></h1>
+                <h2><a href="{% url 'blog:chemical_supplierToNotRegistered' %}" class="navbar-link">Chemicals To Not Registered</a></h2>
+                <h2><a href="{% url 'blog:biological_supplierToNotRegistered' %}" class="navbar-link">Biologicals To Not Registered</a></h2>
             {% endif %}
         </div>
     </div>

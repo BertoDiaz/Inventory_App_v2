@@ -88,6 +88,7 @@ def optic_list(request, pk):
     return render(request, 'blog/optic_list.html', {'optics': optics, 'opticsBack': opticsBack,
                                                     'type_opticBack': type_opticBack})
 
+
 word_to_search = None
 
 
@@ -109,8 +110,8 @@ def optic_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
@@ -202,7 +203,9 @@ def optic_new(request):
                 optic.name_optic = optic.type_optic.name
                 optic.save()
             else:
-                messages.warning(request, 'Ups!! A optic component with this description already exists. If you want to add a new to the stock, please edit it.')
+                messages.warning(request,
+                                 'Ups!! A optic component with this description already exists. If you want to add a '
+                                 'new to the stock, please edit it.')
                 optic = optic_ex
 
             return redirect('blog:optic_detail', pk=optic.pk)

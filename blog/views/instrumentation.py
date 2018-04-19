@@ -91,6 +91,7 @@ def instrumentation_list(request, pk):
                                                               'instrumentBack': instrumentBack,
                                                               'type_instrumBack': type_instrumBack})
 
+
 word_to_search = None
 
 
@@ -112,8 +113,8 @@ def instrumentation_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
@@ -122,15 +123,18 @@ def instrumentation_search(request):
 
         try:
             query_string = Type_Instrumentation.objects.get(name=query_string)
-            instrumentation_list = Instrumentation.objects.filter(type_instrumentation=query_string.pk).order_by('type_instrumentation')
+            instrumentation_list = Instrumentation.objects.filter(type_instrumentation=query_string.pk).
+            order_by('type_instrumentation')
         except ObjectDoesNotExist:
             try:
                 query_string = Supplier.objects.get(name=query_string)
-                instrumentation_list = Instrumentation.objects.filter(supplier=query_string.pk).order_by('type_instrumentation')
+                instrumentation_list = Instrumentation.objects.filter(supplier=query_string.pk).
+                order_by('type_instrumentation')
             except ObjectDoesNotExist:
                 try:
                     query_string = Location.objects.get(name=query_string)
-                    instrumentation_list = Instrumentation.objects.filter(location=query_string.pk).order_by('type_instrumentation')
+                    instrumentation_list = Instrumentation.objects.filter(location=query_string.pk).
+                    order_by('type_instrumentation')
                 except ObjectDoesNotExist:
                     entry_query = get_query(query_string, ['subtype_instrumentation', 'model', 'quantity',
                                                            'characteristics', 'manufacturer'])
@@ -211,7 +215,9 @@ def instrumentation_new(request):
                 messages.success(request, 'You have added your instrument successfully.')
                 instrumentation.save()
             else:
-                messages.warning(request, 'Ups!! A instrument with these characteristics already exists. If you want to add a new to the stock, please edit it.')
+                messages.warning(request,
+                                 'Ups!! A instrument with these characteristics already exists. If you want to add a '
+                                 'new to the stock, please edit it.')
                 instrumentation = instrumentation_ex
 
             return redirect('blog:instrumentation_detail', pk=instrumentation.pk)

@@ -68,6 +68,7 @@ def computing_list(request):
 
     return render(request, 'blog/computing_list.html', {'computings': computings})
 
+
 word_to_search = None
 
 
@@ -89,8 +90,8 @@ def computing_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
@@ -186,7 +187,9 @@ def computing_new(request):
                 messages.success(request, 'You have added your computing successfully.')
                 computing.save()
             else:
-                messages.warning(request, 'Ups!! A computing with this name already exists. If you want to do any change, please edit it.')
+                messages.warning(request,
+                                 'Ups!! A computing with this name already exists. If you want to do any change, '
+                                 'please edit it.')
                 computing = computing_ex
 
             return redirect('blog:computing_detail', pk=computing.pk)

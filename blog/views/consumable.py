@@ -70,6 +70,7 @@ def consumable_list(request):
     return render(request, 'blog/consumable_list.html', {'consumables': consumables,
                                                          'consumableBack': consumableBack})
 
+
 word_to_search = None
 
 
@@ -91,14 +92,14 @@ def consumable_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
             query_string = request.GET['searchfield']
             word_to_search = query_string
-            
+
         try:
             query_string = Supplier.objects.get(name=query_string)
             consumable_list = Consumable.objects.filter(supplier=query_string.pk).order_by('name')
@@ -178,7 +179,9 @@ def consumable_new(request):
                 messages.success(request, 'You have added your consumable successfully.')
                 consumable.save()
             else:
-                messages.warning(request, 'Ups!! A consumable with this name already exists. If you want to add a new to the stock, please edit it.')
+                messages.warning(request,
+                                 'Ups!! A consumable with this name already exists. If you want to add a new to the '
+                                 'stock, please edit it.')
                 consumable = consumable_ex
 
             return redirect('blog:consumable_detail', pk=consumable.pk)

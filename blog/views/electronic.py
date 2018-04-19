@@ -94,6 +94,7 @@ def electronic_list(request, pk):
                                                          'componentsBack': componentsBack,
                                                          'type_componBack': type_componBack})
 
+
 word_to_search = None
 
 
@@ -115,8 +116,8 @@ def electronic_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
@@ -204,7 +205,9 @@ def electronic_new(request):
                 electronic.name_component = electronic.type_component.name
                 electronic.save()
             else:
-                messages.warning(request, 'Ups!! A electronic component with this value already exists. If you want to add a new to the stock, please edit it.')
+                messages.warning(request,
+                                 'Ups!! A electronic component with this value already exists. If you want to add a '
+                                 'new to the stock, please edit it.')
                 electronic = electronic_ex
 
             return redirect('blog:electronic_detail', pk=electronic.pk)

@@ -88,13 +88,14 @@ def wafer_edit(request, pk):
                 wafer.comments = wafer.comments
                 wafer.save()
             else:
-                # messages.warning(request, 'Ups!! A chemical with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
+                # messages.warning(request,
+                #                  'Ups!! A chemical with this reference already exists. If you want to add a new '
+                #                  'bottle to the stock, please edit it.')
                 wafer = wafer_ex
 
             return redirect('blog:wafer_list', pk=wafer.run.pk)
     else:
         waferForm = WaferForm(instance=wafer)
-        # print(waferForm)
     return render(request, 'blog/wafer_edit.html', {'waferForm': waferForm})
 
 
@@ -164,9 +165,8 @@ def wafer_new(request):
             run = runForm.save(commit=False)
             # run_ex = Run.objects.get(run=run.run)
             run_ex = Run.objects.filter(run=run.run).exists()
-            # print("Run: " + str(run_ex))
+
             if not run_ex:
-                # print(run_ex)
                 run.save()
             else:
                 # run = run_ex
@@ -175,9 +175,8 @@ def wafer_new(request):
             wafer = waferForm.save(commit=False)
             # wafer_ex = Wafer.objects.get(wafer=wafer.wafer, run=run)
             wafer_ex = Wafer.objects.filter(name_wafer=wafer.name_wafer, run=run).exists()
-            # print("Wafer: " + str(wafer_ex))
+
             if not wafer_ex:
-                # print(wafer_ex)
                 wafer.run = run
                 wafer.name_wafer = str(wafer.wafer)
                 wafer.save()
@@ -229,10 +228,8 @@ def chip_waveguide_new(run, wafer, chip):
     @param chip: primary key of the chip.
     """
     waveguideName = Name_Waveguide.objects.all()
-    # print(waveguideName)
 
     for waveguide in waveguideName:
-        # print(waveguide.name)
         waveguideForm = WaveguideForm()
         newWaveguide = waveguideForm.save(commit=False)
         newWaveguide.run = run
@@ -240,5 +237,4 @@ def chip_waveguide_new(run, wafer, chip):
         newWaveguide.chip = chip
         newWaveguide.waveguide = waveguide
         newWaveguide.name = waveguide.name
-        # print(newWaveguide)
         newWaveguide.save()

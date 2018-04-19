@@ -111,8 +111,8 @@ def chemical_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
@@ -135,7 +135,8 @@ def chemical_search(request):
                         query_string = Location.objects.get(name=query_string)
                         chemical_list = Chemical.objects.filter(location=query_string.pk).order_by('name')
                     except ObjectDoesNotExist:
-                        entry_query = get_query(query_string, ['name', 'molecular_formula', 'reference', 'cas_number', 'quantity'])
+                        entry_query = get_query(query_string, ['name', 'molecular_formula', 'reference', 'cas_number',
+                                                               'quantity'])
                         chemical_list = Chemical.objects.filter(entry_query).order_by('name')
 
     # Show 25 contacts per page
@@ -200,12 +201,15 @@ def chemical_new(request):
             supplier = supplier_form.save(commit=False)
 
             # if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
-            if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and (supplier.name != "NONE" and supplier.name == ""):
+            if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and (supplier.name != "NONE" and
+                                                                        supplier.name == ""):
 
                 supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
                 addSupplier = True
 
-                messages.warning(request, 'You have to write the next information about the supplier. If you do not know how is the supplier, you write NONE.')
+                messages.warning(request,
+                                 'You have to write the next information about the supplier. If you do not know how is '
+                                 'the supplier, you write NONE.')
 
                 return render(request, 'blog/chemical_new.html', {'form': form,
                                                                   'supplier_form': supplier_form,
@@ -213,7 +217,8 @@ def chemical_new(request):
 
             else:
 
-                if supplier_form.is_valid() and not supplier.name == "NONE" and chemical.supplier.name == "SUPPLIER NOT REGISTERED":
+                if supplier_form.is_valid() and not supplier.name == "NONE" and
+                chemical.supplier.name == "SUPPLIER NOT REGISTERED":
 
                     duplicates = False
 
@@ -292,7 +297,9 @@ def chemical_new(request):
                     messages.success(request, 'You have added your chemical successfully.')
                     chemical.save()
                 else:
-                    messages.warning(request, 'Ups!! A chemical with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
+                    messages.warning(request,
+                                     'Ups!! A chemical with this reference already exists. If you want to add a new '
+                                     'bottle to the stock, please edit it.')
                     chemical = chemical_ex
 
                 return redirect('blog:chemical_detail', pk=chemical.pk)
@@ -444,4 +451,26 @@ def chemical_remove(request, pk):
     """
     chemical = get_object_or_404(Chemical, pk=pk)
     chemical.delete()
+    return redirect('blog:chemical_list_type_chemical')
+
+
+@login_required
+def chemical_supplierToNotRegistered(request):
+    """
+    Chemical_list function docstring.
+
+    This function search if the supplier field is empty and change it by SUPPLIER NOT REGISTERED.
+
+    @param request: HTML request page.
+
+    @return: list of types of chemicals.
+    """
+    chemical_list = Chemical.objects.all().order_by('name')
+    supplier = Supplier.objects.get(name='SUPPLIER NOT REGISTERED')
+
+    for chemical in chemical_list:
+        if len(chemical.supplier.name) == 0:
+            chemical.supplier = supplier
+            chemical.save()
+
     return redirect('blog:chemical_list_type_chemical')

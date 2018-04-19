@@ -31,7 +31,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from blog.views.search import get_query
 from blog.models import Biological, Type_Biological_1, Type_Biological_2, Supplier, Location
 from blog.models import Unit_Chemical
@@ -101,6 +101,7 @@ def biological_list(request, pk):
                                                          'biologicalsBack': biologicalsBack,
                                                          'type_bioBack': type_bioBack})
 
+
 word_to_search = None
 
 
@@ -122,14 +123,14 @@ def biological_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
             query_string = request.GET['searchfield']
             word_to_search = query_string
-            
+
         try:
             query_string = Type_Biological_2.objects.get(name=query_string)
             biological_list = Biological.objects.filter(type_biological=query_string.pk).order_by('name')
@@ -204,13 +205,18 @@ def biological_new(request):
             biological.author = request.user
 
             supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+            supplier = supplier_form.save(commit=False)
 
-            if biological.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+            # if biological.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+            if biological.supplier.name == "SUPPLIER NOT REGISTERED" and (supplier.name != "NONE" and
+                                                                          supplier.name == ""):
 
-                supplier_form = SupplierNameForm(prefix="supplierNameForm")
+                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
                 addSupplier = True
 
-                messages.warning(request, 'You have to write the next information about the supplier.')
+                messages.warning(request,
+                                 'You have to write the next information about the supplier. If you do not know how is '
+                                 'the supplier, you write NONE.')
 
                 return render(request, 'blog/biological_new.html', {'form': form,
                                                                     'supplier_form': supplier_form,
@@ -218,13 +224,12 @@ def biological_new(request):
 
             else:
 
-                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
-
-                if supplier_form.is_valid():
-                    supplier = supplier_form.save(commit=False)
-                    supplier_all = Supplier.objects.all()
+                if supplier_form.is_valid() and not supplier.name == "NONE" and
+                biological.supplier.name == "SUPPLIER NOT REGISTERED":
 
                     duplicates = False
+
+                    supplier_all = Supplier.objects.all()
 
                     for data in supplier_all:
                         if data.name == supplier.name:
@@ -233,6 +238,7 @@ def biological_new(request):
 
                     if not duplicates:
                         supplier.save()
+
                     else:
                         messages.warning(request, 'It is not necessary to add this supplier because already exists.')
                         addSupplier = False
@@ -267,10 +273,11 @@ def biological_new(request):
                     unit_biological = form.cleaned_data.get("unit_biological")
 
                     try:
-                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or (biological.unit_biological.name == "-"):
+                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or
+                        (biological.unit_biological.name == "-"):
                             messages.warning(request, 'Ups!! The unit cannot be None/-.')
                             error = True
-                    except:
+                    except ValidationError:
                         if (unit_biological is None):
                             messages.warning(request, 'Ups!! It is necessary the unit of the concentration.')
                             error = True
@@ -310,7 +317,9 @@ def biological_new(request):
                         biological.save()
 
                 else:
-                    messages.warning(request, 'Ups!! A biological with this reference already exists. If you want to add a new bottle to the stock, please edit it.')
+                    messages.warning(request,
+                                     'Ups!! A biological with this reference already exists. If you want to add a new '
+                                     'bottle to the stock, please edit it.')
                     biological = biological_ex
 
                 return redirect('blog:biological_detail', pk=biological.pk)
@@ -404,10 +413,11 @@ def biological_edit(request, pk):
                     unit_biological = form.cleaned_data.get("unit_biological")
 
                     try:
-                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or (biological.unit_biological.name == "-"):
+                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or
+                        (biological.unit_biological.name == "-"):
                             messages.warning(request, 'Ups!! The unit cannot be None/-.')
                             error = True
-                    except:
+                    except ValidationError:
                         if (unit_biological is None):
                             messages.warning(request, 'Ups!! It is necessary the unit of the concentration.')
                             error = True
@@ -421,7 +431,8 @@ def biological_edit(request, pk):
 
                         if (data.pk != biological.pk):
 
-                            if (data.concentration == biological.concentration) and (data.unit_biological == biological.unit_biological):
+                            if (data.concentration == biological.concentration) and
+                            (data.unit_biological == biological.unit_biological):
 
                                 if (data.quantity == biological.quantity):
                                     duplicates = True
@@ -441,7 +452,7 @@ def biological_edit(request, pk):
 
                     if error:
                         return render(request, 'blog/biological_edit.html', {'form': form,
-                                                                            'supplier_form': supplier_form})
+                                                                             'supplier_form': supplier_form})
                     else:
                         messages.success(request, 'You have updated your biological.')
                         biological.save()
@@ -474,4 +485,26 @@ def biological_remove(request, pk):
     """
     biological = get_object_or_404(Biological, pk=pk)
     biological.delete()
-    return redirect('blog:biological_list')
+    return redirect('blog:biological_list_type_biological')
+
+
+@login_required
+def biological_supplierToNotRegistered(request):
+    """
+    Biological_supplierToNotRegistered function docstring.
+
+    This function search if the supplier field is empty and change it by SUPPLIER NOT REGISTERED.
+
+    @param request: HTML request page.
+
+    @return: list of types of biologicals.
+    """
+    biological_list = Biological.objects.all().order_by('name')
+    supplier = Supplier.objects.get(name='SUPPLIER NOT REGISTERED')
+
+    for biological in biological_list:
+        if len(biological.supplier.name) == 0:
+            biological.supplier = supplier
+            biological.save()
+
+    return redirect('blog:biological_list_type_biological')

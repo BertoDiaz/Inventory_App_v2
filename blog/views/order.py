@@ -79,6 +79,7 @@ def order_list(request):
 
     return render(request, 'blog/order_list.html', {'orders': orders})
 
+
 word_to_search = None
 
 
@@ -100,8 +101,8 @@ def order_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
@@ -230,7 +231,8 @@ def order_new(request):
                 new_products = []
                 duplicates = False
 
-                doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/Order_Form.xlsx'))
+                doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                             'static/orderForm/Order_Form.xlsx'))
                 doc.get_sheet_names()
                 sheet = doc.get_sheet_by_name('Order Form')
                 sheet['C6'] = order.applicant
@@ -277,11 +279,13 @@ def order_new(request):
 
                             sheet = setBordersCell(sheet)
 
-                            if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/')):
-                                os.makedirs(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/'))
+                            if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                                  'static/orderForm/' + order.author.username + '/')):
+                                os.makedirs(os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                            'static/orderForm/' + order.author.username + '/'))
 
-                            doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/' +
-                                     nameFile + '.xlsx'))
+                            doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                     'static/orderForm/' + order.author.username + '/' + nameFile + '.xlsx'))
 
                             messages.success(request, 'You have created your order.')
                             return redirect('blog:order_detail', pk=order.pk)
@@ -512,7 +516,9 @@ def order_edit(request, pk):
                             Product.objects.filter(order=order).delete()
                             Product.objects.bulk_create(new_products)
 
-                            doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx'))
+                            doc = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                                         'static/orderForm/' + order.author.username +
+                                                                      '/OF_' + order.name + '.xlsx'))
                             doc.get_sheet_names()
                             sheet = doc.get_sheet_by_name('Order Form')
                             sheet['C6'] = order.applicant
@@ -550,8 +556,8 @@ def order_edit(request, pk):
 
                             sheet = setBordersCell(sheet)
 
-                            doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/OF_' +
-                                     order.name + '.xlsx'))
+                            doc.save(os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                     'static/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx'))
 
                             messages.success(request, 'You have updated your order.')
                             return redirect('blog:order_detail', pk=order.pk)
@@ -636,7 +642,8 @@ def order_send_email(request, pk):
                 message_2 = "<p></p><p>Best regards,</p><p>" + username.first_name + "</p>"
                 message = message_1 + message_2
             else:
-                message = "<p>Dear Jessica,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" + username.first_name + "</p>"
+                message = "<p>Dear Jessica,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" +
+                username.first_name + "</p>"
 
             msg = MIMEMultipart('related')
             msg['From'] = fromaddr
@@ -648,7 +655,8 @@ def order_send_email(request, pk):
             msg.attach(message)
 
             # ADJUNTO
-            orderForm = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx')
+            orderForm = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                     'static/orderForm/' + order.author.username + '/OF_' + order.name + '.xlsx')
             if (os.path.isfile(orderForm)):
                 adjunto = MIMEBase('application', 'octet-stream')
                 adjunto.set_payload(open(orderForm, "rb").read())
@@ -658,7 +666,8 @@ def order_send_email(request, pk):
                 msg.attach(adjunto)
 
             if order.file_exists:
-                uploadFile = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/orderForm/' + order.author.username + '/' + order.name_file_attach)
+                uploadFile = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                          'static/orderForm/' + order.author.username + '/' + order.name_file_attach)
                 if (os.path.isfile(uploadFile)):
                     adjunto = MIMEBase('application', 'octet-stream')
                     adjunto.set_payload(open(uploadFile, "rb").read())
@@ -683,7 +692,7 @@ def order_send_email(request, pk):
 
                 messages.success(request, 'The order has been sent successfully.')
 
-            except:
+            except smtplib.SMTPException:
                 messages.error(request, 'Username or password is incorrect.')
 
         return redirect('blog:order_detail', pk=pk)
@@ -708,15 +717,15 @@ def order_send_email(request, pk):
         if (order.order_sent):
             messages.warning(request, 'This order has already been sent.')
 
-        context ={
-        'form': form,
-        'order': order,
-        'backList': backList,
-        'backDetail': backDetail,
-        'message_1': message_1,
-        'message_2': message_2,
-        'message_3': message_3,
-        'message_4': message_4
+        context = {
+            'form': form,
+            'order': order,
+            'backList': backList,
+            'backDetail': backDetail,
+            'message_1': message_1,
+            'message_2': message_2,
+            'message_3': message_3,
+            'message_4': message_4
         }
 
         return render(request, 'blog/order_send_email.html', context)
@@ -754,7 +763,8 @@ def order_notify(request, pk):
             toaddrs = usersAdd
             subject = 'New Order'
 
-            message = "<p>Hello everybody,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" + username.first_name + "</p>"
+            message = "<p>Hello everybody,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" +
+            username.first_name + "</p>"
 
             msg = MIMEMultipart('related')
             msg['From'] = fromaddr
@@ -781,7 +791,7 @@ def order_notify(request, pk):
 
                 messages.success(request, 'The group has been notified successfully.')
 
-            except:
+            except smtplib.SMTPException:
                 messages.error(request, 'Username or password is incorrect.')
 
         return redirect('blog:order_detail', pk=pk)
@@ -800,16 +810,16 @@ def order_notify(request, pk):
         if (order.group_notified):
             messages.warning(request, 'The group has already been notified.')
 
-        context ={
-        'form': form,
-        'order': order,
-        'backList': backList,
-        'backDetail': backDetail,
-        'message_1': message_1,
-        'message_2': message_2,
-        'message_3': message_3,
-        'message_4': message_4,
-        'message_5': message_5
+        context = {
+            'form': form,
+            'order': order,
+            'backList': backList,
+            'backDetail': backDetail,
+            'message_1': message_1,
+            'message_2': message_2,
+            'message_3': message_3,
+            'message_4': message_4,
+            'message_5': message_5
         }
 
         return render(request, 'blog/order_notify_email.html', context)

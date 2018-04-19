@@ -1,5 +1,5 @@
 """
-File name: inventory.py
+File name: inventory.py.
 
 Name: Inventory App
 

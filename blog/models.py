@@ -260,10 +260,11 @@ class Biological(models.Model):
     name = models.CharField(max_length=200, blank=True,
                             help_text="Name of the biological component.")
     molecular_formula = models.CharField(max_length=200, blank=True,
-                               help_text="Molecular formula of the biological component.")
+                                         help_text="Molecular formula of the biological component.")
     reference = models.CharField(max_length=200, blank=True,
                                  help_text="Reference of the biological component.")
-    number_bottle = models.CharField(max_length=20, null=True, blank=True, help_text="Number of bottles of the biological component.")
+    number_bottle = models.CharField(max_length=20, null=True, blank=True,
+                                     help_text="Number of bottles of the biological component.")
     quantity = models.CharField(max_length=20, blank=True, help_text="Quantity of the biological component.")
     supplier = models.ForeignKey('Supplier', help_text="Supplier of the biological component.")
     concentration = models.CharField(max_length=200, blank=True,

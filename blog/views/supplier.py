@@ -72,6 +72,7 @@ def supplier_list(request):
 
     return render(request, 'blog/supplier_list.html')
 
+
 word_to_search = None
 
 
@@ -93,8 +94,8 @@ def supplier_search(request):
 
     page = request.GET.get('page')
 
-    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page != None:
-        if page != None:
+    if (('searchfield' in request.GET) and request.GET['searchfield'].strip()) or page is not None:
+        if page is not None:
             query_string = word_to_search
 
         else:
@@ -143,7 +144,7 @@ def supplier_detail(request, pk):
     backList = True
 
     return render(request, 'blog/supplier_detail.html', {'supplier': supplier,
-                                                          'backList': backList})
+                                                         'backList': backList})
 
 
 @login_required
@@ -178,7 +179,9 @@ def supplier_new(request):
                 messages.success(request, 'You have added your supplier successfully.')
                 supplier.save()
             else:
-                messages.warning(request, 'Ups!! A supplier with this name already exists. If you want to do any change, please edit it.')
+                messages.warning(request,
+                                 'Ups!! A supplier with this name already exists. If you want to do any change, '
+                                 'please edit it.')
                 supplier = supplier_ex
 
             return redirect('blog:supplier_detail', pk=supplier.pk)

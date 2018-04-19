@@ -153,7 +153,7 @@ def messages_detail(request, pk):
     backList = True
 
     return render(request, 'blog/messages_detail.html', {'messageInfo': messageInfo,
-                                                          'backList': backList})
+                                                         'backList': backList})
 
 
 @login_required
@@ -202,8 +202,10 @@ def messages_new(request):
                     toaddrs = "grupotestdjango@googlegroups.com"
                     subject = 'New Comment'
 
-                message_1 = "<p>Hello everybody,</p><p>There is a new comment in the Web app of " + username_author.first_name + ":</p>"
-                message_2 = "<p style='padding-left: 20px;'><i>'" + messageInfo.messageText + "'</i></p><p>Best regards,</p><p>" + username_author.first_name + "</p>"
+                message_1 = "<p>Hello everybody,</p><p>There is a new comment in the Web app of " +
+                username_author.first_name + ":</p>"
+                message_2 = "<p style='padding-left: 20px;'><i>'" + messageInfo.messageText +
+                "'</i></p><p>Best regards,</p><p>" + username_author.first_name + "</p>"
                 message = message_1 + message_2
 
                 msg = MIMEMultipart('related')
@@ -229,14 +231,18 @@ def messages_new(request):
 
                     # messages.success(request, 'The group has been notified successfully.')
 
-                except:
-                    messages.error(request, 'There was a error with username or password. You have to notify this error to the admin.')
+                except smtplib.SMTPException:
+                    messages.error(request,
+                                   'There was a error with username or password. You have to notify this error to the '
+                                   'admin.')
 
                 # return redirect('blog:order_detail', pk=pk)
 
                 messageInfo.save()
             else:
-                messages.warning(request, 'Ups!! A message with this text already exists. If you want to do any change, please edit it.')
+                messages.warning(request,
+                                 'Ups!! A message with this text already exists. If you want to do any change, please '
+                                 'edit it.')
                 messageInfo = message_ex
 
             return redirect('blog:messages_detail', pk=messageInfo.pk)

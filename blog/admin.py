@@ -1,5 +1,5 @@
 """
-File name: admin.py
+File name: admin.py.
 
 Name: Inventory App
 

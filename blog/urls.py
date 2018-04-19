@@ -82,6 +82,8 @@ urlpatterns = [
     url(r'^chemical/new/$', views.chemical_new, name='chemical_new'),
     url(r'^chemical/(?P<pk>[0-9]+)/edit/$', views.chemical_edit, name='chemical_edit'),
     url(r'^chemical/(?P<pk>\d+)/remove/$', views.chemical_remove, name='chemical_remove'),
+    url(r'^chemical/chemicalToNotRegistered/$', views.chemical_supplierToNotRegistered,
+        name='chemical_supplierToNotRegistered'),
 
     # #################### BIOLOGICAL ##################### #
     url(r'^biological/component/$', views.biological_list_type_biological,
@@ -92,6 +94,8 @@ urlpatterns = [
     url(r'^biological/new/$', views.biological_new, name='biological_new'),
     url(r'^biological/(?P<pk>[0-9]+)/edit/$', views.biological_edit, name='biological_edit'),
     url(r'^biological/(?P<pk>\d+)/remove/$', views.biological_remove, name='biological_remove'),
+    url(r'^biological/biologicalToNotRegistered/$', views.biological_supplierToNotRegistered,
+        name='biological_supplierToNotRegistered'),
 
     # #################### INSTRUMENTATION #################### #
     url(r'^instrumentation/component/$', views.instrumentation_list_type,
