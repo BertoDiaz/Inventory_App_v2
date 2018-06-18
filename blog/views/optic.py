@@ -67,7 +67,7 @@ def optic_list(request, pk):
     @return: list of optic components.
     """
     type_optic = Type_Optic.objects.get(pk=pk)
-    optic_list = Optic.objects.filter(type_optic=type_optic).order_by('name_optic')
+    optic_list = Optic.objects.filter(type_optic=type_optic).order_by('location')
 
     # Show 25 contacts per page
     paginator = Paginator(optic_list, 10)
@@ -182,9 +182,11 @@ def optic_new(request):
     """
     if request.method == "POST":
         form = OpticForm(request.POST)
+
         if form.is_valid():
             optic = form.save(commit=False)
             optic.author = request.user
+
             optic_all = Optic.objects.all()
 
             duplicates = False
@@ -200,7 +202,7 @@ def optic_new(request):
 
             if not duplicates:
                 messages.success(request, 'You have added your optic component successfully.')
-                optic.name_optic = optic.type_optic.name
+                # optic.name_optic = optic.type_optic.name
                 optic.save()
             else:
                 messages.warning(request,
@@ -231,23 +233,24 @@ def optic_edit(request, pk):
     @raise 404: optic component does not exists.
     """
     optic = get_object_or_404(Optic, pk=pk)
+
     if request.method == "POST":
         form = OpticForm(data=request.POST, instance=optic)
+
         if form.is_valid():
             optic = form.save(commit=False)
-            optic.author = request.user
+            optic.edited_by = request.user.username
+
             optic_all = Optic.objects.all()
 
             duplicates = False
 
             for data in optic_all:
-                if data.pk == optic.pk:
-                    duplicates = True
-                    optic_ex = data
-                elif data.model == optic.model and data.manufacturer == optic.manufacturer:
-                    if data.location == optic.location:
-                        duplicates = True
-                        optic_ex = data
+                if data.pk != optic.pk:
+                    if (data.model == optic.model) and (data.manufacturer == optic.manufacturer):
+                        if data.location == optic.location:
+                            duplicates = True
+                            optic_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have updated your optic component.')
@@ -278,4 +281,4 @@ def optic_remove(request, pk):
     """
     optic = get_object_or_404(Optic, pk=pk)
     optic.delete()
-    return redirect('blog:optic_list')
+    return redirect('blog:optic_list_type_optic')

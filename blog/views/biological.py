@@ -208,8 +208,7 @@ def biological_new(request):
             supplier = supplier_form.save(commit=False)
 
             # if biological.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
-            if biological.supplier.name == "SUPPLIER NOT REGISTERED" and (supplier.name != "NONE" and
-                                                                          supplier.name == ""):
+            if biological.supplier.name == "SUPPLIER NOT REGISTERED" and (supplier.name != "NONE" and supplier.name == ""):
 
                 supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
                 addSupplier = True
@@ -224,8 +223,7 @@ def biological_new(request):
 
             else:
 
-                if supplier_form.is_valid() and not supplier.name == "NONE" and
-                biological.supplier.name == "SUPPLIER NOT REGISTERED":
+                if supplier_form.is_valid() and not supplier.name == "NONE" and biological.supplier.name == "SUPPLIER NOT REGISTERED":
 
                     duplicates = False
 
@@ -273,8 +271,7 @@ def biological_new(request):
                     unit_biological = form.cleaned_data.get("unit_biological")
 
                     try:
-                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or
-                        (biological.unit_biological.name == "-"):
+                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or (biological.unit_biological.name == "-"):
                             messages.warning(request, 'Ups!! The unit cannot be None/-.')
                             error = True
                     except ValidationError:
@@ -355,13 +352,17 @@ def biological_edit(request, pk):
             biological.edited_by = request.user.username
 
             supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+            supplier = supplier_form.save(commit=False)
 
-            if biological.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+            # if biological.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+            if biological.supplier.name == "SUPPLIER NOT REGISTERED" and (supplier.name != "NONE" and supplier.name == ""):
 
-                supplier_form = SupplierNameForm(prefix="supplierNameForm")
+                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
                 addSupplier = True
 
-                messages.warning(request, 'You have to write the next information about the supplier.')
+                messages.warning(request,
+                                 'You have to write the next information about the supplier. If you do not know how is '
+                                 'the supplier, you write NONE.')
 
                 return render(request, 'blog/biological_edit.html', {'pk': biological.pk,
                                                                      'form': form,
@@ -370,13 +371,11 @@ def biological_edit(request, pk):
 
             else:
 
-                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
-
-                if supplier_form.is_valid():
-                    supplier = supplier_form.save(commit=False)
-                    supplier_all = Supplier.objects.all()
+                if supplier_form.is_valid() and not supplier.name == "NONE" and biological.supplier.name == "SUPPLIER NOT REGISTERED":
 
                     duplicates = False
+
+                    supplier_all = Supplier.objects.all()
 
                     for data in supplier_all:
                         if data.name == supplier.name:
@@ -386,12 +385,21 @@ def biological_edit(request, pk):
                     if not duplicates:
                         supplier.save()
 
-                        biological.supplier = supplier
-
                     else:
+
+                        messages.warning(request, 'It is not necessary to add this supplier because already exists.')
                         addSupplier = False
 
                         biological.supplier = supplier_ex
+
+                        form = BiologicalForm(instance=biological, prefix="biological")
+
+                        return render(request, 'blog/biological_edit.html', {'pk': biological.pk,
+                                                                             'form': form,
+                                                                             'supplier_form': supplier_form,
+                                                                             'addSupplier': addSupplier})
+
+                    biological.supplier = supplier
 
                 error = False
 
@@ -413,8 +421,7 @@ def biological_edit(request, pk):
                     unit_biological = form.cleaned_data.get("unit_biological")
 
                     try:
-                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or
-                        (biological.unit_biological.name == "-"):
+                        if (biological.unit_biological.name == "None") or (biological.unit_biological.name == "") or (biological.unit_biological.name == "-"):
                             messages.warning(request, 'Ups!! The unit cannot be None/-.')
                             error = True
                     except ValidationError:
@@ -431,8 +438,7 @@ def biological_edit(request, pk):
 
                         if (data.pk != biological.pk):
 
-                            if (data.concentration == biological.concentration) and
-                            (data.unit_biological == biological.unit_biological):
+                            if (data.concentration == biological.concentration) and (data.unit_biological == biological.unit_biological):
 
                                 if (data.quantity == biological.quantity):
                                     duplicates = True

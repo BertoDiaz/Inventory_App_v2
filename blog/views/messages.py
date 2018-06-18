@@ -202,10 +202,8 @@ def messages_new(request):
                     toaddrs = "grupotestdjango@googlegroups.com"
                     subject = 'New Comment'
 
-                message_1 = "<p>Hello everybody,</p><p>There is a new comment in the Web app of " +
-                username_author.first_name + ":</p>"
-                message_2 = "<p style='padding-left: 20px;'><i>'" + messageInfo.messageText +
-                "'</i></p><p>Best regards,</p><p>" + username_author.first_name + "</p>"
+                message_1 = "<p>Hello everybody,</p><p>There is a new comment in the Web app of " + username_author.first_name + ":</p>"
+                message_2 = "<p style='padding-left: 20px;'><i>'" + messageInfo.messageText + "'</i></p><p>Best regards,</p><p>" + username_author.first_name + "</p>"
                 message = message_1 + message_2
 
                 msg = MIMEMultipart('related')
@@ -225,6 +223,7 @@ def messages_new(request):
                     # Credenciales
                     # Añadir nombre de usuario y contraseña con el siguiente comando
                     # server.login(username, password)
+                    server.login("heriberto.diazluis@gmail.com", 'heriberto_20')
                     server.set_debuglevel(1)
                     server.sendmail(fromaddr, toaddrs, msg.as_string())
                     server.quit()

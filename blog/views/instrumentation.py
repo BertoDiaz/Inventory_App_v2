@@ -69,7 +69,7 @@ def instrumentation_list(request, pk):
     """
     type_instrumentation = Type_Instrumentation.objects.get(pk=pk)
     instrumentation_list = Instrumentation.objects.filter(
-        type_instrumentation=type_instrumentation).order_by('characteristics')
+        type_instrumentation=type_instrumentation).order_by('location')
 
     # Show 25 contacts per page
     paginator = Paginator(instrumentation_list, 10)
@@ -123,18 +123,18 @@ def instrumentation_search(request):
 
         try:
             query_string = Type_Instrumentation.objects.get(name=query_string)
-            instrumentation_list = Instrumentation.objects.filter(type_instrumentation=query_string.pk).
-            order_by('type_instrumentation')
+            instrumentation_list = Instrumentation.objects.filter(
+                type_instrumentation=query_string.pk).order_by('type_instrumentation')
         except ObjectDoesNotExist:
             try:
                 query_string = Supplier.objects.get(name=query_string)
-                instrumentation_list = Instrumentation.objects.filter(supplier=query_string.pk).
-                order_by('type_instrumentation')
+                instrumentation_list = Instrumentation.objects.filter(
+                    supplier=query_string.pk).order_by('type_instrumentation')
             except ObjectDoesNotExist:
                 try:
                     query_string = Location.objects.get(name=query_string)
-                    instrumentation_list = Instrumentation.objects.filter(location=query_string.pk).
-                    order_by('type_instrumentation')
+                    instrumentation_list = Instrumentation.objects.filter(
+                        location=query_string.pk).order_by('type_instrumentation')
                 except ObjectDoesNotExist:
                     entry_query = get_query(query_string, ['subtype_instrumentation', 'model', 'quantity',
                                                            'characteristics', 'manufacturer'])
@@ -247,20 +247,17 @@ def instrumentation_edit(request, pk):
         form = InstrumentationForm(data=request.POST, instance=instrumentation)
         if form.is_valid():
             instrumentation = form.save(commit=False)
-            instrumentation.author = request.user
+            instrumentation.edited_by = request.user.username
             instrumentation_all = Instrumentation.objects.all()
 
             duplicates = False
 
             for data in instrumentation_all:
-                if data.pk == instrumentation.pk:
-                    duplicates = True
-                    instrumentation_ex = data
-
-                elif data.model == instrumentation.model and data.manufacturer == instrumentation.manufacturer:
-                    if data.location == instrumentation.location:
-                        duplicates = True
-                        instrumentation_ex = data
+                if data.pk != instrumentation.pk:
+                    if (data.model == instrumentation.model) and (data.manufacturer == instrumentation.manufacturer):
+                        if data.location == instrumentation.location:
+                            duplicates = True
+                            instrumentation_ex = data
 
             if not duplicates:
                 messages.success(request, 'You have updated your instrumentation.')
@@ -292,4 +289,4 @@ def instrumentation_remove(request, pk):
     """
     instrumentation = get_object_or_404(Instrumentation, pk=pk)
     instrumentation.delete()
-    return redirect('blog:instrumentation_list')
+    return redirect('blog:instrumentation_list_type')

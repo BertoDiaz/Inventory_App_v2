@@ -171,7 +171,7 @@ class Optic(models.Model):
     manufacturer = models.CharField(max_length=200, blank=True,
                                     help_text="Manufacturer of the optic component.")
     quantity = models.CharField(max_length=100, blank=True, help_text="Quantity of the optic component.")
-    description = models.CharField(max_length=300, help_text="Description of the optic component.")
+    description = models.CharField(max_length=300, blank=True, help_text="Description of the optic component.")
     location = models.ForeignKey('Location', help_text="Where it is the optic component.")
     # unit = models.ForeignKey('Unit', help_text="Unit of the value of the optic component.")
     # value = models.CharField(max_length=200, blank=True,
@@ -195,7 +195,7 @@ class Optic(models.Model):
 
         @return: a string with the location of a optic component.
         """
-        return self.name_optic
+        return self.model
 
 
 class Chemical(models.Model):

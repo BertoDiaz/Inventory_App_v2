@@ -90,6 +90,7 @@ def chemical_list(request, pk):
                                                        'chemicalsBack': chemicalsBack,
                                                        'type_chemicalBack': type_chemicalBack})
 
+
 word_to_search = None
 
 
@@ -217,8 +218,7 @@ def chemical_new(request):
 
             else:
 
-                if supplier_form.is_valid() and not supplier.name == "NONE" and
-                chemical.supplier.name == "SUPPLIER NOT REGISTERED":
+                if supplier_form.is_valid() and not supplier.name == "NONE" and chemical.supplier.name == "SUPPLIER NOT REGISTERED":
 
                     duplicates = False
 
@@ -335,13 +335,17 @@ def chemical_edit(request, pk):
             chemical.edited_by = request.user.username
 
             supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
+            supplier = supplier_form.save(commit=False)
 
-            if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+            # if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and not supplier_form.is_valid():
+            if chemical.supplier.name == "SUPPLIER NOT REGISTERED" and (supplier.name != "NONE" and supplier.name == ""):
 
-                supplier_form = SupplierNameForm(prefix="supplierNameForm")
+                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
                 addSupplier = True
 
-                messages.warning(request, 'You have to write the next information about the supplier.')
+                messages.warning(request,
+                                 'You have to write the next information about the supplier. If you do not know how is '
+                                 'the supplier, you write NONE.')
 
                 return render(request, 'blog/chemical_edit.html', {'pk': chemical.pk,
                                                                    'form': form,
@@ -350,13 +354,11 @@ def chemical_edit(request, pk):
 
             else:
 
-                supplier_form = SupplierNameForm(data=request.POST, prefix="supplierNameForm")
-
-                if supplier_form.is_valid():
-                    supplier = supplier_form.save(commit=False)
-                    supplier_all = Supplier.objects.all()
+                if supplier_form.is_valid() and not supplier.name == "NONE" and chemical.supplier.name == "SUPPLIER NOT REGISTERED":
 
                     duplicates = False
+
+                    supplier_all = Supplier.objects.all()
 
                     for data in supplier_all:
                         if data.name == supplier.name:
@@ -366,12 +368,20 @@ def chemical_edit(request, pk):
                     if not duplicates:
                         supplier.save()
 
-                        chemical.supplier = supplier
-
                     else:
+                        messages.warning(request, 'It is not necessary to add this supplier because already exists.')
                         addSupplier = False
 
                         chemical.supplier = supplier_ex
+
+                        form = ChemicalForm(instance=chemical, prefix="chemical")
+
+                        return render(request, 'blog/chemical_edit.html', {'pk': chemical.pk,
+                                                                           'form': form,
+                                                                           'supplier_form': supplier_form,
+                                                                           'addSupplier': addSupplier})
+
+                    chemical.supplier = supplier
 
             if chemical.reference == "" or chemical.reference == "-":
                 chemical.reference = "-"

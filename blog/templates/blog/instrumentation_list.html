@@ -8,8 +8,8 @@
                     <div class="date">
                         {{ instrumentation.created_date }}
                     </div>
-                    <h1><a href="{% url 'blog:instrumentation_detail' pk=instrumentation.pk %}">{{ instrumentation.characteristics }}</a></h1>
-                    <p>{{ instrumentation.type_instrumentation|linebreaksbr }}</p>
+                    <h1><a href="{% url 'blog:instrumentation_detail' pk=instrumentation.pk %}">{{ instrumentation.model }}</a></h1>
+                    <p>{{ instrumentation.location|linebreaksbr }}</p>
                 {% endfor %}
             </div>
         </div>

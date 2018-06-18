@@ -642,8 +642,7 @@ def order_send_email(request, pk):
                 message_2 = "<p></p><p>Best regards,</p><p>" + username.first_name + "</p>"
                 message = message_1 + message_2
             else:
-                message = "<p>Dear Jessica,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" +
-                username.first_name + "</p>"
+                message = "<p>Dear Jessica,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" + username.first_name + "</p>"
 
             msg = MIMEMultipart('related')
             msg['From'] = fromaddr
@@ -763,8 +762,7 @@ def order_notify(request, pk):
             toaddrs = usersAdd
             subject = 'New Order'
 
-            message = "<p>Hello everybody,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" +
-            username.first_name + "</p>"
+            message = "<p>Hello everybody,</p><p>" + request.POST['message'] + "</p><p>Best regards,</p><p>" + username.first_name + "</p>"
 
             msg = MIMEMultipart('related')
             msg['From'] = fromaddr

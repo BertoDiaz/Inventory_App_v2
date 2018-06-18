@@ -8,8 +8,8 @@
                     <div class="date">
                         {{ optic.created_date }}
                     </div>
-                    <h1><a href="{% url 'blog:optic_detail' pk=optic.pk %}">{{ optic.description }}</a></h1>
-                    <p>{{ optic.type_optic|linebreaksbr }}</p>
+                    <h1><a href="{% url 'blog:optic_detail' pk=optic.pk %}">{{ optic.location }}</a></h1>
+                    <p>{{ optic.model|linebreaksbr }}</p>
                 {% endfor %}
             </div>
         </div>
