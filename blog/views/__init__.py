@@ -5,6 +5,7 @@ from .chemical import *
 from .chip import *
 from .computing import *
 from .consumable import *
+from .download import *
 from .electronic import *
 from .instrumentation import *
 from .inventory import *

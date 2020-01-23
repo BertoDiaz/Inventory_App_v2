@@ -41,8 +41,8 @@ class Inventory(models.Model):
     """
 
     author = models.ForeignKey('auth.User',
-                               help_text="Name of the author that created the inventory.")
-    type_item = models.ForeignKey('Type', help_text="Type of inventory.")
+                               help_text="Name of the author that created the inventory.", on_delete=models.DO_NOTHING)
+    type_item = models.ForeignKey('Type', help_text="Type of inventory.", on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=200, help_text="Name of the inventory.")
     maker = models.CharField(max_length=200, help_text="Manufacturer of the inventory.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
@@ -74,13 +74,13 @@ class Computing(models.Model):
     This model stores the computers.
     """
 
-    author = models.ForeignKey('auth.User', null=True)
+    author = models.ForeignKey('auth.User', null=True, on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=200, blank=True, help_text="Name of the computer.")
-    type_object = models.ForeignKey('Type_Object', help_text="Type of the computing.")
-    location = models.ForeignKey('Location', help_text="Where it is the computer.")
+    type_object = models.ForeignKey('Type_Object', help_text="Type of the computing.", on_delete=models.DO_NOTHING)
+    location = models.ForeignKey('Location', help_text="Where it is the computer.", on_delete=models.DO_NOTHING)
     user_name = models.ForeignKey('Full_Name_Users', blank=True,
-                                  help_text="Username of this computer.")
+                                  help_text="Username of this computer.", on_delete=models.DO_NOTHING)
     model = models.CharField(max_length=200, blank=True, help_text="Model of the computer.")
     processor = models.CharField(max_length=200, blank=True, help_text="Processor of the computer.")
     memory = models.CharField(max_length=200, blank=True,
@@ -93,7 +93,8 @@ class Computing(models.Model):
     mouse = models.CharField(max_length=200, blank=True, help_text="Mouse of the computer.")
     others = models.CharField(max_length=200, blank=True,
                               help_text="Others characteristics of the computer.")
-    setup = models.ForeignKey('Setup', blank=True, help_text="In order to the computer is used.")
+    setup = models.ForeignKey('Setup', blank=True, help_text="In order to the computer is used.",
+                              on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -123,13 +124,15 @@ class Electronic(models.Model):
     This model stores the electronic components.
     """
 
-    author = models.ForeignKey('auth.User', null=True)
+    author = models.ForeignKey('auth.User', null=True, on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
     type_component = models.ForeignKey('Type_Component',
-                                       help_text="Type of the electronic component.")
+                                       help_text="Type of the electronic component.", on_delete=models.DO_NOTHING)
     name_component = models.CharField(max_length=200, blank=True)
-    location = models.ForeignKey('Location', help_text="Where it is the electronic component.")
-    unit = models.ForeignKey('Unit', help_text="Unit of the value of the electronic componente.")
+    location = models.ForeignKey('Location', help_text="Where it is the electronic component.",
+                                 on_delete=models.DO_NOTHING)
+    unit = models.ForeignKey('Unit', help_text="Unit of the value of the electronic componente.",
+                             on_delete=models.DO_NOTHING)
     value = models.CharField(max_length=200, blank=True,
                              help_text="Value of the electronic component.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
@@ -161,9 +164,9 @@ class Optic(models.Model):
     This model stores the optic components.
     """
 
-    author = models.ForeignKey('auth.User', null=True)
+    author = models.ForeignKey('auth.User', null=True, on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
-    type_optic = models.ForeignKey('Type_Optic', help_text="Type of the optic component.")
+    type_optic = models.ForeignKey('Type_Optic', help_text="Type of the optic component.", on_delete=models.DO_NOTHING)
     subtype_optic = models.CharField(max_length=200, blank=True,
                                      help_text="Sub-type of the optic component.")
     # name_optic = models.CharField(max_length=100, blank=True)
@@ -172,7 +175,7 @@ class Optic(models.Model):
                                     help_text="Manufacturer of the optic component.")
     quantity = models.CharField(max_length=100, blank=True, help_text="Quantity of the optic component.")
     description = models.CharField(max_length=300, blank=True, help_text="Description of the optic component.")
-    location = models.ForeignKey('Location', help_text="Where it is the optic component.")
+    location = models.ForeignKey('Location', help_text="Where it is the optic component.", on_delete=models.DO_NOTHING)
     # unit = models.ForeignKey('Unit', help_text="Unit of the value of the optic component.")
     # value = models.CharField(max_length=200, blank=True,
     #                          help_text="Value of the optic component.")
@@ -205,9 +208,9 @@ class Chemical(models.Model):
     This model stores the chemicals.
     """
 
-    author = models.ForeignKey('auth.User', null=True)
+    author = models.ForeignKey('auth.User', null=True, on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
-    type_chemical = models.ForeignKey('Type_Chemical', help_text="Type of the chemical.")
+    type_chemical = models.ForeignKey('Type_Chemical', help_text="Type of the chemical.", on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=200, blank=True, help_text="Name of the chemical.")
     molecular_formula = models.CharField(max_length=200, blank=True,
                                          help_text="Molecular formula of the chemical.")
@@ -215,15 +218,15 @@ class Chemical(models.Model):
     cas_number = models.CharField(max_length=200, blank=True, help_text="CAS number of the chemical.")
     number_bottle = models.CharField(max_length=200, blank=True, help_text="Number of bottles of the chemical.")
     quantity = models.CharField(max_length=20, help_text="Quantity of the chemical.")
-    state = models.ForeignKey('State', help_text="State of the chemical.")
-    supplier = models.ForeignKey('Supplier', help_text="Supplier of the chemical.")
+    state = models.ForeignKey('State', help_text="State of the chemical.", on_delete=models.DO_NOTHING)
+    supplier = models.ForeignKey('Supplier', help_text="Supplier of the chemical.", on_delete=models.DO_NOTHING)
     molecular_weight = models.CharField(max_length=200, blank=True,
                                         help_text="Molecular weight of the chemical.")
     # unit_chemical = models.ForeignKey('Unit_Chemical', help_text="Unit to the "
     #                                   "molecular weight of the chemical.")
     unit_chemical = models.CharField(max_length=20, default="g/mol", help_text="Unit to the "
                                      "molecular weight of the chemical.")
-    location = models.ForeignKey('Location', help_text="Where it is the chemical.")
+    location = models.ForeignKey('Location', help_text="Where it is the chemical.", on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -253,10 +256,10 @@ class Biological(models.Model):
     This model stores the biological components.
     """
 
-    author = models.ForeignKey('auth.User', null=True)
+    author = models.ForeignKey('auth.User', null=True, on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
     type_biological = models.ForeignKey('Type_Biological_2',
-                                        help_text="Type of the biological component.")
+                                        help_text="Type of the biological component.", on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=200, blank=True,
                             help_text="Name of the biological component.")
     molecular_formula = models.CharField(max_length=200, blank=True,
@@ -266,12 +269,14 @@ class Biological(models.Model):
     number_bottle = models.CharField(max_length=20, null=True, blank=True,
                                      help_text="Number of bottles of the biological component.")
     quantity = models.CharField(max_length=20, blank=True, help_text="Quantity of the biological component.")
-    supplier = models.ForeignKey('Supplier', help_text="Supplier of the biological component.")
+    supplier = models.ForeignKey('Supplier', help_text="Supplier of the biological component.",
+                                 on_delete=models.DO_NOTHING)
     concentration = models.CharField(max_length=200, blank=True,
                                      help_text="Concentration of the biological component.")
     unit_biological = models.ForeignKey('Unit_Chemical', blank=True, help_text="Unit to the "
-                                        "concentration of the biological.")
-    location = models.ForeignKey('Location', help_text="Where it is the biological component.")
+                                        "concentration of the biological.", on_delete=models.DO_NOTHING)
+    location = models.ForeignKey('Location', help_text="Where it is the biological component.",
+                                 on_delete=models.DO_NOTHING)
     aliquots = models.BooleanField(default=False)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
@@ -302,10 +307,10 @@ class Instrumentation(models.Model):
     This model stores the instruments.
     """
 
-    author = models.ForeignKey('auth.User', null=True)
+    author = models.ForeignKey('auth.User', null=True, on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
     type_instrumentation = models.ForeignKey('Type_Instrumentation',
-                                             help_text="Type of instrument to be stored.")
+                                             help_text="Type of instrument to be stored.", on_delete=models.DO_NOTHING)
     subtype_instrumentation = models.CharField(max_length=200, blank=True,
                                                help_text="Sub-type of the instrument.")
     model = models.CharField(max_length=200, blank=True, help_text="Model of the instrument.")
@@ -314,8 +319,8 @@ class Instrumentation(models.Model):
                                        help_text="Important features of the instrument.")
     manufacturer = models.CharField(max_length=200, blank=True,
                                     help_text="Manufacturer of the instrument.")
-    supplier = models.ForeignKey('Supplier', help_text="Seller of the instrument.")
-    location = models.ForeignKey('Location', help_text="Where it is the computer.")
+    supplier = models.ForeignKey('Supplier', help_text="Seller of the instrument.", on_delete=models.DO_NOTHING)
+    location = models.ForeignKey('Location', help_text="Where it is the computer.", on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -345,15 +350,15 @@ class Consumable(models.Model):
     This model stores the consumables.
     """
 
-    author = models.ForeignKey('auth.User', null=True)
+    author = models.ForeignKey('auth.User', null=True, on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=200, blank=True, help_text="Name of the consumable.")
     characteristics = models.CharField(max_length=200, blank=True,
                                        help_text="Important features of the consumable.")
     manufacturer = models.CharField(max_length=200, blank=True,
                                     help_text="Manufacturer of the consumable.")
-    supplier = models.ForeignKey('Supplier', help_text="Seller of the consumable.")
-    location = models.ForeignKey('Location', help_text="Where it is the consumable.")
+    supplier = models.ForeignKey('Supplier', help_text="Seller of the consumable.", on_delete=models.DO_NOTHING)
+    location = models.ForeignKey('Location', help_text="Where it is the consumable.", on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -413,7 +418,8 @@ class Type(models.Model):
     This model stores the different types of inventories.
     """
 
-    author = models.ForeignKey('auth.User', help_text="Name of the author that created the type.")
+    author = models.ForeignKey('auth.User', help_text="Name of the author that created the type.",
+                               on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=200, help_text="Name of the type of inventory.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
@@ -630,7 +636,7 @@ class Type_Biological_2(models.Model):
     """
 
     name = models.CharField(max_length=200, help_text="Name of the type of biological component.")
-    type_biological_1 = models.ForeignKey('Type_Biological_1')
+    type_biological_1 = models.ForeignKey('Type_Biological_1', on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -909,17 +915,18 @@ class Order(models.Model):
     This model stores the different orders of the group.
     """
 
-    author = models.ForeignKey('auth.User', help_text="Username of who create the order.")
+    author = models.ForeignKey('auth.User', help_text="Username of who create the order.", on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=200, help_text="Name of the order to save it.")
     # name = models.ForeignKey('auth.User')
     applicant = models.CharField(max_length=200, help_text="Name of who do the order.")
-    budget = models.ForeignKey('Budget', help_text="Budget in where load the order.")
+    budget = models.ForeignKey('Budget', help_text="Budget in where load the order.", on_delete=models.DO_NOTHING)
     type_of_purchase = models.ForeignKey('Type_of_purchase',
-                                         help_text="Type of purchase of the order.")
+                                         help_text="Type of purchase of the order.", on_delete=models.DO_NOTHING)
     payment_conditions = models.ForeignKey('Payment',
-                                           help_text="Conditions of payment of the order.")
-    supplier = models.ForeignKey('Supplier', help_text="Who provide of components of the order.")
+                                           help_text="Conditions of payment of the order.", on_delete=models.DO_NOTHING)
+    supplier = models.ForeignKey('Supplier', help_text="Who provide of components of the order.",
+                                 on_delete=models.DO_NOTHING)
     name_supplier = models.CharField(max_length=200, null=True)
     file_exists = models.BooleanField(default=False,
                                       help_text="To know if this order has a file assigned.")
@@ -1086,14 +1093,14 @@ class Product(models.Model):
     This model stores the different products.
     """
 
-    author = models.ForeignKey('auth.User', null=True)
+    author = models.ForeignKey('auth.User', null=True, on_delete=models.DO_NOTHING)
     edited_by = models.CharField(max_length=200, null=True)
     description = models.CharField(max_length=300, help_text="Description of the product.")
     quantity = models.CharField(max_length=20,
                                 help_text="Quantity of the product that are ordered.")
     unit_price = models.CharField(max_length=20, help_text="Price per unit of the product.")
     order = models.ForeignKey('Order', null=True, blank=True,
-                              help_text="To what order is assigned.")
+                              help_text="To what order is assigned.", on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):
@@ -1157,7 +1164,7 @@ class Wafer(models.Model):
     This model stores the different wafers.
     """
 
-    run = models.ForeignKey('Run', help_text="To what run is assigned.")
+    run = models.ForeignKey('Run', help_text="To what run is assigned.", on_delete=models.DO_NOTHING)
     wafer = models.IntegerField(help_text="Id of the wafer.")
     name_wafer = models.CharField(max_length=50, default="", help_text="ID of the wafer.")
     comments = models.TextField(max_length=500, blank=True, default="", help_text="Comments of the wafer.")
@@ -1190,8 +1197,8 @@ class Chip(models.Model):
     This model stores the different chips.
     """
 
-    run = models.ForeignKey('Run', help_text="To what run is assigned.")
-    wafer = models.ForeignKey('Wafer', help_text="To what wafer is assigned.")
+    run = models.ForeignKey('Run', help_text="To what run is assigned.", on_delete=models.DO_NOTHING)
+    wafer = models.ForeignKey('Wafer', help_text="To what wafer is assigned.", on_delete=models.DO_NOTHING)
     # chip = models.IntegerField(help_text="ID of the chip.")
     chip = models.CharField(max_length=50, help_text="ID of the chip.")
     date = models.DateField(blank=True, null=True, help_text="MM/DD/YY")
@@ -1200,7 +1207,7 @@ class Chip(models.Model):
     readout = models.CharField(max_length=50, blank=True,
                                help_text="What type of sensor is used to read.")
     user_name = models.ForeignKey('Full_Name_Users', blank=True, null=True,
-                                  help_text="Who have the chip.")
+                                  help_text="Who have the chip.", on_delete=models.DO_NOTHING)
     comments = models.TextField(max_length=500, blank=True, default="", help_text="Comments of the chip.")
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
@@ -1231,10 +1238,11 @@ class Waveguide(models.Model):
     This model stores the different Waveguides.
     """
 
-    run = models.ForeignKey('Run', help_text="To what run is assigned.")
-    wafer = models.ForeignKey('Wafer', help_text="To what wafer is assigned.")
-    chip = models.ForeignKey('Chip', null=True, help_text="To what chip is assigned.")
-    waveguide = models.ForeignKey('Name_Waveguide', blank=True, help_text="ID of the waveguide.")
+    run = models.ForeignKey('Run', help_text="To what run is assigned.", on_delete=models.DO_NOTHING)
+    wafer = models.ForeignKey('Wafer', help_text="To what wafer is assigned.", on_delete=models.DO_NOTHING)
+    chip = models.ForeignKey('Chip', null=True, help_text="To what chip is assigned.", on_delete=models.DO_NOTHING)
+    waveguide = models.ForeignKey('Name_Waveguide', blank=True, help_text="ID of the waveguide.",
+                                  on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=100, blank=True, help_text="Name of the waveguide.")
     amplitude = models.FloatField(blank=True, null=True, help_text="Amplitude of the signal.")
     offset = models.FloatField(blank=True, null=True, help_text="")
@@ -1308,7 +1316,7 @@ class Messages(models.Model):
     messageText = models.TextField(help_text="Message about the update.")
     show = models.BooleanField(default=True, help_text="It is used to show the message.")
     author = models.ForeignKey('auth.User',
-                               help_text="Name of the author that created the message.")
+                               help_text="Name of the author that created the message.", on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(default=timezone.now, help_text="Date when was created.")
 
     def create(self):

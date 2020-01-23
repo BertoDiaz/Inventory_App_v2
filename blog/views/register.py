@@ -28,10 +28,15 @@ Email: heriberto.diazluis@gmail.com
 """
 
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
 from blog.models import Full_Name_Users, Messages
 from blog.forms import SignUpForm
+
+
+import ldap
 
 
 def home(request):
@@ -75,7 +80,7 @@ def signup(request):
     """
     if request.method == 'POST':
         form = SignUpForm(request.POST, prefix="register")
-        fullName_form = FullNameForm(request.POST, prefix="fullName")
+        # fullName_form = FullNameForm(request.POST, prefix="fullName")
         if form.is_valid():
             form.save()
             firstname = form.cleaned_data.get('first_name')
@@ -93,3 +98,98 @@ def signup(request):
     else:
         form = SignUpForm(prefix="register")
     return render(request, 'registration/signup.html', {'form': form})
+
+
+def signin(request):
+    """
+    Sign in function docstring.
+
+    This function carries out the login of user.
+
+    @param request: HTML request page.
+
+    @return: First time, return to sign in page. If the login is right, return to home
+    page with your username.
+    """
+    if request.method == 'POST':
+
+        username = '%s@icn2.net' % request.POST.get('Username')
+
+        try:
+            connection = ldap.initialize('ldap://icn2.net')
+            connection.set_option(ldap.OPT_REFERRALS, 0)
+
+            connection.simple_bind_s(username, request.POST.get('Password'))
+
+            base_dn = 'DC=icn2,DC=net'
+            ldap_filter = 'userPrincipalName=%s' % username
+
+            ldap_client = connection.search_s(base_dn, ldap.SCOPE_SUBTREE, ldap_filter)
+
+            firstName = ldap_client[0][1]['givenName'][0].decode('utf-8')
+            lastName = ldap_client[0][1]['sn'][0].decode('utf-8')
+            mail = ldap_client[0][1]['mail'][0].decode('utf-8')
+            # fullName = ldap_client[0][1]['name'][0].decode('utf-8')
+
+        except ldap.INVALID_CREDENTIALS:
+            messages.error(request, 'Username or Password incorrect.')
+
+            return render(request, 'registration/signin.html')
+
+        except ldap.SERVER_DOWN:
+            messages.error(request, 'Server is not available now, try again later.')
+
+            return render(request, 'registration/signin.html')
+
+        try:
+            user = User.objects.get(username=request.POST.get('Username'))
+
+        except User.DoesNotExist:
+            user = User(username=request.POST.get('Username'), password=request.POST.get('Password'),
+                        first_name=firstName, last_name=lastName, email=mail)
+            user.is_active = True
+
+        if not user.first_name:
+            user.first_name = firstName
+
+        if not user.last_name:
+            user.last_name = lastName
+
+        user.save()
+
+        userAuthenticate = authenticate(username=request.POST.get('Username'), password=request.POST.get('Password'))
+
+        if userAuthenticate is not None:
+            login(request, userAuthenticate)
+
+            return render(request, 'blog/home.html')
+
+        else:
+            user.set_password(request.POST.get('Password'))
+
+            user.save()
+
+            userAuthenticate = authenticate(username=request.POST.get('Username'),
+                                            password=request.POST.get('Password'))
+
+            login(request, userAuthenticate)
+
+            return render(request, 'blog/home.html')
+
+    else:
+        return render(request, 'registration/signin.html')
+
+
+def signout(request):
+    """
+    Sign out function docstring.
+
+    This function carry out the logout.
+
+    @param request: HTML request page.
+
+    @return: Home page.
+    """
+    logout(request)
+
+    return redirect('blog:home')

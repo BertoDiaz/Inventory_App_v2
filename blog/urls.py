@@ -30,12 +30,24 @@ Email: heriberto.diazluis@gmail.com
 from django.conf.urls import url
 from . import views
 
+app_name = 'blog'
 urlpatterns = [
     # #################### HOME #################### #
     url(r'^$', views.home, name='home'),
 
     # #################### SIGN UP #################### #
     url(r'^accounts/signup/$', views.signup, name='signup'),
+    url(r'^accounts/signin/$', views.signin, name='signin'),
+    url(r'^accounts/signout/$', views.signout, name='signout'),
+
+    # #################### DOWNLOAD #################### #
+    url(r'^download/$', views.download_list, name='download_list'),
+    url(r'^download/computing/$', views.download_computing, name='download_computing'),
+    url(r'^download/electronic/$', views.download_electronic, name='download_electronic'),
+    url(r'^download/optic/$', views.download_optic, name='download_optic'),
+    url(r'^download/chemical/$', views.download_chemical, name='download_chemical'),
+    url(r'^download/biological/$', views.download_biological, name='download_biological'),
+    url(r'^download/instrumentation/$', views.download_instrumentation, name='download_instrumentation'),
 
     # #################### INVENTORY #################### #
     url(r'^inventory/$', views.inventory_list, name='inventory_list'),

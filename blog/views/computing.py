@@ -49,7 +49,7 @@ def computing_list(request):
 
     @return: list of computers.
     """
-    computing_list = Computing.objects.all().order_by('name')
+    computing_list = Computing.objects.all().order_by('location')
     if not computing_list.exists():
         messages.info(request, 'Ups!! There are not any computing in the inventory.')
 
