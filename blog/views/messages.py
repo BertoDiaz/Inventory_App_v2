@@ -192,15 +192,14 @@ def messages_new(request):
 
                 username_author = User.objects.get(username=messageInfo.author)
 
-                if notify_form.cleaned_data['notifyStaff']:
-                    fromaddr = "heriberto.diazluis@gmail.com"
-                    toaddrs = "heriberto.diaz@icn2.cat"
-                    subject = 'New Comment'
+                fromaddr = "nanob2agroup@gmail.com"
+                subject = "New Comment"
 
-                elif notify_form.cleaned_data['notifyGroup']:
-                    fromaddr = "heriberto.diazluis@gmail.com"
-                    toaddrs = "grupotestdjango@googlegroups.com"
-                    subject = 'New Comment'
+                if notify_form.cleaned_data['notifyGroup']:
+                    toaddrs = "nanob2a@googlegroups.com"
+
+                else:
+                    toaddrs = "heriberto.diaz@icn2.cat"
 
                 message_1 = "<p>Hello everybody,</p><p>There is a new comment in the Web app of " + username_author.first_name + ":</p>"
                 message_2 = "<p style='padding-left: 20px;'><i>'" + messageInfo.messageText + "'</i></p><p>Best regards,</p><p>" + username_author.first_name + "</p>"
@@ -222,8 +221,7 @@ def messages_new(request):
                     server.starttls()
                     # Credenciales
                     # Añadir nombre de usuario y contraseña con el siguiente comando
-                    # server.login(username, password)
-                    server.login("heriberto.diazluis@gmail.com", 'heriberto_20')
+                    server.login(username, password)
                     server.set_debuglevel(1)
                     server.sendmail(fromaddr, toaddrs, msg.as_string())
                     server.quit()
