@@ -37,7 +37,7 @@ from blog.models import Supplier
 from blog.forms import SupplierForm, ChemicalForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def supplier_list(request):
     """
     Supplier_list function docstring.
@@ -76,7 +76,7 @@ def supplier_list(request):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def supplier_search(request):
     """
     Supplier_search function docstring.
@@ -124,7 +124,7 @@ def supplier_search(request):
     return render(request, 'blog/supplier_list.html', {'suppliers': suppliers})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def supplier_detail(request, pk):
     """
     Supplier_detail function docstring.
@@ -147,7 +147,7 @@ def supplier_detail(request, pk):
                                                          'backList': backList})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def supplier_new(request):
     """
     Supplier_new function docstring.
@@ -190,7 +190,7 @@ def supplier_new(request):
     return render(request, 'blog/supplier_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def supplier_edit(request, pk):
     """
     Supplier_edit function docstring.
@@ -233,7 +233,7 @@ def supplier_edit(request, pk):
     return render(request, 'blog/supplier_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def supplier_remove(request, pk):
     """
     Supplier_remove function docstring.

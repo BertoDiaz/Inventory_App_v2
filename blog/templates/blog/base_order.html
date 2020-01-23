@@ -55,7 +55,7 @@
                     </form>
                 </div>
             {% else %}
-                <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+                <a href="{% url 'blog:signin' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
             <h1 class="col-md-2"><a href="{% url 'blog:order_list' %}">Order</a></h1>
         </div>

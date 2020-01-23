@@ -54,7 +54,7 @@ def instrumentation_list_type(request):
                   {'instrumentations': instrumentations})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def instrumentation_list(request, pk):
     """
     Instrumentation_list function docstring.
@@ -95,7 +95,7 @@ def instrumentation_list(request, pk):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def instrumentation_search(request):
     """
     Instrumentation_search function docstring.
@@ -155,7 +155,7 @@ def instrumentation_search(request):
     return render(request, 'blog/instrumentation_list.html', {'instrumentations': instrumentations})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def instrumentation_detail(request, pk):
     """
     Instrumentation_detail function docstring.
@@ -180,7 +180,7 @@ def instrumentation_detail(request, pk):
                                                                 })
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def instrumentation_new(request):
     """
     Instrumentation_new function docstring.
@@ -226,7 +226,7 @@ def instrumentation_new(request):
     return render(request, 'blog/instrumentation_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def instrumentation_edit(request, pk):
     """
     Instrumentation_edit function docstring.
@@ -272,7 +272,7 @@ def instrumentation_edit(request, pk):
     return render(request, 'blog/instrumentation_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def instrumentation_remove(request, pk):
     """
     Instrumentation_remove function docstring.

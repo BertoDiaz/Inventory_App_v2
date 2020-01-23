@@ -35,7 +35,7 @@ from blog.models import Run, Chip
 from blog.forms import RunForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def run_list(request):
     """
     Run_list function docstring.
@@ -52,7 +52,7 @@ def run_list(request):
     return render(request, 'blog/run_list.html', {'runs': runs})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def run_detail(request, pk):
     """
     Run_detail function docstring.
@@ -72,7 +72,7 @@ def run_detail(request, pk):
     return render(request, 'blog/run_detail.html', {'run': run})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def run_new(request):
     """
     Run_new function docstring.
@@ -95,7 +95,7 @@ def run_new(request):
     return render(request, 'blog/run_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def run_edit(request, pk):
     """
     Run_edit function docstring.
@@ -124,7 +124,7 @@ def run_edit(request, pk):
     return render(request, 'blog/run_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def run_remove(request, pk):
     """
     Run_remove function docstring.
@@ -144,7 +144,7 @@ def run_remove(request, pk):
     return redirect('blog:run_list')
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def run_chip_list(request, pk):
     """
     Run_chip_list function docstring.

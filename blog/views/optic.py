@@ -53,7 +53,7 @@ def optic_list_type_optic(request):
     return render(request, 'blog/optic_list_type_optic.html', {'optics': optics})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def optic_list(request, pk):
     """
     Optic_list function docstring.
@@ -92,7 +92,7 @@ def optic_list(request, pk):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def optic_search(request):
     """
     Optic_search function docstring.
@@ -145,7 +145,7 @@ def optic_search(request):
     return render(request, 'blog/optic_list.html', {'optics': optics})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def optic_detail(request, pk):
     """
     Optic_detail function docstring.
@@ -168,7 +168,7 @@ def optic_detail(request, pk):
                                                       'type_opticBack': type_opticBack})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def optic_new(request):
     """
     Optic_new function docstring.
@@ -216,7 +216,7 @@ def optic_new(request):
     return render(request, 'blog/optic_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def optic_edit(request, pk):
     """
     Optic_edit function docstring.
@@ -264,7 +264,7 @@ def optic_edit(request, pk):
     return render(request, 'blog/optic_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def optic_remove(request, pk):
     """
     Optic_remove function docstring.

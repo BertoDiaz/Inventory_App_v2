@@ -57,7 +57,7 @@ def electronic_list_type_components(request):
                   {'electronics': electronics})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def electronic_list(request, pk):
     """
     Electronic_list function docstring.
@@ -98,7 +98,7 @@ def electronic_list(request, pk):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def electronic_search(request):
     """
     Electronic_search function docstring.
@@ -150,7 +150,7 @@ def electronic_search(request):
     return render(request, 'blog/electronic_list.html', {'electronics': electronics})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def electronic_detail(request, pk):
     """
     Electronic_detail function docstring.
@@ -174,7 +174,7 @@ def electronic_detail(request, pk):
                                                            'type_componBack': type_componBack})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def electronic_new(request):
     """
     Electronic_new function docstring.
@@ -216,7 +216,7 @@ def electronic_new(request):
     return render(request, 'blog/electronic_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def electronic_edit(request, pk):
     """
     Electronic_edit function docstring.
@@ -260,7 +260,7 @@ def electronic_edit(request, pk):
     return render(request, 'blog/electronic_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def electronic_remove(request, pk):
     """
     Electronic_remove function docstring.

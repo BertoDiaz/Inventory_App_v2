@@ -35,7 +35,7 @@
             {% if user.is_authenticated %}
                 <a href="{% url 'blog:wafer_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
             {% else %}
-                <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+                <a href="{% url 'blog:signin' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
             <h1><a href="{% url 'blog:run_list' %}">RUN</a></h1>
         </div>

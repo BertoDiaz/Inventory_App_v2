@@ -35,7 +35,7 @@ from blog.models import Others
 from blog.forms import OthersForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def others_list(request):
     """
     Others_list function docstring.
@@ -66,7 +66,7 @@ def others_list(request):
     return render(request, 'blog/others_list.html', {'otherss': otherss})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def others_detail(request, pk):
     """
     Others_detail function docstring.
@@ -86,7 +86,7 @@ def others_detail(request, pk):
     return render(request, 'blog/others_detail.html', {'others': others})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def others_new(request):
     """
     Others_new function docstring.
@@ -109,7 +109,7 @@ def others_new(request):
     return render(request, 'blog/others_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def others_edit(request, pk):
     """
     Others_edit function docstring.
@@ -137,7 +137,7 @@ def others_edit(request, pk):
     return render(request, 'blog/others_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def others_remove(request, pk):
     """
     Others_remove function docstring.

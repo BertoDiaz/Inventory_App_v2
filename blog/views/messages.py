@@ -43,7 +43,7 @@ from blog.models import Messages, Full_Name_Users
 from blog.forms import MessagesForm, NotifyToForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def messages_list(request):
     """
     Messages_list function docstring.
@@ -83,7 +83,7 @@ def messages_list(request):
     return render(request, 'blog/messages_list.html')
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def messages_search(request):
     """
     Messages_search function docstring.
@@ -133,7 +133,7 @@ def messages_search(request):
                                                        'is_search': is_search})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def messages_detail(request, pk):
     """
     Messages_detail function docstring.
@@ -156,7 +156,7 @@ def messages_detail(request, pk):
                                                          'backList': backList})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def messages_new(request):
     """
     Messages_new function docstring.
@@ -249,7 +249,7 @@ def messages_new(request):
     return render(request, 'blog/messages_new.html', {'form': form, 'notify': notify_form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def messages_edit(request, pk):
     """
     Messages_edit function docstring.
@@ -300,7 +300,7 @@ def messages_edit(request, pk):
     return render(request, 'blog/messages_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def messages_remove(request, pk):
     """
     Messages_remove function docstring.

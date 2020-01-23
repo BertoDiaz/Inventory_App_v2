@@ -40,7 +40,7 @@ from blog.forms import WaveguideForm
 #
 #     return render(request, 'blog/waveguide_list.html', {'waveguides': waveguides})
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def waveguide_list(request, pk):
     """
     Waveguide_list function docstring.
@@ -63,7 +63,7 @@ def waveguide_list(request, pk):
 
 
 # def waveguide_detail(request, pk, pk2):
-@login_required
+@login_required(login_url='/accounts/signin/')
 def waveguide_detail(request, pk):
     """
     Waveguide_detail function docstring.
@@ -89,7 +89,7 @@ def waveguide_detail(request, pk):
                                                           'waveguideBack': waveguideBack})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def waveguide_detail_exist(request, pk, pk2):
     """
     Waveguide_detail_exist function docstring.
@@ -112,7 +112,7 @@ def waveguide_detail_exist(request, pk, pk2):
     return render(request, 'blog/waveguide_detail_exist.html', {'waveguide': waveguide})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def waveguide_new(request, pk):
     """
     Waveguide_new function docstring.
@@ -183,7 +183,7 @@ def waveguide_new(request, pk):
                                                         'chip': chip})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def waveguide_edit(request, pk):
     """
     Waveguide_edit function docstring.
@@ -220,7 +220,7 @@ def waveguide_edit(request, pk):
     return render(request, 'blog/waveguide_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def waveguide_remove(request, pk):
     """
     Waveguide_remove function docstring.

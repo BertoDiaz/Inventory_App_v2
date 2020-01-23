@@ -65,7 +65,7 @@ def biological_list_type_biological(request):
                   {'biologicals': biologicals, 'biologicals_2': biologicals_2})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def biological_list(request, pk):
     """
     Biological_list function docstring.
@@ -105,7 +105,7 @@ def biological_list(request, pk):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def biological_search(request):
     """
     Biological_search function docstring.
@@ -161,7 +161,7 @@ def biological_search(request):
     return render(request, 'blog/biological_list.html', {'biologicals': biologicals})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def biological_detail(request, pk):
     """
     Biological_detail function docstring.
@@ -185,7 +185,7 @@ def biological_detail(request, pk):
                                                            'type_bioBack': type_bioBack})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def biological_new(request):
     """
     Biological_new function docstring.
@@ -326,7 +326,7 @@ def biological_new(request):
     return render(request, 'blog/biological_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def biological_edit(request, pk):
     """
     Biological_edit function docstring.
@@ -474,7 +474,7 @@ def biological_edit(request, pk):
     return render(request, 'blog/biological_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def biological_remove(request, pk):
     """
     Biological_remove function docstring.
@@ -494,7 +494,7 @@ def biological_remove(request, pk):
     return redirect('blog:biological_list_type_biological')
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def biological_supplierToNotRegistered(request):
     """
     Biological_supplierToNotRegistered function docstring.

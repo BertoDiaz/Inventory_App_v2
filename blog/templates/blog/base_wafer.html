@@ -36,7 +36,7 @@
                 <a href="{% url 'blog:wafer_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
                 <a href="{% url 'blog:run_list' %}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
             {% else %}
-                <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+                <a href="{% url 'blog:signin' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
             <!-- <h1><a href="{% url 'blog:chip_list' %}">Chip</a></h1> -->
             <h1>Wafer</h1>

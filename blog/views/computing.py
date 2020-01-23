@@ -37,7 +37,7 @@ from blog.models import Computing, Type_Object, Location, Full_Name_Users, Setup
 from blog.forms import ComputingForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def computing_list(request):
     """
     Computing_list function docstring.
@@ -72,7 +72,7 @@ def computing_list(request):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def computing_search(request):
     """
     Computing_search function docstring.
@@ -134,7 +134,7 @@ def computing_search(request):
     return render(request, 'blog/computing_list.html', {'computings': computings})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def computing_detail(request, pk):
     """
     Computing_detail function docstring.
@@ -157,7 +157,7 @@ def computing_detail(request, pk):
                                                           'backList': backList})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def computing_new(request):
     """
     Computing_new function docstring.
@@ -198,7 +198,7 @@ def computing_new(request):
     return render(request, 'blog/computing_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def computing_edit(request, pk):
     """
     Computing_edit function docstring.
@@ -241,7 +241,7 @@ def computing_edit(request, pk):
     return render(request, 'blog/computing_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def computing_remove(request, pk):
     """
     Computing_remove function docstring.

@@ -33,7 +33,7 @@ from blog.models import Inventory, Biological
 from blog.forms import InventoryForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def inventory_list(request):
     """
     Inventory_list function docstring.
@@ -49,7 +49,7 @@ def inventory_list(request):
     return render(request, 'blog/inventory_list.html', {'inventories': inventories})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def inventory_detail(request, pk):
     """
     Inventory_detail function docstring.
@@ -69,7 +69,7 @@ def inventory_detail(request, pk):
     return render(request, 'blog/inventory_detail.html', {'inventory': inventory})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def inventory_new(request):
     """
     Inventory_new function docstring.
@@ -94,7 +94,7 @@ def inventory_new(request):
     return render(request, 'blog/inventory_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def inventory_edit(request, pk):
     """
     Inventory_edit function docstring.
@@ -123,7 +123,7 @@ def inventory_edit(request, pk):
     return render(request, 'blog/inventory_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def inventory_remove(request, pk):
     """
     Inventory_remove function docstring.

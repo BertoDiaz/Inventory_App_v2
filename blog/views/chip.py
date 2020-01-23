@@ -35,7 +35,7 @@ from blog.models import Run, Chip, Wafer, Name_Waveguide
 from blog.forms import RunForm, WaferForm, ChipForm, WaveguideForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chip_list(request):
     """
     Chip_list function docstring.
@@ -52,7 +52,7 @@ def chip_list(request):
     return render(request, 'blog/chip_list.html', {'chips': chips})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chip_detail(request, pk):
     """
     Chip_detail function docstring.
@@ -75,7 +75,7 @@ def chip_detail(request, pk):
                                                      'runback': runback, 'waferback': waferback})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chip_detail_exist(request, pk):
     """
     Chip_detail_exist function docstring.
@@ -95,7 +95,7 @@ def chip_detail_exist(request, pk):
     return render(request, 'blog/chip_detail_exist.html', {'chip': chip})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chip_new(request):
     """
     Chip_new function docstring.
@@ -155,7 +155,7 @@ def chip_new(request):
                                                    'chipForm': chipForm})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chip_edit(request, pk):
     """
     Chip_edit function docstring.
@@ -186,7 +186,7 @@ def chip_edit(request, pk):
                                                    'chipForm': chipForm})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chip_remove(request, pk):
     """
     Chip_remove function docstring.
@@ -207,7 +207,7 @@ def chip_remove(request, pk):
     return redirect('blog:wafer_chip_list', pk=wafer_id)
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chip_waveguide_new(run, wafer, chip):
     """
     Chip_waveguide_new function docstring.

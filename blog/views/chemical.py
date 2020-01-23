@@ -54,7 +54,7 @@ def chemical_list_type_chemical(request):
     return render(request, 'blog/chemical_list_type_chemical.html', {'chemicals': chemicals})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chemical_list(request, pk):
     """
     Chemical_list function docstring.
@@ -94,7 +94,7 @@ def chemical_list(request, pk):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chemical_search(request):
     """
     Chemical_search function docstring.
@@ -155,7 +155,7 @@ def chemical_search(request):
     return render(request, 'blog/chemical_list.html', {'chemicals': chemicals})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chemical_detail(request, pk):
     """
     Chemical_detail function docstring.
@@ -179,7 +179,7 @@ def chemical_detail(request, pk):
                                                          'type_chemicalBack': type_chemicalBack})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chemical_new(request):
     """
     Chemical_new function docstring.
@@ -309,7 +309,7 @@ def chemical_new(request):
     return render(request, 'blog/chemical_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chemical_edit(request, pk):
     """
     Chemical_edit function docstring.
@@ -444,7 +444,7 @@ def chemical_edit(request, pk):
     return render(request, 'blog/chemical_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chemical_remove(request, pk):
     """
     Chemical_remove function docstring.
@@ -464,7 +464,7 @@ def chemical_remove(request, pk):
     return redirect('blog:chemical_list_type_chemical')
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def chemical_supplierToNotRegistered(request):
     """
     Chemical_list function docstring.

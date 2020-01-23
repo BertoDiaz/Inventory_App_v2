@@ -34,7 +34,7 @@ from blog.models import Run, Wafer, Chip, Name_Waveguide
 from blog.forms import RunForm, WaferForm, ChipForm, WaveguideForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def wafer_list(request, pk):
     """
     wafer_list function docstring.
@@ -51,7 +51,7 @@ def wafer_list(request, pk):
     return render(request, 'blog/wafer_list.html', {'wafers': wafers})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def wafer_edit(request, pk):
     """
     Wafer_edit function docstring.
@@ -144,7 +144,7 @@ def wafer_chip_new(run, wafer):
         chip_waveguide_new(run, wafer, newChip)
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def wafer_new(request):
     """
     wafer_new function docstring.
@@ -192,7 +192,7 @@ def wafer_new(request):
     return render(request, 'blog/wafer_edit.html', {'runForm': runForm, 'waferForm': waferForm})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def wafer_chip_list(request, pk):
     """
     Wafer_chip_list function docstring.

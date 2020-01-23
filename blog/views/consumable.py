@@ -37,7 +37,7 @@ from blog.models import Consumable, Supplier, Location
 from blog.forms import ConsumableForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def consumable_list(request):
     """
     Consumable_list function docstring.
@@ -74,7 +74,7 @@ def consumable_list(request):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def consumable_search(request):
     """
     Consumable_search function docstring.
@@ -126,7 +126,7 @@ def consumable_search(request):
     return render(request, 'blog/consumable_list.html', {'consumables': consumables})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def consumable_detail(request, pk):
     """
     Consumable_detail function docstring.
@@ -149,7 +149,7 @@ def consumable_detail(request, pk):
                                                            'consumableBack': consumableBack})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def consumable_new(request):
     """
     Consumable_new function docstring.
@@ -190,7 +190,7 @@ def consumable_new(request):
     return render(request, 'blog/consumable_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def consumable_edit(request, pk):
     """
     Consumable_edit function docstring.
@@ -233,7 +233,7 @@ def consumable_edit(request, pk):
     return render(request, 'blog/consumable_edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def consumable_remove(request, pk):
     """
     Consumable_remove function docstring.

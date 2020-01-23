@@ -50,7 +50,7 @@ from blog.models import Order, Product, Budget, Type_of_purchase, Supplier
 from blog.forms import OrderForm, ProductForm, SendEmailForm, UploadFileForm, SupplierForm
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_list(request):
     """
     Order_list function docstring.
@@ -83,7 +83,7 @@ def order_list(request):
 word_to_search = None
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_search(request):
     """
     Order_search function docstring.
@@ -143,7 +143,7 @@ def order_search(request):
     return render(request, 'blog/order_list.html', {'orders': orders})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_detail(request, pk):
     """
     Order_detail function docstring.
@@ -173,7 +173,7 @@ def order_detail(request, pk):
                                                       'backDetail': backDetail})
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_new(request):
     """
     Order_new function docstring.
@@ -414,7 +414,7 @@ def setBordersCell(sheet):
     return sheet
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_edit(request, pk):
     """
     Order_edit function docstring.
@@ -611,7 +611,7 @@ def order_edit(request, pk):
     return render(request, 'blog/order_edit.html', context)
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_send_email(request, pk):
     """
     Order_send_email function docstring.
@@ -730,7 +730,7 @@ def order_send_email(request, pk):
         return render(request, 'blog/order_send_email.html', context)
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_notify(request, pk):
     """
     Order_notify function docstring.
@@ -823,7 +823,7 @@ def order_notify(request, pk):
         return render(request, 'blog/order_notify_email.html', context)
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_add_file(request, pk):
     """
     Order_add_file function docstring.
@@ -884,7 +884,7 @@ def handle_uploaded_file(f, order):
             destination.write(chunk)
 
 
-@login_required
+@login_required(login_url='/accounts/signin/')
 def order_remove(request, pk):
     """
     Order_remove function docstring.

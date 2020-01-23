@@ -40,7 +40,7 @@
                     <a href="{% url 'blog:wafer_chip_list' pk=waferPK%}" class="top-menu"><span class="glyphicon glyphicon-chevron-left"></span></a>
                 {% endif %}
             {% else %}
-                <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+                <a href="{% url 'blog:signin' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
             <!-- <h1><a href="{% url 'blog:chip_list' %}">Chip</a></h1> -->
             <h1>Chip</h1>
